@@ -184,10 +184,25 @@
   .jar-sel {
     padding:10px 6px; border-radius:10px; border:1.5px solid var(--border);
     background:var(--surface2); cursor:pointer; text-align:center; transition:all .15s;
+    position:relative;
   }
+  .jar-sel:active { transform:scale(.95); }
   .jar-sel.selected { border-color:var(--j2); background:rgba(59,130,246,.15); }
+  .jar-sel.over-limit { border-color:rgba(248,113,113,.5); background:rgba(248,113,113,.08); }
+  .jar-sel.near-limit { border-color:rgba(251,191,36,.4); background:rgba(251,191,36,.07); }
+  .jar-sel.selected.over-limit { border-color:var(--red); background:rgba(248,113,113,.18); }
+  .jar-sel.selected.near-limit { border-color:var(--yellow); background:rgba(251,191,36,.15); }
   .jar-sel .icon { font-size:22px; }
-  .jar-sel .lbl { font-size:9px; font-weight:700; color:var(--text2); margin-top:4px; text-transform:uppercase; letter-spacing:.3px; }
+  .jar-sel .lbl { font-size:9px; font-weight:700; color:var(--text2); margin-top:3px; text-transform:uppercase; letter-spacing:.3px; }
+  .jar-sel .bal { font-size:10px; font-weight:800; margin-top:3px; }
+  .jar-sel .minibar { height:3px; border-radius:99px; background:rgba(255,255,255,.08); margin-top:4px; overflow:hidden; }
+  .jar-sel .minibar-fill { height:100%; border-radius:99px; }
+  .jar-warn-badge {
+    position:absolute; top:-5px; right:-5px;
+    width:16px; height:16px; border-radius:50%;
+    font-size:9px; display:flex; align-items:center; justify-content:center;
+    font-weight:800; line-height:1;
+  }
 
   .cat-chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px; }
   .cat-chip {
@@ -371,6 +386,25 @@
   .jar-ratio-pct { font-size:12px; color:var(--text2); width:36px; text-align:right; }
   .jar-ratio-val { font-size:13px; font-weight:700; width:90px; text-align:right; }
 
+  /* ===== MONTH CLOSE MODAL ===== */
+  .month-close-modal { background:var(--surface); border-radius:28px 28px 0 0; width:100%; padding:0 20px 36px; max-height:94%; overflow-y:auto; animation:slideUp .25s ease; }
+  .summary-jar-row { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface2); border-radius:10px; margin-bottom:7px; border:1px solid var(--border); }
+  .summary-jar-row .sj-icon { font-size:20px; flex-shrink:0; }
+  .summary-jar-row .sj-name { flex:1; font-size:12px; font-weight:700; }
+  .summary-jar-row .sj-nums { text-align:right; }
+  .summary-jar-row .sj-balance { font-size:13px; font-weight:800; }
+  .summary-jar-row .sj-saved { font-size:10px; margin-top:2px; }
+  .month-stat-row { display:flex; gap:8px; margin-bottom:14px; }
+  .month-stat { flex:1; background:var(--surface2); border-radius:12px; padding:12px; text-align:center; border:1px solid var(--border); }
+  .month-stat-val { font-size:16px; font-weight:800; margin-bottom:3px; }
+  .month-stat-lbl { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:.5px; }
+  .action-choice { background:var(--surface2); border-radius:12px; padding:13px 14px; margin-bottom:8px; display:flex; align-items:center; gap:12px; cursor:pointer; border:1.5px solid var(--border); transition:all .15s; }
+  .action-choice:active { transform:scale(.98); }
+  .action-choice.selected-choice { border-color:var(--j2); background:rgba(59,130,246,.08); }
+  .action-choice-icon { font-size:22px; flex-shrink:0; }
+  .action-choice-text .act-title { font-size:13px; font-weight:700; }
+  .action-choice-text .act-desc { font-size:11px; color:var(--text2); margin-top:3px; line-height:1.5; }
+
   /* ===== STORAGE / SYNC MODAL ===== */
   .sync-modal { background:var(--surface); border-radius:28px 28px 0 0; width:100%; padding:0 20px 36px; max-height:92%; overflow-y:auto; animation:slideUp .25s ease; }
   .sync-section-title { font-size:11px; font-weight:800; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin:20px 0 10px; }
@@ -550,6 +584,13 @@
           </div>
           <div class="chevron">›</div>
         </div>
+        <div class="settings-item" onclick="openMonthClose()">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:rgba(251,191,36,.1)">📅</div>
+            <div><div class="settings-label">Chốt tháng & Sang tháng mới</div><div class="settings-sub" id="month-close-sub">Tổng kết, reset hạn mức, nhập thu nhập mới</div></div>
+          </div>
+          <div class="chevron">›</div>
+        </div>
         <div class="settings-item" onclick="resetData()">
           <div class="settings-item-left">
             <div class="settings-icon" style="background:rgba(248,113,113,.1)">🗑️</div>
@@ -626,6 +667,34 @@
       <div id="jar-section" style="display:none">
         <label class="form-label">Chọn hũ</label>
         <div class="jar-select-grid" id="jar-select-grid"></div>
+
+        <!-- Jar balance info — appears when jar selected -->
+        <div id="jar-balance-info" style="display:none;margin-bottom:14px;">
+          <div style="background:var(--surface2);border-radius:12px;padding:13px 15px;border:1.5px solid var(--border);" id="jar-balance-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span id="jbi-icon" style="font-size:20px;"></span>
+                <span id="jbi-name" style="font-size:13px;font-weight:700;"></span>
+              </div>
+              <div id="jbi-pct-badge" style="font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;"></div>
+            </div>
+            <div style="display:flex;gap:12px;margin-bottom:8px;">
+              <div style="flex:1;">
+                <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Số dư hiện tại</div>
+                <div id="jbi-balance" style="font-size:18px;font-weight:800;"></div>
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Đã chi tháng này</div>
+                <div id="jbi-spent" style="font-size:18px;font-weight:800;color:var(--red);"></div>
+              </div>
+            </div>
+            <div style="background:rgba(255,255,255,.06);border-radius:99px;height:5px;overflow:hidden;margin-bottom:5px;">
+              <div id="jbi-bar" style="height:100%;border-radius:99px;transition:width .4s;"></div>
+            </div>
+            <div id="jbi-warning" style="display:none;margin-top:8px;padding:8px 10px;border-radius:8px;font-size:11px;font-weight:600;line-height:1.5;"></div>
+          </div>
+        </div>
+
         <label class="form-label">Danh mục</label>
         <div class="cat-chips" id="cat-chips"></div>
       </div>
@@ -667,6 +736,71 @@
       <div class="jar-select-grid" id="to-jar-grid"></div>
       <div style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--j6);">⚠️ Khoản mượn nội bộ sẽ được ghi nhận và nhắc bù đắp vào tháng sau.</div>
       <button class="btn-primary" onclick="submitTransfer()">✓ Xác nhận mượn</button>
+    </div>
+  </div>
+
+  <!-- ===== MONTH CLOSE MODAL ===== -->
+  <div class="modal-overlay" id="month-modal">
+    <div class="month-close-modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title" id="mc-title">📅 Chốt tháng</div>
+
+      <!-- Month stats -->
+      <div class="month-stat-row" id="mc-stats"></div>
+
+      <!-- Jar summary -->
+      <div class="sec-title">Tổng kết từng hũ</div>
+      <div id="mc-jar-list"></div>
+
+      <!-- Surplus action choice -->
+      <div class="sec-title" id="mc-surplus-title" style="display:none">Xử lý tiền thừa tháng này</div>
+      <div id="mc-actions" style="display:none">
+        <div class="action-choice selected-choice" id="act-keep" onclick="selectMonthAction('keep')">
+          <div class="action-choice-icon">💰</div>
+          <div class="action-choice-text">
+            <div class="act-title">Giữ nguyên tích lũy (khuyến nghị)</div>
+            <div class="act-desc">Số dư tiếp tục cộng dồn sang tháng sau. Hạn mức reset theo thu nhập mới.</div>
+          </div>
+        </div>
+        <div class="action-choice" id="act-invest" onclick="selectMonthAction('invest')">
+          <div class="action-choice-icon">💎</div>
+          <div class="action-choice-text">
+            <div class="act-title">Chuyển tiền thừa vào Tự do TC</div>
+            <div class="act-desc">Phần dư từ các hũ Thiết yếu + Hưởng thụ + Giáo dục + Từ thiện gộp vào hũ Tự do TC.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- New month income input -->
+      <div id="mc-income-section">
+        <div class="sec-title">Thu nhập tháng <span id="mc-next-month"></span></div>
+        <div class="numpad-display" style="margin-bottom:10px;">
+          <div class="numpad-expr" id="np-expr-mc"></div>
+          <div class="numpad-value zero" id="np-display-mc">₫0</div>
+        </div>
+        <div class="quick-amounts" id="mc-quick-amounts" style="margin-bottom:10px;"></div>
+        <div class="numpad-grid" style="margin-bottom:14px;">
+          <button class="np-btn digit" onclick="npInputMc('7')">7</button>
+          <button class="np-btn digit" onclick="npInputMc('8')">8</button>
+          <button class="np-btn digit" onclick="npInputMc('9')">9</button>
+          <button class="np-btn digit" onclick="npInputMc('4')">4</button>
+          <button class="np-btn digit" onclick="npInputMc('5')">5</button>
+          <button class="np-btn digit" onclick="npInputMc('6')">6</button>
+          <button class="np-btn digit" onclick="npInputMc('1')">1</button>
+          <button class="np-btn digit" onclick="npInputMc('2')">2</button>
+          <button class="np-btn digit" onclick="npInputMc('3')">3</button>
+          <button class="np-btn k-btn" onclick="npInputMc('k')">K</button>
+          <button class="np-btn zero-wide digit" onclick="npInputMc000()">0 0 0</button>
+          <button class="np-btn del" onclick="npDelMc()">⌫</button>
+        </div>
+        <div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:10px;padding:11px 13px;margin-bottom:14px;font-size:11px;color:var(--text2);line-height:1.6;">
+          💡 <strong style="color:var(--text);">Số dư hiện tại được giữ nguyên</strong> — chỉ hạn mức tháng mới được cập nhật theo thu nhập bạn nhập vào.
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="confirmMonthClose()">🎯 Xác nhận chốt tháng</button>
+      <div style="height:8px"></div>
+      <button class="btn-primary" style="background:var(--surface2);color:var(--text2);box-shadow:none;margin-top:0;" onclick="document.getElementById('month-modal').classList.remove('open')">Để sau</button>
     </div>
   </div>
 
@@ -806,6 +940,9 @@ function loadState() {
     txs: [],
     loans: [],
     streak: 0,
+    currentMonth: new Date().getMonth() + 1,
+    currentYear: new Date().getFullYear(),
+    monthHistory: [],
     missions: [
       { id:'m1', title:'Tiêu hết hũ Hưởng thụ có ý nghĩa', target:100, current:0, badge:'🎊', jar:'j4' },
       { id:'m2', title:'Giảm 5% chi tiêu hũ Thiết yếu', target:100, current:60, badge:'📉', jar:'j1' },
@@ -877,6 +1014,7 @@ function renderHome() {
       </div>`;
   });
 
+  updateMonthDisplay();
   // Transactions
   const txList = document.getElementById('tx-list');
   const recent = [...state.txs].reverse().slice(0,8);
@@ -1011,6 +1149,11 @@ function updateNpDisplay() {
   if (document.getElementById('split-section').style.display !== 'none') {
     updateSplitPreview();
   }
+  // refresh jar grid warnings + balance if expense tab open
+  if (document.getElementById('jar-section') && document.getElementById('jar-section').style.display !== 'none') {
+    renderJarSelect();
+    if (selectedJar) updateJarBalanceInfo(selectedJar);
+  }
 }
 
 function renderQuickAmounts() {
@@ -1074,6 +1217,7 @@ function openModal(type) {
   updateNpDisplay();
   renderQuickAmounts();
   document.getElementById('tx-note').value = '';
+  document.getElementById('jar-balance-info').style.display = 'none';
   document.getElementById('modal-title').textContent = type==='income' ? '💰 Thêm thu nhập' : '💸 Ghi chi tiêu';
 
   // type toggle
@@ -1120,14 +1264,40 @@ function updateSplitPreview() {
   });
 }
 
+function getJarStatus(jarId) {
+  const jar = state.jars[jarId];
+  const bal = jar.balance || 0;
+  const lim = jar.limit || 0;
+  const spent = Math.max(0, lim - bal);
+  const pct = lim > 0 ? Math.round(spent / lim * 100) : 0;
+  return { bal, lim, spent, pct,
+    isOver: pct >= 100,
+    isNear: pct >= 75 && pct < 100,
+    barColor: pct >= 100 ? 'linear-gradient(90deg,#ef4444,#dc2626)' : pct >= 75 ? 'linear-gradient(90deg,#f59e0b,#d97706)' : 'linear-gradient(90deg,#22c55e,#16a34a)'
+  };
+}
+
 function renderJarSelect() {
   const grid = document.getElementById('jar-select-grid');
   grid.innerHTML = '';
+  const txAmount = parseNpExpr(npExpr) || 0;
   JARS.forEach(j => {
+    const st = getJarStatus(j.id);
+    const afterSpend = st.lim > 0 ? Math.round(((st.spent + txAmount) / st.lim) * 100) : 0;
+    const wouldOver = txAmount > 0 && afterSpend >= 100;
+    const wouldNear = txAmount > 0 && afterSpend >= 75 && !wouldOver;
+    let cls = '';
+    if (wouldOver || st.isOver) cls = 'over-limit';
+    else if (wouldNear || st.isNear) cls = 'near-limit';
+    const badge = st.isOver ? '🚫' : st.isNear ? '⚠️' : '';
+    const balColor = st.isOver ? 'var(--red)' : st.isNear ? 'var(--yellow)' : 'var(--green)';
     grid.innerHTML += `
-      <div class="jar-sel" id="jsel-${j.id}" onclick="selectJar('${j.id}')">
+      <div class="jar-sel ${cls}" id="jsel-${j.id}" onclick="selectJar('${j.id}')">
+        ${badge ? `<div class="jar-warn-badge" style="background:${st.isOver?'var(--red)':'var(--yellow)'};color:#000">${badge}</div>` : ''}
         <div class="icon">${j.icon}</div>
         <div class="lbl">${j.name}</div>
+        <div class="bal" style="color:${balColor}">₫${fmt(st.bal)}</div>
+        <div class="minibar"><div class="minibar-fill" style="width:${Math.min(100,st.pct)}%;background:${st.barColor}"></div></div>
       </div>`;
   });
 }
@@ -1137,6 +1307,82 @@ function selectJar(id) {
   document.querySelectorAll('.jar-sel').forEach(el => el.classList.remove('selected'));
   document.getElementById('jsel-'+id).classList.add('selected');
   renderCatChips(id);
+  updateJarBalanceInfo(id);
+}
+
+function updateJarBalanceInfo(id) {
+  const jar = JARS.find(j => j.id === id);
+  const st = getJarStatus(id);
+  const txAmount = parseNpExpr(npExpr) || 0;
+  const afterPct = st.lim > 0 ? Math.round(((st.spent + txAmount) / st.lim) * 100) : 0;
+
+  const box = document.getElementById('jar-balance-info');
+  const card = document.getElementById('jar-balance-card');
+  box.style.display = 'block';
+
+  document.getElementById('jbi-icon').textContent = jar.icon;
+  document.getElementById('jbi-name').textContent = jar.name;
+  document.getElementById('jbi-balance').textContent = '₫' + fmtFull(st.bal);
+  document.getElementById('jbi-balance').style.color = st.isOver ? 'var(--red)' : 'var(--text)';
+  document.getElementById('jbi-spent').textContent = '₫' + fmtFull(st.spent);
+  document.getElementById('jbi-bar').style.width = Math.min(100, txAmount > 0 ? afterPct : st.pct) + '%';
+  document.getElementById('jbi-bar').style.background = st.barColor || 'var(--j1g)';
+
+  // PCT badge
+  const badge = document.getElementById('jbi-pct-badge');
+  const displayPct = txAmount > 0 ? afterPct : st.pct;
+  if (displayPct >= 100) {
+    badge.textContent = '🚫 Vượt ' + (displayPct - 100) + '%';
+    badge.style.background = 'rgba(248,113,113,.2)';
+    badge.style.color = 'var(--red)';
+    card.style.borderColor = 'rgba(248,113,113,.4)';
+  } else if (displayPct >= 75) {
+    badge.textContent = '⚠️ ' + displayPct + '%';
+    badge.style.background = 'rgba(251,191,36,.2)';
+    badge.style.color = 'var(--yellow)';
+    card.style.borderColor = 'rgba(251,191,36,.35)';
+  } else {
+    badge.textContent = displayPct + '%' + (st.lim > 0 ? '' : ' • Chưa có hạn mức');
+    badge.style.background = 'rgba(74,222,128,.15)';
+    badge.style.color = 'var(--green)';
+    card.style.borderColor = 'var(--border)';
+  }
+
+  // Warning message
+  const warn = document.getElementById('jbi-warning');
+  if (st.bal <= 0) {
+    warn.style.display = 'block';
+    warn.style.background = 'rgba(248,113,113,.12)';
+    warn.style.color = 'var(--red)';
+    warn.style.borderLeft = '3px solid var(--red)';
+    warn.textContent = '🚫 Hũ đã cạn! Số dư = ₫0. Không thể chi tiêu từ hũ này.';
+  } else if (txAmount > 0 && txAmount > st.bal) {
+    warn.style.display = 'block';
+    warn.style.background = 'rgba(248,113,113,.12)';
+    warn.style.color = 'var(--red)';
+    warn.style.borderLeft = '3px solid var(--red)';
+    warn.textContent = '🚫 Số tiền chi (' + fmtFull(txAmount) + '₫) vượt số dư hũ (' + fmtFull(st.bal) + '₫)!';
+  } else if (txAmount > 0 && afterPct >= 100) {
+    warn.style.display = 'block';
+    warn.style.background = 'rgba(248,113,113,.12)';
+    warn.style.color = 'var(--red)';
+    warn.style.borderLeft = '3px solid var(--red)';
+    warn.textContent = '⛔ Chi tiêu này sẽ vượt ngân sách hũ ' + jar.name + ' thêm ' + fmtFull(txAmount - (st.lim - st.spent)) + '₫!';
+  } else if (txAmount > 0 && afterPct >= 75) {
+    warn.style.display = 'block';
+    warn.style.background = 'rgba(251,191,36,.1)';
+    warn.style.color = 'var(--yellow)';
+    warn.style.borderLeft = '3px solid var(--yellow)';
+    warn.textContent = '⚠️ Sau khi chi, hũ ' + jar.name + ' sẽ dùng ' + afterPct + '% ngân sách. Còn lại: ₫' + fmtFull(Math.max(0, st.bal - txAmount)) + '.';
+  } else if (st.isOver) {
+    warn.style.display = 'block';
+    warn.style.background = 'rgba(248,113,113,.1)';
+    warn.style.color = 'var(--red)';
+    warn.style.borderLeft = '3px solid var(--red)';
+    warn.textContent = '⛔ Hũ ' + jar.name + ' đã vượt ngân sách tháng này!';
+  } else {
+    warn.style.display = 'none';
+  }
 }
 
 function renderCatChips(jarId) {
@@ -1181,8 +1427,9 @@ function submitTx() {
       JARS.forEach(j => {
         const val = Math.round(amount * state.ratios[j.id] / 100);
         state.jars[j.id].balance += val;
-        if (state.jars[j.id].limit === 0) state.jars[j.id].limit = val * 1.5;
-        else state.jars[j.id].limit += val;
+        // Limit = portion from this income (reset each time income entered this month)
+        // balance accumulates; limit is set fresh per income entry
+        state.jars[j.id].limit = val;
       });
       state.txs.push({ type:'income', amount, note:note||'Thu nhập', date:dateStr, jar:null, cat:'Thu nhập' });
       showToast('✅ Đã phân bổ vào 6 hũ!');
@@ -1198,12 +1445,39 @@ function submitTx() {
   };
 
   // Warning for protected jars
-  if (currentType === 'expense' && selectedJar && PROTECTED.includes(selectedJar)) {
+  if (currentType === 'expense' && selectedJar) {
     const jar = JARS.find(j=>j.id===selectedJar);
-    showAlert('⚠️ Vi phạm kỷ luật!',
-      `Bạn đang dùng hũ "${jar.name}" để chi tiêu thường ngày. Đây là hũ quan trọng cần được bảo vệ!`,
-      (confirmed) => { if (confirmed) doSubmit(); });
-    return;
+    const st = getJarStatus(selectedJar);
+
+    if (amount > st.bal) {
+      showAlert('🚫 Không đủ số dư!',
+        'Hũ ' + jar.icon + ' ' + jar.name + ' chỉ còn ₫' + fmtFull(st.bal) + ' nhưng bạn muốn chi ₫' + fmtFull(amount) + '. Hãy giảm số tiền hoặc mượn từ hũ khác.',
+        (confirmed) => { if (confirmed) doSubmit(); });
+      return;
+    }
+
+    const afterPct = st.lim > 0 ? Math.round(((st.spent + amount) / st.lim) * 100) : 0;
+    if (afterPct >= 100 && st.lim > 0) {
+      const over = amount - (st.lim - st.spent);
+      showAlert('⛔ Vượt ngân sách hũ!',
+        'Chi tiêu này sẽ vượt ngân sách hũ ' + jar.icon + ' ' + jar.name + ' thêm ₫' + fmtFull(over) + ' (' + afterPct + '%). Số dư còn: ₫' + fmtFull(st.bal) + '. Vẫn tiếp tục?',
+        (confirmed) => {
+          if (!confirmed) return;
+          if (PROTECTED.includes(selectedJar)) {
+            showAlert('⚠️ Vi phạm kỷ luật!',
+              'Hũ ' + jar.name + ' là hũ quan trọng. Xác nhận lần cuối?',
+              (c2) => { if (c2) doSubmit(); });
+          } else { doSubmit(); }
+        });
+      return;
+    }
+
+    if (PROTECTED.includes(selectedJar)) {
+      showAlert('⚠️ Vi phạm kỷ luật!',
+        'Bạn đang dùng hũ "' + jar.name + '" để chi tiêu thường ngày. Đây là hũ quan trọng cần được bảo vệ!',
+        (confirmed) => { if (confirmed) doSubmit(); });
+      return;
+    }
   }
   doSubmit();
 }
@@ -1614,6 +1888,211 @@ setInterval(() => {
     sub.textContent = 'Lưu lần cuối: ' + now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
   }
 }, 30000);
+
+// ===== MONTH CLOSE =====
+let npMcExpr = '';
+let selectedMonthAction = 'keep';
+
+const MONTH_NAMES = ['','Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
+  'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+
+function openMonthClose() {
+  npMcExpr = '';
+  selectedMonthAction = 'keep';
+  updateNpMcDisplay();
+  renderMonthCloseModal();
+  document.getElementById('month-modal').classList.add('open');
+}
+
+function renderMonthCloseModal() {
+  const m = state.currentMonth || (new Date().getMonth() + 1);
+  const y = state.currentYear || new Date().getFullYear();
+  const nextM = m === 12 ? 1 : m + 1;
+  const nextY = m === 12 ? y + 1 : y;
+
+  document.getElementById('mc-title').textContent = '📅 Chốt ' + MONTH_NAMES[m] + ' ' + y;
+  document.getElementById('mc-next-month').textContent = MONTH_NAMES[nextM] + ' ' + nextY;
+
+  // Stats
+  const monthTxs = state.txs.filter(t => {
+    // all txs (simple: use all if no month tagging yet)
+    return true;
+  });
+  const totalIncome = state.txs.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
+  const totalExpense = state.txs.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
+  const totalBalance = Object.values(state.jars).reduce((s, j) => s + j.balance, 0);
+  const totalSaved = JARS.filter(j => ['j2','j3'].includes(j.id))
+    .reduce((s, j) => s + state.jars[j.id].balance, 0);
+
+  document.getElementById('mc-stats').innerHTML =
+    '<div class="month-stat"><div class="month-stat-val" style="color:var(--green)">₫' + fmt(totalIncome) + '</div><div class="month-stat-lbl">Tổng thu</div></div>' +
+    '<div class="month-stat"><div class="month-stat-val" style="color:var(--red)">₫' + fmt(totalExpense) + '</div><div class="month-stat-lbl">Tổng chi</div></div>' +
+    '<div class="month-stat"><div class="month-stat-val" style="color:var(--j2)">₫' + fmt(totalBalance) + '</div><div class="month-stat-lbl">Tổng dư</div></div>';
+
+  // Jar list
+  let jarHtml = '';
+  let hasSurplus = false;
+  JARS.forEach(j => {
+    const st = getJarStatus(j.id);
+    const bal = state.jars[j.id].balance;
+    const saved = bal; // balance = accumulated surplus
+    if (bal > 0) hasSurplus = true;
+    const statusColor = bal > 0 ? 'var(--green)' : 'var(--text3)';
+    const savedLabel = bal > 0
+      ? '<span style="color:var(--green);font-size:10px;">+₫' + fmt(bal) + ' tích lũy</span>'
+      : '<span style="color:var(--text3);font-size:10px;">Đã dùng hết</span>';
+    const lim = state.jars[j.id].limit;
+    const spentPct = lim > 0 ? Math.min(100, Math.round((lim - bal) / lim * 100)) : 0;
+    jarHtml +=
+      '<div class="summary-jar-row">' +
+        '<div class="sj-icon">' + j.icon + '</div>' +
+        '<div class="sj-name">' + j.name +
+          '<div style="background:rgba(255,255,255,.06);border-radius:99px;height:3px;overflow:hidden;margin-top:5px;width:80px;">' +
+            '<div style="height:100%;border-radius:99px;width:' + (100-spentPct) + '%;background:' + (bal>0?'var(--green)':'var(--text3)') + '"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="sj-nums">' +
+          '<div class="sj-balance" style="color:' + statusColor + '">₫' + fmt(bal) + '</div>' +
+          '<div class="sj-saved">' + savedLabel + '</div>' +
+        '</div>' +
+      '</div>';
+  });
+  document.getElementById('mc-jar-list').innerHTML = jarHtml;
+
+  // Show surplus actions if any jar has balance
+  document.getElementById('mc-surplus-title').style.display = hasSurplus ? 'block' : 'none';
+  document.getElementById('mc-actions').style.display = hasSurplus ? 'block' : 'none';
+
+  // Quick amounts
+  renderMcQuickAmounts();
+
+  // Update dashboard month display
+  updateMonthDisplay();
+}
+
+function updateMonthDisplay() {
+  const m = state.currentMonth || (new Date().getMonth() + 1);
+  const y = state.currentYear || new Date().getFullYear();
+  const subEl = document.getElementById('wisdom-sub');
+  if (subEl && !subEl.querySelector('span')) {
+    subEl.textContent = MONTH_NAMES[m] + ' • ' + y;
+  }
+  const closeSub = document.getElementById('month-close-sub');
+  if (closeSub) closeSub.textContent = 'Đang ở ' + MONTH_NAMES[m] + ' ' + y + ' • Nhấn để chốt tháng';
+}
+
+function selectMonthAction(act) {
+  selectedMonthAction = act;
+  ['keep','invest'].forEach(a => {
+    document.getElementById('act-' + a).classList.toggle('selected-choice', a === act);
+  });
+}
+
+function confirmMonthClose() {
+  const newIncome = parseNpExpr(npMcExpr);
+  if (!newIncome || newIncome <= 0) {
+    showToast('⚠️ Nhập thu nhập tháng mới!');
+    return;
+  }
+
+  const m = state.currentMonth || (new Date().getMonth() + 1);
+  const y = state.currentYear || new Date().getFullYear();
+
+  // Snapshot month history
+  const snapshot = {
+    month: m, year: y,
+    jars: JSON.parse(JSON.stringify(state.jars)),
+    txCount: state.txs.length,
+    totalIncome: state.txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0),
+    totalExpense: state.txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0),
+    closedAt: new Date().toISOString(),
+  };
+  if (!state.monthHistory) state.monthHistory = [];
+  state.monthHistory.push(snapshot);
+
+  // Handle surplus action
+  if (selectedMonthAction === 'invest') {
+    // Transfer surplus from spending jars to j2 (Tự do TC)
+    const spendingJars = ['j1','j4','j5','j6'];
+    let transferred = 0;
+    spendingJars.forEach(jid => {
+      const bal = state.jars[jid].balance;
+      if (bal > 0) {
+        state.jars['j2'].balance += bal;
+        state.jars[jid].balance = 0;
+        transferred += bal;
+      }
+    });
+    if (transferred > 0) {
+      state.txs.push({
+        type: 'income', amount: transferred,
+        note: 'Chuyển tiền thừa → Tự do TC (chốt ' + MONTH_NAMES[m] + ')',
+        date: '1/' + (m===12?1:m+1), jar: 'j2', cat: 'Chốt tháng'
+      });
+    }
+  }
+  // If 'keep': balances stay as-is (already accumulating)
+
+  // Reset limits based on new income, keep balances
+  const nextM = m === 12 ? 1 : m + 1;
+  const nextY = m === 12 ? y + 1 : y;
+  JARS.forEach(j => {
+    const newLimit = Math.round(newIncome * state.ratios[j.id] / 100);
+    state.jars[j.id].limit = newLimit;
+    state.jars[j.id].balance += newLimit; // add new month income portion to balance
+  });
+
+  // Log new income tx
+  state.txs.push({
+    type: 'income', amount: newIncome,
+    note: 'Thu nhập ' + MONTH_NAMES[nextM] + ' ' + nextY,
+    date: '1/' + nextM, jar: null, cat: 'Thu nhập'
+  });
+
+  // Advance month
+  state.currentMonth = nextM;
+  state.currentYear = nextY;
+  state.streak = (state.streak || 0) + 1;
+
+  saveState();
+  renderHome();
+  updateMonthDisplay();
+  document.getElementById('month-modal').classList.remove('open');
+
+  const actionLabel = selectedMonthAction === 'invest' ? 'Tiền thừa → Tự do TC' : 'Số dư tích lũy';
+  showToast('🎉 Chốt ' + MONTH_NAMES[m] + ' thành công! ' + actionLabel + '.');
+}
+
+// Numpad for month close
+function npInputMc(ch) {
+  const ops = ['+','-'], last = npMcExpr.slice(-1);
+  if (ch==='0' && !npMcExpr) return;
+  if (ops.includes(ch) && ops.includes(last)) { npMcExpr = npMcExpr.slice(0,-1)+ch; }
+  else if (ch==='k'||ch==='m') {
+    if (/[\dk]/.test(last)) { if (last==='k'||last==='m') npMcExpr=npMcExpr.slice(0,-1); npMcExpr+=ch; }
+  } else { npMcExpr+=ch; }
+  updateNpMcDisplay();
+}
+function npInputMc000() { if(!npMcExpr) return; const l=npMcExpr.slice(-1); if(['+','-','k','m'].includes(l)) return; npMcExpr+='000'; updateNpMcDisplay(); }
+function npDelMc() { npMcExpr=npMcExpr.slice(0,-1); updateNpMcDisplay(); }
+function updateNpMcDisplay() {
+  const val = parseNpExpr(npMcExpr);
+  const disp = document.getElementById('np-display-mc');
+  const expr = document.getElementById('np-expr-mc');
+  if (!disp) return;
+  if (expr) expr.textContent = /[+\-]/.test(npMcExpr) ? npMcExpr : '';
+  disp.textContent = val > 0 ? '₫' + val.toLocaleString('vi-VN') : '₫0';
+  disp.className = 'numpad-value ' + (val > 0 ? 'has-value' : 'zero');
+}
+function renderMcQuickAmounts() {
+  const c2 = document.getElementById('mc-quick-amounts');
+  if (!c2) return;
+  c2.innerHTML = '';
+  QUICK_AMOUNTS.forEach(q => {
+    c2.innerHTML += '<button class="qa-btn add" onclick="npInputMc(\'' + q.val + '\')">' + q.label + '</button>';
+  });
+  c2.innerHTML += '<button class="qa-btn" style="color:var(--red);border-color:rgba(248,113,113,.2);" onclick="npMcExpr=\'\';updateNpMcDisplay()">✕</button>';
+}
 
 // ===== INIT =====
 
