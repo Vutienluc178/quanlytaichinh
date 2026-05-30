@@ -468,6 +468,88 @@
   .progress-bar-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#3b82f6,#6d28d9); transition:width .4s ease; }
 
   /* warning bar color thresholds */
+  /* ===== NOTES / TODO ===== */
+  .note-input-wrap { display:flex; gap:8px; margin-bottom:14px; align-items:flex-end; }
+  .note-textarea {
+    flex:1; background:var(--surface2); border:1.5px solid var(--border); border-radius:14px;
+    padding:12px 14px; color:var(--text); font-family:inherit; font-size:13px; line-height:1.5;
+    resize:none; outline:none; min-height:46px; max-height:120px; overflow-y:auto;
+    transition:border-color .2s;
+  }
+  .note-textarea:focus { border-color:var(--j2); }
+  .note-textarea::placeholder { color:var(--text3); }
+  .note-add-btn {
+    width:46px; height:46px; border-radius:14px; border:none; flex-shrink:0;
+    background:linear-gradient(135deg,#3b82f6,#6d28d9); color:#fff;
+    font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:transform .15s; box-shadow:0 4px 12px rgba(59,130,246,.3);
+  }
+  .note-add-btn:active { transform:scale(.92); }
+
+  .note-filters { display:flex; gap:6px; margin-bottom:12px; overflow-x:auto; padding-bottom:2px; }
+  .note-filters::-webkit-scrollbar { display:none; }
+
+  .note-card {
+    background:var(--surface); border-radius:14px; padding:14px;
+    margin-bottom:10px; border:1px solid var(--border);
+    display:flex; gap:10px; align-items:flex-start;
+    transition:all .2s; position:relative; overflow:hidden;
+  }
+  .note-card.done { opacity:.5; }
+  .note-card.done .note-text { text-decoration:line-through; color:var(--text3); }
+  .note-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; }
+  .note-card.priority-high::before { background:var(--red); }
+  .note-card.priority-med::before { background:var(--yellow); }
+  .note-card.priority-low::before { background:var(--green); }
+  .note-card.type-finance::before { background:var(--j2); }
+  .note-card.type-goal::before { background:var(--j5); }
+  .note-card.type-remind::before { background:var(--j4); }
+
+  .note-check {
+    width:22px; height:22px; border-radius:6px; border:2px solid var(--border);
+    flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-size:12px; transition:all .15s; margin-top:1px;
+  }
+  .note-check.checked { background:var(--green); border-color:var(--green); color:#fff; }
+  .note-content { flex:1; min-width:0; }
+  .note-text { font-size:13px; line-height:1.6; word-break:break-word; }
+  .note-meta { display:flex; gap:8px; align-items:center; margin-top:6px; flex-wrap:wrap; }
+  .note-tag { font-size:9px; font-weight:800; padding:2px 8px; border-radius:99px; text-transform:uppercase; letter-spacing:.4px; }
+  .note-date { font-size:10px; color:var(--text3); }
+  .note-jar-link { font-size:10px; padding:2px 8px; border-radius:99px; background:rgba(96,165,250,.12); color:var(--j2); font-weight:700; cursor:pointer; }
+  .note-actions { display:flex; flex-direction:column; gap:6px; flex-shrink:0; }
+  .note-act-btn { background:none; border:none; cursor:pointer; font-size:15px; padding:2px; opacity:.5; transition:opacity .15s; }
+  .note-act-btn:hover { opacity:1; }
+
+  .note-empty { text-align:center; padding:40px 20px; color:var(--text3); }
+  .note-empty-icon { font-size:44px; margin-bottom:12px; }
+  .note-empty-text { font-size:13px; line-height:1.7; }
+
+  .ai-suggest-btn {
+    width:100%; padding:13px; border:1.5px dashed rgba(167,139,250,.35); border-radius:12px;
+    background:rgba(167,139,250,.05); color:var(--j5); font-family:inherit; font-size:12px;
+    font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    gap:8px; margin-bottom:14px; transition:all .2s;
+  }
+  .ai-suggest-btn:active { background:rgba(167,139,250,.12); }
+
+  .smart-chip-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+  .smart-chip {
+    padding:6px 12px; border-radius:99px; font-size:11px; font-weight:600;
+    background:var(--surface2); border:1px solid var(--border); cursor:pointer;
+    transition:all .15s; display:flex; align-items:center; gap:5px;
+  }
+  .smart-chip:active { transform:scale(.95); }
+
+  /* note detail modal */
+  .note-detail-modal { background:var(--surface); border-radius:28px 28px 0 0; width:100%; padding:0 20px 32px; max-height:80%; overflow-y:auto; animation:slideUp .25s ease; }
+  .priority-btn { flex:1; padding:10px 6px; border-radius:10px; border:1.5px solid var(--border); background:var(--surface2); cursor:pointer; font-family:inherit; font-size:11px; font-weight:700; text-align:center; transition:all .15s; }
+  .priority-btn.sel-high { border-color:var(--red); background:rgba(248,113,113,.12); color:var(--red); }
+  .priority-btn.sel-med { border-color:var(--yellow); background:rgba(251,191,36,.12); color:var(--yellow); }
+  .priority-btn.sel-low { border-color:var(--green); background:rgba(74,222,128,.12); color:var(--green); }
+
+  [data-theme="light"] .note-card { box-shadow:0 1px 6px rgba(0,0,0,.05); }
+
   .bar-ok { background:var(--j1g); }
   .bar-warn { background:linear-gradient(90deg,#f59e0b,#d97706); }
   .bar-danger { background:linear-gradient(90deg,#ef4444,#dc2626); }
@@ -694,6 +776,102 @@
   </div>
 
   <!-- ===== NAV ===== -->
+  <!-- ===== NOTES SCREEN ===== -->
+  <div class="screen" id="screen-notes">
+    <div style="padding:0 16px;flex-shrink:0;">
+      <div class="page-header">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div class="page-title">Ghi chú 📝</div>
+            <div class="page-sub" id="note-count-sub">0 việc cần làm</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="openNoteAI()" style="background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.25);border-radius:10px;padding:7px 12px;color:var(--j5);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;">✨ Gợi ý AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick input -->
+      <div class="note-input-wrap">
+        <textarea class="note-textarea" id="note-quick-input" placeholder="Ghi nhanh việc cần làm... (Enter để lưu)" rows="1"
+          oninput="autoResizeTA(this)" onkeydown="noteQuickEnter(event)"></textarea>
+        <button class="note-add-btn" onclick="addNoteQuick()">＋</button>
+      </div>
+
+      <!-- Smart chips -->
+      <div class="smart-chip-row" id="smart-chips">
+        <div class="smart-chip" onclick="addChipNote('💸 Chuyển tiền vào hũ Tự do TC')">💸 Chuyển vào hũ</div>
+        <div class="smart-chip" onclick="addChipNote('📊 Xem lại báo cáo tháng này')">📊 Xem báo cáo</div>
+        <div class="smart-chip" onclick="addChipNote('📅 Chốt tháng và nhập thu nhập mới')">📅 Chốt tháng</div>
+        <div class="smart-chip" onclick="addChipNote('☁️ Sao lưu dữ liệu tháng này')">☁️ Sao lưu</div>
+        <div class="smart-chip" onclick="addChipNote('💰 Kiểm tra các khoản nợ nội bộ giữa hũ')">🔄 Kiểm tra nợ hũ</div>
+      </div>
+
+      <!-- Filters -->
+      <div class="note-filters" id="note-filters">
+        <button class="rtab active" onclick="filterNotes('all',this)">Tất cả</button>
+        <button class="rtab" onclick="filterNotes('todo',this)">📋 Chưa xong</button>
+        <button class="rtab" onclick="filterNotes('done',this)">✅ Hoàn thành</button>
+        <button class="rtab" onclick="filterNotes('high',this)">🔴 Khẩn</button>
+        <button class="rtab" onclick="filterNotes('finance',this)">💰 Tài chính</button>
+        <button class="rtab" onclick="filterNotes('goal',this)">🎯 Mục tiêu</button>
+      </div>
+    </div>
+
+    <div class="scroll">
+      <div id="notes-list"></div>
+    </div>
+  </div>
+
+  <!-- NOTE DETAIL MODAL -->
+  <div class="modal-overlay" id="note-modal">
+    <div class="note-detail-modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title" id="note-modal-title">✏️ Chỉnh sửa ghi chú</div>
+
+      <label class="form-label">Nội dung</label>
+      <textarea class="form-input" id="note-edit-text" style="min-height:80px;resize:none;line-height:1.6;" placeholder="Nội dung ghi chú..."></textarea>
+
+      <label class="form-label">Loại</label>
+      <div style="display:flex;gap:6px;margin-bottom:16px;">
+        <button class="priority-btn" id="type-btn-finance" onclick="selectNoteType('finance')">💰 Tài chính</button>
+        <button class="priority-btn" id="type-btn-goal" onclick="selectNoteType('goal')">🎯 Mục tiêu</button>
+        <button class="priority-btn" id="type-btn-remind" onclick="selectNoteType('remind')">🔔 Nhắc nhở</button>
+        <button class="priority-btn" id="type-btn-other" onclick="selectNoteType('other')">📝 Khác</button>
+      </div>
+
+      <label class="form-label">Ưu tiên</label>
+      <div style="display:flex;gap:6px;margin-bottom:16px;">
+        <button class="priority-btn" id="prio-high" onclick="selectNotePrio('high')">🔴 Khẩn</button>
+        <button class="priority-btn" id="prio-med" onclick="selectNotePrio('med')">🟡 Bình thường</button>
+        <button class="priority-btn" id="prio-low" onclick="selectNotePrio('low')">🟢 Thấp</button>
+      </div>
+
+      <label class="form-label">Liên kết hũ (tuỳ chọn)</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;" id="note-jar-chips">
+        <div class="smart-chip" id="njc-none" onclick="selectNoteJar(null)" style="border-color:var(--j2);">Không liên kết</div>
+      </div>
+
+      <label class="form-label">Hạn hoàn thành (tuỳ chọn)</label>
+      <input type="date" id="note-due" class="form-input" style="color-scheme:dark;">
+
+      <button class="btn-primary" onclick="saveNoteEdit()">✓ Lưu ghi chú</button>
+      <div style="height:8px;"></div>
+      <button id="note-delete-btn" class="btn-primary" style="background:rgba(248,113,113,.15);color:var(--red);box-shadow:none;border:1px solid rgba(248,113,113,.2);" onclick="deleteNote()">🗑️ Xóa ghi chú</button>
+    </div>
+  </div>
+
+  <!-- AI SUGGEST MODAL -->
+  <div class="modal-overlay" id="ai-note-modal">
+    <div class="note-detail-modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">✨ Gợi ý việc cần làm</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6;">Dựa trên tình trạng tài chính hiện tại của bạn:</div>
+      <div id="ai-suggestions"></div>
+      <button class="btn-primary" style="background:var(--surface2);color:var(--text2);box-shadow:none;" onclick="document.getElementById('ai-note-modal').classList.remove('open')">Đóng</button>
+    </div>
+  </div>
+
   <!-- ===== TIPS SCREEN ===== -->
   <div class="screen" id="screen-tips">
     <div style="padding:0 16px;flex-shrink:0;">
@@ -749,6 +927,10 @@
     <button class="nav-btn" onclick="goScreen('game',this)">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
       Thành tích
+    </button>
+    <button class="nav-btn" onclick="goScreen('notes',this)" id="nav-notes">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+      <span style="position:relative;">Ghi chú<span id="note-badge" style="display:none;position:absolute;top:-8px;right:-10px;background:var(--red);color:#fff;font-size:8px;font-weight:800;padding:1px 4px;border-radius:99px;min-width:14px;text-align:center;"></span></span>
     </button>
     <button class="nav-btn" onclick="goScreen('settings',this)">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -1096,6 +1278,7 @@ function loadState() {
     txs: [],
     loans: [],
     streak: 0,
+    notes: [],
     currentMonth: new Date().getMonth() + 1,
     currentYear: new Date().getFullYear(),
     monthHistory: [],
@@ -1131,10 +1314,11 @@ function goScreen(id, btn) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-'+id).classList.add('active');
-  btn.classList.add('active');
+  if (btn) btn.classList.add('active');
   if (id==='reports') renderReports('month');
   if (id==='game') renderGame();
   if (id==='settings') renderSettings();
+  if (id==='notes') renderNotes();
 }
 
 // ===== RENDER HOME =====
@@ -1171,6 +1355,7 @@ function renderHome() {
   });
 
   updateMonthDisplay();
+  renderNotes(); // keep badge updated
   // Transactions
   const txList = document.getElementById('tx-list');
   const recent = [...state.txs].reverse().slice(0,8);
@@ -2483,6 +2668,298 @@ function wisdomToast() {
   t.style.lineHeight = '1.5';
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 5000);
+}
+
+// ===== NOTES =====
+if (!state.notes) state.notes = [];
+
+const NOTE_TYPES = {
+  finance: { label:'💰 Tài chính', color:'var(--j2)', bg:'rgba(96,165,250,.12)' },
+  goal:    { label:'🎯 Mục tiêu',  color:'var(--j5)', bg:'rgba(167,139,250,.12)' },
+  remind:  { label:'🔔 Nhắc nhở', color:'var(--j4)', bg:'rgba(251,146,60,.12)' },
+  other:   { label:'📝 Khác',      color:'var(--text2)', bg:'rgba(255,255,255,.07)' },
+};
+const PRIO_COLORS = { high:'var(--red)', med:'var(--yellow)', low:'var(--green)' };
+const PRIO_LABELS = { high:'🔴 Khẩn', med:'🟡 Thường', low:'🟢 Thấp' };
+
+let noteFilter = 'all';
+let editingNoteId = null;
+let editNoteType = 'other';
+let editNotePrio = 'med';
+let editNoteJar  = null;
+
+function renderNotes() {
+  const all = state.notes || [];
+  const todo = all.filter(n => !n.done).length;
+  const high = all.filter(n => !n.done && n.prio === 'high').length;
+
+  // sub label
+  const sub = document.getElementById('note-count-sub');
+  if (sub) sub.textContent = todo + ' việc cần làm' + (high ? ' • 🔴 ' + high + ' khẩn' : '');
+
+  // badge on nav
+  const badge = document.getElementById('note-badge');
+  if (badge) { badge.style.display = todo > 0 ? 'inline' : 'none'; badge.textContent = todo > 9 ? '9+' : todo; }
+
+  // filter
+  let list = [...all];
+  if (noteFilter === 'todo')    list = list.filter(n => !n.done);
+  else if (noteFilter === 'done') list = list.filter(n => n.done);
+  else if (noteFilter === 'high') list = list.filter(n => n.prio === 'high' && !n.done);
+  else if (noteFilter === 'finance') list = list.filter(n => n.type === 'finance');
+  else if (noteFilter === 'goal')    list = list.filter(n => n.type === 'goal');
+
+  // sort: high prio first, then by creation time desc
+  list.sort((a,b) => {
+    if (!a.done && b.done) return -1;
+    if (a.done && !b.done) return 1;
+    const pOrder = {high:0,med:1,low:2};
+    if (!a.done && (pOrder[a.prio]||1) !== (pOrder[b.prio]||1)) return (pOrder[a.prio]||1) - (pOrder[b.prio]||1);
+    return (b.createdAt||0) - (a.createdAt||0);
+  });
+
+  const container = document.getElementById('notes-list');
+  if (!container) return;
+
+  if (!list.length) {
+    container.innerHTML =
+      '<div class="note-empty">' +
+        '<div class="note-empty-icon">' + (noteFilter==='done'?'🎉':'📝') + '</div>' +
+        '<div class="note-empty-text">' +
+          (noteFilter==='done' ? 'Chưa hoàn thành việc nào.<br>Tiếp tục cố gắng nhé! 💪' :
+           noteFilter==='high' ? 'Không có việc khẩn cấp. Tuyệt vời! 🎉' :
+           'Chưa có ghi chú nào.<br>Nhập nhanh ở ô trên hoặc chọn gợi ý nhanh.') +
+        '</div>' +
+      '</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  list.forEach(note => {
+    const type = NOTE_TYPES[note.type] || NOTE_TYPES.other;
+    const jar  = note.jar ? JARS.find(j => j.id === note.jar) : null;
+    const due  = note.due ? new Date(note.due) : null;
+    const now  = new Date(); now.setHours(0,0,0,0);
+    const isOverdue = due && !note.done && due < now;
+    const isDueToday = due && !note.done && due.toDateString() === now.toDateString();
+    const dueFmt = due ? due.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'}) : '';
+
+    container.innerHTML +=
+      '<div class="note-card priority-' + note.prio + ' type-' + note.type + (note.done?' done':'') + '" id="nc-'+note.id+'">' +
+        '<div class="note-check ' + (note.done?'checked':'') + '" onclick="toggleNote(\'' + note.id + '\')">' + (note.done?'✓':'') + '</div>' +
+        '<div class="note-content" onclick="openNoteEdit(\'' + note.id + '\')">' +
+          '<div class="note-text">' + escapeHtml(note.text) + '</div>' +
+          '<div class="note-meta">' +
+            '<span class="note-tag" style="background:' + type.bg + ';color:' + type.color + ';">' + type.label + '</span>' +
+            (note.prio !== 'med' ? '<span class="note-tag" style="background:rgba(255,255,255,.06);color:' + PRIO_COLORS[note.prio] + ';">' + PRIO_LABELS[note.prio] + '</span>' : '') +
+            (jar ? '<span class="note-jar-link">' + jar.icon + ' ' + jar.name + '</span>' : '') +
+            (due ? '<span class="note-date" style="' + (isOverdue?'color:var(--red);font-weight:700;':isDueToday?'color:var(--yellow);font-weight:700;':'') + '">' + (isOverdue?'⏰ Trễ: ':isDueToday?'📅 Hôm nay: ':'📅 ') + dueFmt + '</span>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="note-actions">' +
+          '<button class="note-act-btn" onclick="openNoteEdit(\'' + note.id + '\')" title="Sửa">✏️</button>' +
+          '<button class="note-act-btn" onclick="quickDeleteNote(\'' + note.id + '\')" title="Xóa">🗑️</button>' +
+        '</div>' +
+      '</div>';
+  });
+}
+
+function escapeHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function addNoteQuick() {
+  const ta = document.getElementById('note-quick-input');
+  const text = ta.value.trim();
+  if (!text) return;
+  const note = { id: Date.now().toString(), text, type:'other', prio:'med', done:false, jar:null, due:null, createdAt:Date.now() };
+  if (!state.notes) state.notes = [];
+  // smart classify
+  if (/đầu tư|hũ tự do|chuyển tiền|cổ phiếu|crypto/i.test(text)) note.type = 'finance';
+  else if (/mục tiêu|kế hoạch|tiết kiệm|mua/i.test(text)) note.type = 'goal';
+  else if (/nhắc|hạn|deadline|ngày/i.test(text)) note.type = 'remind';
+  if (/gấp|khẩn|urgent|quan trọng|ngay/i.test(text)) note.prio = 'high';
+  else if (/thấp|sau|không gấp/i.test(text)) note.prio = 'low';
+  state.notes.unshift(note);
+  saveState();
+  ta.value = ''; ta.style.height = '46px';
+  renderNotes();
+  showToast('✅ Đã thêm ghi chú!');
+}
+
+function addChipNote(text) {
+  if (!state.notes) state.notes = [];
+  const note = { id: Date.now().toString(), text, type:'finance', prio:'med', done:false, jar:null, due:null, createdAt:Date.now() };
+  state.notes.unshift(note);
+  saveState();
+  renderNotes();
+  showToast('✅ Đã thêm: ' + text.substring(0,20) + '...');
+}
+
+function toggleNote(id) {
+  const n = state.notes.find(n => n.id === id);
+  if (!n) return;
+  n.done = !n.done;
+  if (n.done) n.completedAt = Date.now();
+  saveState();
+  renderNotes();
+  if (n.done) showToast('🎉 Hoàn thành: ' + n.text.substring(0,20) + '!');
+}
+
+function quickDeleteNote(id) {
+  state.notes = state.notes.filter(n => n.id !== id);
+  saveState();
+  renderNotes();
+}
+
+function openNoteEdit(id) {
+  const n = id ? state.notes.find(n => n.id === id) : null;
+  editingNoteId = id || null;
+  editNoteType = n ? n.type : 'other';
+  editNotePrio = n ? n.prio : 'med';
+  editNoteJar  = n ? n.jar : null;
+
+  document.getElementById('note-modal-title').textContent = n ? '✏️ Chỉnh sửa' : '➕ Ghi chú mới';
+  document.getElementById('note-edit-text').value = n ? n.text : '';
+  document.getElementById('note-due').value = n && n.due ? n.due : '';
+  document.getElementById('note-delete-btn').style.display = n ? 'block' : 'none';
+
+  // type buttons
+  ['finance','goal','remind','other'].forEach(t => {
+    const btn = document.getElementById('type-btn-'+t);
+    if (btn) btn.className = 'priority-btn' + (t === editNoteType ? ' sel-low' : '');
+  });
+  // prio buttons
+  ['high','med','low'].forEach(p => {
+    const btn = document.getElementById('prio-'+p);
+    if (btn) btn.className = 'priority-btn' + (p === editNotePrio ? (' sel-'+p) : '');
+  });
+  // jar chips
+  const jarChips = document.getElementById('note-jar-chips');
+  jarChips.innerHTML = '<div class="smart-chip" id="njc-none" onclick="selectNoteJar(null)" style="' + (!editNoteJar?'border-color:var(--j2);background:rgba(59,130,246,.1);color:var(--j2);':'') + '">❌ Không liên kết</div>';
+  JARS.forEach(j => {
+    jarChips.innerHTML += '<div class="smart-chip" id="njc-'+j.id+'" onclick="selectNoteJar(\''+j.id+'\')" style="' + (editNoteJar===j.id?'border-color:'+j.color+';background:rgba(255,255,255,.08);':'') + '">' + j.icon + ' ' + j.name + '</div>';
+  });
+
+  document.getElementById('note-modal').classList.add('open');
+}
+
+function selectNoteType(t) {
+  editNoteType = t;
+  ['finance','goal','remind','other'].forEach(x => {
+    const btn = document.getElementById('type-btn-'+x);
+    if (btn) btn.className = 'priority-btn' + (x === t ? ' sel-low' : '');
+  });
+}
+function selectNotePrio(p) {
+  editNotePrio = p;
+  ['high','med','low'].forEach(x => {
+    const btn = document.getElementById('prio-'+x);
+    if (btn) btn.className = 'priority-btn' + (x === p ? ' sel-'+p : '');
+  });
+}
+function selectNoteJar(jid) {
+  editNoteJar = jid;
+  document.getElementById('njc-none').style.cssText = !jid ? 'border-color:var(--j2);background:rgba(59,130,246,.1);color:var(--j2);' : '';
+  JARS.forEach(j => {
+    const el = document.getElementById('njc-'+j.id);
+    if (el) el.style.cssText = jid===j.id ? 'border-color:'+j.color+';background:rgba(255,255,255,.08);' : '';
+  });
+}
+
+function saveNoteEdit() {
+  const text = document.getElementById('note-edit-text').value.trim();
+  if (!text) { showToast('⚠️ Nhập nội dung ghi chú!'); return; }
+  const due = document.getElementById('note-due').value || null;
+  if (!state.notes) state.notes = [];
+  if (editingNoteId) {
+    const n = state.notes.find(n => n.id === editingNoteId);
+    if (n) { n.text = text; n.type = editNoteType; n.prio = editNotePrio; n.jar = editNoteJar; n.due = due; }
+  } else {
+    state.notes.unshift({ id:Date.now().toString(), text, type:editNoteType, prio:editNotePrio, jar:editNoteJar, due, done:false, createdAt:Date.now() });
+  }
+  saveState();
+  renderNotes();
+  document.getElementById('note-modal').classList.remove('open');
+  showToast('✅ Đã lưu ghi chú!');
+}
+
+function deleteNote() {
+  if (!editingNoteId) return;
+  state.notes = state.notes.filter(n => n.id !== editingNoteId);
+  saveState();
+  renderNotes();
+  document.getElementById('note-modal').classList.remove('open');
+  showToast('🗑️ Đã xóa ghi chú');
+}
+
+function filterNotes(f, btn) {
+  noteFilter = f;
+  document.querySelectorAll('#note-filters .rtab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNotes();
+}
+
+function noteQuickEnter(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addNoteQuick(); }
+}
+
+function autoResizeTA(el) {
+  el.style.height = '46px';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// AI smart suggestions based on financial state
+function openNoteAI() {
+  const suggestions = generateAISuggestions();
+  const container = document.getElementById('ai-suggestions');
+  container.innerHTML = '';
+  suggestions.forEach(s => {
+    container.innerHTML +=
+      '<div style="background:var(--surface2);border-radius:12px;padding:13px;margin-bottom:10px;border:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;cursor:pointer;" onclick="addFromAI(this,\''+escapeHtml(s.text)+'\',\''+s.type+'\',\''+s.prio+'\')">' +
+        '<div style="font-size:20px;flex-shrink:0;">'+s.icon+'</div>' +
+        '<div style="flex:1;">' +
+          '<div style="font-size:12px;font-weight:700;margin-bottom:3px;">'+escapeHtml(s.text)+'</div>' +
+          '<div style="font-size:10px;color:var(--text3);">'+s.reason+'</div>' +
+        '</div>' +
+        '<div style="font-size:18px;color:var(--green);flex-shrink:0;">＋</div>' +
+      '</div>';
+  });
+  document.getElementById('ai-note-modal').classList.add('open');
+}
+
+function generateAISuggestions() {
+  const sugg = [];
+  const total = Object.values(state.jars).reduce((s,j) => s+j.balance, 0);
+  const totalIncome = state.txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
+
+  JARS.forEach(j => {
+    const st = getJarStatus(j.id);
+    if (st.pct >= 90) sugg.push({ icon:'⚠️', text:'Kiểm tra lại chi tiêu hũ ' + j.name + ' – đã dùng ' + st.pct + '%', type:'finance', prio:'high', reason:'Hũ ' + j.name + ' gần chạm hạn mức tháng này' });
+    if (j.id === 'j2' && state.jars[j.id].balance > 0) sugg.push({ icon:'💎', text:'Chuyển ₫' + fmt(state.jars[j.id].balance) + ' từ hũ Tự do TC vào đầu tư', type:'finance', prio:'med', reason:'Tiền trong hũ Tự do TC nên được đầu tư, không để idle' });
+  });
+
+  if (state.loans && state.loans.length > 0) sugg.push({ icon:'🔄', text:'Hoàn trả ' + state.loans.length + ' khoản mượn nội bộ giữa các hũ', type:'finance', prio:'high', reason:'Có ' + state.loans.length + ' khoản mượn hũ chưa được bù đắp' });
+  if (totalIncome === 0) sugg.push({ icon:'💰', text:'Nhập thu nhập tháng này để bắt đầu phân bổ 6 hũ', type:'finance', prio:'high', reason:'Chưa có thu nhập nào được ghi nhận' });
+
+  const m = state.currentMonth || new Date().getMonth()+1;
+  sugg.push({ icon:'📅', text:'Chốt tháng ' + m + ' và nhập thu nhập tháng ' + (m===12?1:m+1), type:'remind', prio:'med', reason:'Nhắc nhở cuối tháng – reset hạn mức và tổng kết' });
+  sugg.push({ icon:'☁️', text:'Sao lưu dữ liệu Hũ Vàng tháng ' + m, type:'remind', prio:'low', reason:'Bảo vệ dữ liệu tài chính của bạn' });
+  sugg.push({ icon:'📊', text:'Xem báo cáo xu hướng chi tiêu 3 tháng gần nhất', type:'goal', prio:'low', reason:'Giúp nhận ra thói quen và điều chỉnh kịp thời' });
+  sugg.push({ icon:'🎯', text:'Đặt mục tiêu tiết kiệm cho tháng tới', type:'goal', prio:'med', reason:'Có mục tiêu cụ thể giúp duy trì kỷ luật tài chính' });
+
+  return sugg.slice(0, 8);
+}
+
+function addFromAI(el, text, type, prio) {
+  if (!state.notes) state.notes = [];
+  state.notes.unshift({ id:Date.now().toString(), text, type, prio, jar:null, due:null, done:false, createdAt:Date.now() });
+  saveState();
+  renderNotes();
+  el.style.opacity = '0.4';
+  el.style.pointerEvents = 'none';
+  el.querySelector('div:last-child').textContent = '✓';
+  showToast('✅ Đã thêm vào ghi chú!');
 }
 
 // ===== THEME =====
