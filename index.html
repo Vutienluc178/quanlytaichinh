@@ -2,7 +2,14 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hũ Vàng">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="application-name" content="Hũ Vàng">
+<meta name="description" content="Ứng dụng quản lý tài chính 6 chiếc hũ – Vũ Tiến Lực">
 <title>Hũ Vàng – Quản Lý Tài Chính Thông Minh</title>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
@@ -16,6 +23,18 @@
     --text2: #8899bb;
     --text3: #4a5a7a;
 
+  /* Light theme override */
+  [data-theme="light"] {
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --surface2: #eef1f8;
+    --surface3: #e4e8f2;
+    --border: rgba(0,0,0,0.08);
+    --text: #0f172a;
+    --text2: #4b5a7a;
+    --text3: #94a3b8;
+  }
+
     --j1: #4ade80; --j1d: #166534; --j1g: linear-gradient(135deg,#22c55e,#16a34a);
     --j2: #60a5fa; --j2d: #1e3a5f; --j2g: linear-gradient(135deg,#3b82f6,#1d4ed8);
     --j3: #f472b6; --j3d: #5b1a3a; --j3g: linear-gradient(135deg,#ec4899,#be185d);
@@ -28,18 +47,25 @@
     --shadow: 0 8px 32px rgba(0,0,0,0.4);
   }
 
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; transition:background-color .25s, border-color .25s, color .15s; }
   html, body { height:100%; background:var(--bg); font-family:'Be Vietnam Pro',sans-serif; color:var(--text); overflow:hidden; }
 
-  /* ===== PHONE FRAME ===== */
-  .phone-wrap { display:flex; align-items:center; justify-content:center; height:100vh; padding:12px; }
+  /* ===== APP LAYOUT — always full screen ===== */
+  .phone-wrap { display:flex; justify-content:center; align-items:stretch; height:100dvh; overflow:hidden; }
   .phone {
-    width:100%; max-width:400px; height:100%; max-height:860px;
-    background:var(--bg); border-radius:44px;
-    border:1.5px solid rgba(255,255,255,0.1);
-    box-shadow:0 40px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
-    display:flex; flex-direction:column; overflow:hidden; position:relative;
+    width:100%; max-width:480px; height:100dvh;
+    background:var(--bg); display:flex; flex-direction:column; overflow:hidden;
+    position:relative;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
   }
+  /* On wider screens: slim centered column with subtle border */
+  @media (min-width:481px) {
+    .phone-wrap { background:#050810; }
+    .phone { border-left:1px solid rgba(255,255,255,.06); border-right:1px solid rgba(255,255,255,.06); }
+  }
+  .status-bar { padding-top:max(14px, env(safe-area-inset-top,14px)); }
+  .nav { padding-bottom:max(20px, env(safe-area-inset-bottom,20px)); }
   .status-bar {
     padding:14px 24px 6px; display:flex; justify-content:space-between; align-items:center;
     font-size:11px; font-weight:600; color:var(--text2); flex-shrink:0;
@@ -445,14 +471,72 @@
   .bar-ok { background:var(--j1g); }
   .bar-warn { background:linear-gradient(90deg,#f59e0b,#d97706); }
   .bar-danger { background:linear-gradient(90deg,#ef4444,#dc2626); }
+
+  /* Light theme adjustments */
+  [data-theme="light"] .balance-card { background:linear-gradient(135deg,#1e3a6e,#0f2548); }
+  [data-theme="light"] .balance-card .balance-label,
+  [data-theme="light"] .balance-card .balance-amount { color:#fff; }
+  [data-theme="light"] .balance-card .balance-amount span { color:rgba(255,255,255,.6); }
+  [data-theme="light"] .jar-card { box-shadow:0 2px 12px rgba(0,0,0,.06); }
+  [data-theme="light"] .nav { box-shadow:0 -1px 0 rgba(0,0,0,.06); }
+  [data-theme="light"] .nav-btn { color:#94a3b8; }
+  [data-theme="light"] .nav-btn.active { color:#3b82f6; }
+  [data-theme="light"] .streak-card { background:linear-gradient(135deg,#ede9fe,#ddd6fe); }
+  [data-theme="light"] .streak-card .streak-num { background:var(--j5g); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  [data-theme="light"] .streak-card .streak-label { color:#4b5a7a; }
+  [data-theme="light"] .modal,
+  [data-theme="light"] .sync-modal,
+  [data-theme="light"] .tips-modal,
+  [data-theme="light"] .month-close-modal { background:#ffffff; }
+  [data-theme="light"] .numpad-display { background:#eef1f8; }
+  [data-theme="light"] .np-btn.digit { background:#e4e8f2; color:#0f172a; }
+  [data-theme="light"] .np-btn.digit:active { background:#d8dded; }
+  [data-theme="light"] .wisdom-card-wrap { background:rgba(251,191,36,.06); }
+  [data-theme="light"] .alert-box { background:#ffffff; }
+  [data-theme="light"] #theme-toggle { background:rgba(0,0,0,.04); }
+  [data-theme="light"] #theme-toggle:hover { background:rgba(0,0,0,.08); }
+
+
+
+  /* ===== TIPS MODAL ===== */
+  .tips-modal { background:var(--surface); border-radius:28px 28px 0 0; width:100%; padding:0 20px 36px; max-height:90%; overflow-y:auto; animation:slideUp .25s ease; }
+  .tip-card { background:var(--surface2); border-radius:12px; padding:14px 16px; margin-bottom:10px; border-left:3px solid var(--j2); display:flex; gap:12px; align-items:flex-start; }
+  .tip-card.gold { border-left-color:var(--j6); }
+  .tip-card.green { border-left-color:var(--j1); }
+  .tip-card.pink { border-left-color:var(--j3); }
+  .tip-card.purple { border-left-color:var(--j5); }
+  .tip-card.orange { border-left-color:var(--j4); }
+  .tip-num { font-size:10px; font-weight:800; color:var(--text3); background:rgba(255,255,255,.06); border-radius:6px; padding:3px 7px; flex-shrink:0; margin-top:1px; }
+  .tip-body strong { font-size:13px; font-weight:700; display:block; margin-bottom:4px; }
+  .tip-body p { font-size:11.5px; color:var(--text2); line-height:1.65; margin:0; }
+  .tip-tag { display:inline-block; font-size:9px; font-weight:800; padding:2px 7px; border-radius:99px; margin-top:6px; text-transform:uppercase; letter-spacing:.4px; }
+
+  /* ===== INSTALL BANNER (mobile) ===== */
+  .install-banner {
+    display:none; position:absolute; bottom:72px; left:12px; right:12px;
+    background:linear-gradient(135deg,#1e3a5f,#2d1b69);
+    border:1px solid rgba(96,165,250,.3); border-radius:14px;
+    padding:12px 16px; z-index:50; align-items:center; gap:12px;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
+    animation:slideUp .3s ease;
+  }
+  .install-banner.show { display:flex; }
+  .ib-text { flex:1; font-size:11px; color:var(--text2); line-height:1.5; }
+  .ib-text strong { color:var(--text); display:block; margin-bottom:2px; font-size:12px; }
+  .ib-btn { background:linear-gradient(135deg,#3b82f6,#6d28d9); border:none; border-radius:8px; padding:8px 14px; color:#fff; font-family:inherit; font-size:11px; font-weight:800; cursor:pointer; flex-shrink:0; }
+  .ib-close { background:none; border:none; color:var(--text3); font-size:18px; cursor:pointer; flex-shrink:0; padding:0; }
 </style>
 </head>
 <body>
 <div class="phone-wrap">
+
 <div class="phone">
   <div class="status-bar">
     <span id="clock">9:41</span>
-    <span>🔋 87%</span>
+    <button id="theme-toggle" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:99px;display:flex;align-items:center;gap:5px;transition:background .2s;" title="Đổi giao diện">
+      <span id="theme-icon" style="font-size:15px;">🌙</span>
+      <span id="theme-label" style="font-size:10px;font-weight:700;color:var(--text2);">Tối</span>
+    </button>
   </div>
 
   <!-- ===================== DASHBOARD ===================== -->
@@ -553,6 +637,13 @@
       <div id="ratio-settings"></div>
       <div class="sec-title">Cài đặt chung</div>
       <div class="settings-group">
+        <div class="settings-item" onclick="goToTipsScreen()">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:rgba(251,191,36,.12)">💡</div>
+            <div><div class="settings-label">Mẹo & Hướng dẫn sử dụng</div><div class="settings-sub">12 mẹo + hướng dẫn cài app</div></div>
+          </div>
+          <div class="chevron">›</div>
+        </div>
         <div class="settings-item">
           <div class="settings-item-left">
             <div class="settings-icon" style="background:rgba(74,222,128,.1)">🔔</div>
@@ -603,6 +694,49 @@
   </div>
 
   <!-- ===== NAV ===== -->
+  <!-- ===== TIPS SCREEN ===== -->
+  <div class="screen" id="screen-tips">
+    <div style="padding:0 16px;flex-shrink:0;">
+      <div class="page-header" style="display:flex;align-items:center;gap:12px;">
+        <button onclick="goScreen('settings', document.querySelector('.nav-btn:nth-child(4)'))" style="background:var(--surface2);border:none;color:var(--text2);cursor:pointer;padding:6px 12px;font-size:22px;display:flex;align-items:center;border-radius:10px;font-weight:300;line-height:1;">‹</button>
+        <div>
+          <div class="page-title">Mẹo & Hướng dẫn 💡</div>
+          <div class="page-sub">Sử dụng Hũ Vàng hiệu quả nhất</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll">
+
+      <!-- Categories -->
+      <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;" id="tip-cats">
+        <button class="rtab active" onclick="filterTips('all',this)">Tất cả</button>
+        <button class="rtab" onclick="filterTips('Nhập số',this)">⚡ Nhập số</button>
+        <button class="rtab" onclick="filterTips('Thu nhập',this)">💰 Thu nhập</button>
+        <button class="rtab" onclick="filterTips('Đầu tư',this)">💎 Kỷ luật</button>
+        <button class="rtab" onclick="filterTips('Cuối tháng',this)">📅 Cuối tháng</button>
+        <button class="rtab" onclick="filterTips('Bảo mật',this)">☁️ Dữ liệu</button>
+        <button class="rtab" onclick="filterTips('Cài đặt',this)">📲 Cài app</button>
+      </div>
+
+      <!-- 6 hũ quick reference -->
+      <div style="background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(109,40,217,.06));border:1px solid rgba(96,165,250,.15);border-radius:14px;padding:14px;margin-bottom:14px;">
+        <div style="font-size:10px;font-weight:800;color:var(--j2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">📊 Tỷ lệ chuẩn 6 hũ</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;" id="jar-ref-grid"></div>
+      </div>
+
+      <div id="tips-list"></div>
+
+      <!-- Install guide card -->
+      <div style="background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(109,40,217,.08));border:1px solid rgba(96,165,250,.2);border-radius:14px;padding:16px;margin-bottom:16px;text-align:center;cursor:pointer;" onclick="showInstallGuide()">
+        <div style="font-size:28px;margin-bottom:8px;">📲</div>
+        <div style="font-size:14px;font-weight:800;margin-bottom:5px;">Cài Hũ Vàng như app thật</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.6;">Thêm vào màn hình chính để dùng toàn màn hình, không cần trình duyệt. Hỗ trợ iOS, Android & PC.</div>
+        <div style="margin-top:10px;display:inline-block;background:linear-gradient(135deg,#3b82f6,#6d28d9);color:#fff;padding:8px 20px;border-radius:99px;font-size:12px;font-weight:800;">Xem hướng dẫn →</div>
+      </div>
+
+    </div>
+  </div>
+
   <nav class="nav">
     <button class="nav-btn active" onclick="goScreen('home',this)">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.75z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 22V12h6v10"/></svg>
@@ -620,6 +754,7 @@
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       Cài đặt
     </button>
+
   </nav>
 
   <!-- ===== TRANSACTION MODAL ===== -->
@@ -914,6 +1049,27 @@
   <div style="position:absolute;bottom:72px;left:0;right:0;text-align:center;font-size:9px;color:var(--text3);letter-spacing:.3px;pointer-events:none;padding:0 12px;">
     🪙 <strong style="color:var(--text2);">Hũ Vàng</strong> &nbsp;|&nbsp; © 2026 <strong style="color:var(--text2);">Vũ Tiến Lực</strong> &nbsp;|&nbsp; 0969 068 849
   </div>
+
+  <!-- INSTALL BANNER (mobile) -->
+  <div class="install-banner" id="install-banner">
+    <div style="font-size:24px;flex-shrink:0;">📲</div>
+    <div class="ib-text"><strong>Cài Hũ Vàng như app</strong>Thêm vào màn hình chính để dùng toàn màn hình!</div>
+    <button class="ib-btn" onclick="showInstallGuide()">Cách cài</button>
+    <button class="ib-close" onclick="dismissInstallBanner()">×</button>
+  </div>
+
+
+
+  <!-- INSTALL GUIDE MODAL -->
+  <div class="modal-overlay" id="install-modal">
+    <div class="tips-modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">📲 Cài đặt như app</div>
+      <div id="install-content"></div>
+      <button class="btn-primary" style="background:var(--surface2);color:var(--text2);box-shadow:none;margin-top:4px;" onclick="document.getElementById('install-modal').classList.remove('open')">Đóng</button>
+    </div>
+  </div>
+
 </div>
 </div>
 
@@ -1889,6 +2045,190 @@ setInterval(() => {
   }
 }, 30000);
 
+// ===== TIPS & INSTALL =====
+const TIPS = [
+  { icon:'⚡', color:'gold', tag:'Nhập số', title:'Dùng phím K và M',
+    text:'Thay vì gõ 50000, hãy bấm 5 → 0 → K để ra 50.000đ ngay lập tức. Bấm M cho triệu: 2M = 2.000.000đ. Tiết kiệm thời gian rất nhiều khi ghi chép hàng ngày.' },
+  { icon:'➕', color:'green', tag:'Nhập số', title:'Cộng nhiều khoản một lúc',
+    text:'Bạn có thể nhập biểu thức: 50k+30k+15k rồi lưu, app sẽ tự tính = 95.000đ. Dùng khi muốn tổng hợp nhiều khoản nhỏ vào một giao dịch.' },
+  { icon:'💰', color:'', tag:'Thu nhập', title:'Nhập thu nhập ngay khi nhận lương',
+    text:'Thói quen tốt nhất: mỗi lần nhận tiền (lương, thưởng, thu nhập phụ) hãy nhập ngay vào app. App sẽ tự động chia vào 6 hũ theo tỷ lệ đã cài. Không để đến cuối tháng mới nhớ lại.' },
+  { icon:'🔄', color:'purple', tag:'Mượn hũ', title:'Mượn hũ thay vì phá vỡ kỷ luật',
+    text:'Khi hũ Thiết yếu hết tiền trước cuối tháng, đừng lấy từ hũ Tự do TC hay Tiết kiệm. Hãy dùng chức năng "Mượn hũ" – khoản nợ sẽ được ghi lại và nhắc bạn bù tháng sau.' },
+  { icon:'📅', color:'orange', tag:'Cuối tháng', title:'Chốt tháng để tổng kết chính xác',
+    text:'Cuối mỗi tháng, vào Cài đặt → "Chốt tháng". App sẽ tổng kết thu-chi, cho bạn chọn cách xử lý tiền thừa, rồi nhập thu nhập tháng mới. Hạn mức tự động reset.' },
+  { icon:'💎', color:'', tag:'Đầu tư', title:'Hũ Tự do TC – không bao giờ tiêu',
+    text:'Nguyên tắc vàng của phương pháp 6 hũ: tiền vào hũ Tự do TC (💎) chỉ được dùng để đầu tư sinh lợi, không bao giờ chi tiêu. Kể cả khi khó khăn, hũ này là bất khả xâm phạm.' },
+  { icon:'🎉', color:'orange', tag:'Hưởng thụ', title:'Hũ Hưởng thụ – tiêu HẾT không thương tiếc',
+    text:'Ngược lại với hũ đầu tư, hũ Hưởng thụ (🎉) được thiết kế để tiêu hết mỗi tháng. Đây là phần thưởng cho bản thân. Đừng cảm thấy tội lỗi – bạn xứng đáng được hưởng!' },
+  { icon:'☁️', color:'', tag:'Bảo mật', title:'Sao lưu dữ liệu thường xuyên',
+    text:'LocalStorage có thể mất nếu xóa cache trình duyệt. Hãy vào Cài đặt → Lưu & Đồng bộ → Xuất file JSON về máy hoặc sao chép mã vào iCloud Notes mỗi tuần một lần.' },
+  { icon:'📲', color:'green', tag:'Cài đặt', title:'Dùng như app thật trên điện thoại',
+    text:'Trên iPhone: Safari → nút Chia sẻ → "Thêm vào Màn hình chính". Trên Android: Chrome → menu ⋮ → "Thêm vào màn hình chính". App sẽ mở toàn màn hình, không có thanh địa chỉ.' },
+  { icon:'🎯', color:'pink', tag:'Tỷ lệ', title:'Tùy chỉnh tỷ lệ cho phù hợp',
+    text:'Tỷ lệ 55-10-10-10-10-5 là gợi ý, không phải quy tắc cứng. Nếu bạn đang thuê nhà đắt, hãy tăng hũ Thiết yếu lên 60-65%. Quan trọng là tổng 6 hũ = 100%.' },
+  { icon:'🔔', color:'gold', tag:'Thói quen', title:'Ghi chép ngay sau khi chi tiêu',
+    text:'Bí quyết của những người quản lý tài chính tốt: ghi liền sau khi tiêu, không để cuối ngày. Chỉ cần 10 giây nhập vào app. Sau 21 ngày sẽ thành thói quen tự nhiên.' },
+  { icon:'📊', color:'', tag:'Phân tích', title:'Xem báo cáo để nhận diện thói quen xấu',
+    text:'Mỗi tuần một lần, mở tab Báo cáo → Chẩn đoán. App phân tích tự động và chỉ ra hũ nào đang vượt ngân sách. Nhận ra sớm giúp bạn điều chỉnh trước khi quá muộn.' },
+];
+
+const INSTALL_STEPS = {
+  ios: [
+    { icon:'🌐', step:'1', text:'Mở trang này trong <strong>Safari</strong> (không phải Chrome hay Firefox)' },
+    { icon:'⬆️', step:'2', text:'Bấm nút <strong>Chia sẻ</strong> (hình vuông có mũi tên lên) ở thanh dưới' },
+    { icon:'➕', step:'3', text:'Kéo xuống, chọn <strong>"Thêm vào Màn hình chính"</strong>' },
+    { icon:'✏️', step:'4', text:'Đặt tên <strong>"Hũ Vàng"</strong> rồi bấm Thêm' },
+    { icon:'🎉', step:'5', text:'App xuất hiện trên màn hình chính, mở <strong>toàn màn hình</strong> như app thật!' },
+  ],
+  android: [
+    { icon:'🌐', step:'1', text:'Mở trang này trong <strong>Chrome</strong>' },
+    { icon:'⋮', step:'2', text:'Bấm menu <strong>⋮</strong> (3 chấm) góc trên phải' },
+    { icon:'📱', step:'3', text:'Chọn <strong>"Thêm vào màn hình chính"</strong> hoặc <strong>"Cài đặt ứng dụng"</strong>' },
+    { icon:'✏️', step:'4', text:'Đặt tên <strong>"Hũ Vàng"</strong> rồi bấm Thêm' },
+    { icon:'🎉', step:'5', text:'App xuất hiện trên màn hình chính, chạy <strong>toàn màn hình</strong>!' },
+  ],
+  desktop: [
+    { icon:'🌐', step:'1', text:'Mở trang trong <strong>Chrome</strong> hoặc <strong>Edge</strong>' },
+    { icon:'📥', step:'2', text:'Click icon <strong>Cài đặt</strong> (mũi tên xuống) trên thanh địa chỉ, hoặc menu ⋮ → Cài đặt ứng dụng' },
+    { icon:'✅', step:'3', text:'Bấm <strong>"Cài đặt"</strong> để xác nhận' },
+    { icon:'🎉', step:'4', text:'App xuất hiện trong Start Menu / Launchpad như ứng dụng thật!' },
+  ],
+};
+
+function openTipsModal() { goToTipsScreen(); } // kept for back-compat
+
+function goToTipsScreen() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  // Highlight settings nav as active (tips is a sub-page)
+  const settingsBtn = document.querySelector('.nav-btn:nth-child(4)');
+  if (settingsBtn) settingsBtn.classList.add('active');
+  document.getElementById('screen-tips').classList.add('active');
+  renderTipsScreen('all');
+}
+
+function renderTipsScreen(filter) {
+  // Jar reference grid
+  const jarGrid = document.getElementById('jar-ref-grid');
+  if (jarGrid) {
+    jarGrid.innerHTML = '';
+    JARS.forEach(j => {
+      const ratio = state.ratios[j.id] || j.ratio;
+      jarGrid.innerHTML +=
+        '<div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border-radius:8px;padding:7px 10px;">' +
+          '<span style="font-size:16px">' + j.icon + '</span>' +
+          '<div><div style="font-size:11px;font-weight:700">' + j.name + '</div>' +
+          '<div style="font-size:10px;color:var(--text3)">' + ratio + '%</div></div>' +
+        '</div>';
+    });
+  }
+
+  // Tips list
+  const list = document.getElementById('tips-list');
+  if (!list) return;
+  const filtered = filter === 'all' ? TIPS : TIPS.filter(t => t.tag === filter);
+  list.innerHTML = '';
+  filtered.forEach((t, i) => {
+    const num = TIPS.indexOf(t) + 1;
+    list.innerHTML +=
+      '<div class="tip-card ' + t.color + '" style="margin-bottom:10px;">' +
+        '<div class="tip-num">' + num + '</div>' +
+        '<div class="tip-body">' +
+          '<strong>' + t.icon + ' ' + t.title + '</strong>' +
+          '<p>' + t.text + '</p>' +
+          '<span class="tip-tag" style="background:rgba(255,255,255,.07);color:var(--text3);">' + t.tag + '</span>' +
+        '</div>' +
+      '</div>';
+  });
+  if (!filtered.length) list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">Không có mẹo nào cho mục này</div>';
+}
+
+function filterTips(tag, btn) {
+  document.querySelectorAll('#tip-cats .rtab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTipsScreen(tag);
+}
+
+function showInstallGuide() {
+  const ua = navigator.userAgent;
+  let platform = 'desktop';
+  if (/iPhone|iPad|iPod/.test(ua)) platform = 'ios';
+  else if (/Android/.test(ua)) platform = 'android';
+
+  const steps = INSTALL_STEPS[platform];
+  const labels = { ios:'iPhone / iPad (Safari)', android:'Android (Chrome)', desktop:'Máy tính (Chrome/Edge)' };
+  const container = document.getElementById('install-content');
+
+  let html = '<div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--j2);font-weight:700;">📱 Thiết bị: ' + labels[platform] + '</div>';
+
+  steps.forEach(s => {
+    html += '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">' +
+      '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6d28d9);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;color:#fff;">' + s.step + '</div>' +
+      '<div style="font-size:12px;color:var(--text2);line-height:1.65;padding-top:4px;">' + s.icon + ' ' + s.text + '</div>' +
+    '</div>';
+  });
+
+  html += '<div style="background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:12px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:4px;">' +
+    '✅ Sau khi cài, app mở <strong style="color:var(--text);">toàn màn hình</strong> trên điện thoại – không có thanh địa chỉ trình duyệt. Dữ liệu vẫn được giữ nguyên.' +
+  '</div>';
+
+  // Platform switcher
+  html += '<div style="display:flex;gap:6px;margin-top:14px;">' +
+    ['ios','android','desktop'].map(p =>
+      '<button onclick="showInstallGuide_platform(\'' + p + '\')" style="flex:1;padding:8px 4px;border-radius:8px;border:1px solid var(--border);background:' + (p===platform?'var(--j2)':'var(--surface2)') + ';color:' + (p===platform?'#fff':'var(--text2)') + ';font-family:inherit;font-size:10px;font-weight:700;cursor:pointer;">' +
+        (p==='ios'?'🍎 iOS':p==='android'?'🤖 Android':'💻 PC') +
+      '</button>'
+    ).join('') +
+  '</div>';
+
+  container.innerHTML = html;
+  document.getElementById('install-modal').classList.add('open');
+}
+
+function showInstallGuide_platform(platform) {
+  // reuse showInstallGuide with forced platform
+  const orig = navigator.userAgent;
+  const steps = INSTALL_STEPS[platform];
+  const labels = { ios:'iPhone / iPad (Safari)', android:'Android (Chrome)', desktop:'Máy tính (Chrome/Edge)' };
+  const container = document.getElementById('install-content');
+  let html = '<div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--j2);font-weight:700;">📱 Thiết bị: ' + labels[platform] + '</div>';
+  steps.forEach(s => {
+    html += '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">' +
+      '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6d28d9);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;color:#fff;">' + s.step + '</div>' +
+      '<div style="font-size:12px;color:var(--text2);line-height:1.65;padding-top:4px;">' + s.icon + ' ' + s.text + '</div>' +
+    '</div>';
+  });
+  html += '<div style="background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:12px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:4px;">✅ Sau khi cài, app mở <strong style="color:var(--text);">toàn màn hình</strong> – không có thanh địa chỉ trình duyệt.</div>';
+  html += '<div style="display:flex;gap:6px;margin-top:14px;">' +
+    ['ios','android','desktop'].map(p =>
+      '<button onclick="showInstallGuide_platform(\'' + p + '\')" style="flex:1;padding:8px 4px;border-radius:8px;border:1px solid var(--border);background:' + (p===platform?'var(--j2)':'var(--surface2)') + ';color:' + (p===platform?'#fff':'var(--text2)') + ';font-family:inherit;font-size:10px;font-weight:700;cursor:pointer;">' +
+        (p==='ios'?'🍎 iOS':p==='android'?'🤖 Android':'💻 PC') +
+      '</button>'
+    ).join('') + '</div>';
+  container.innerHTML = html;
+}
+
+// Install banner logic
+function initInstallBanner() {
+  const dismissed = localStorage.getItem('6hu_install_dismissed');
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (!dismissed && !isStandalone && window.innerWidth <= 520) {
+    setTimeout(() => {
+      document.getElementById('install-banner').classList.add('show');
+    }, 8000);
+  }
+}
+function dismissInstallBanner() {
+  document.getElementById('install-banner').classList.remove('show');
+  localStorage.setItem('6hu_install_dismissed', '1');
+}
+
+// Also add Tips to settings screen
+function addTipsToSettings() {
+  // This is called from renderSettings, not needed separately
+}
+
 // ===== MONTH CLOSE =====
 let npMcExpr = '';
 let selectedMonthAction = 'keep';
@@ -2145,7 +2485,34 @@ function wisdomToast() {
   setTimeout(() => t.classList.remove('show'), 5000);
 }
 
+// ===== THEME =====
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const icon = document.getElementById('theme-icon');
+  const label = document.getElementById('theme-label');
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (theme === 'light') {
+    if (icon) icon.textContent = '☀️';
+    if (label) label.textContent = 'Sáng';
+    if (meta) meta.content = '#f4f6fb';
+  } else {
+    if (icon) icon.textContent = '🌙';
+    if (label) label.textContent = 'Tối';
+    if (meta) meta.content = '#0a0e1a';
+  }
+  localStorage.setItem('6hu_theme', theme);
+}
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+
+// Load saved theme
+applyTheme(localStorage.getItem('6hu_theme') || 'dark');
+
 showWisdom();
+initInstallBanner();
 // rotate wisdom in header every 12 seconds
 setInterval(showWisdom, 12000);
 // show wisdom toast every 60s
