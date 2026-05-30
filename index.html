@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Hũ Vàng – Quản Lý Tài Chính Thông Minh</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --surface3: #202d42;
+    --border: rgba(255,255,255,0.07);
+    --text: #f0f4ff;
+    --text2: #8899bb;
+    --text3: #4a5a7a;
+
+    --j1: #4ade80; --j1d: #166534; --j1g: linear-gradient(135deg,#22c55e,#16a34a);
+    --j2: #60a5fa; --j2d: #1e3a5f; --j2g: linear-gradient(135deg,#3b82f6,#1d4ed8);
+    --j3: #f472b6; --j3d: #5b1a3a; --j3g: linear-gradient(135deg,#ec4899,#be185d);
+    --j4: #fb923c; --j4d: #5c2a0e; --j4g: linear-gradient(135deg,#f97316,#ea580c);
+    --j5: #a78bfa; --j5d: #3b1f6e; --j5g: linear-gradient(135deg,#8b5cf6,#6d28d9);
+    --j6: #fbbf24; --j6d: #5c3c0a; --j6g: linear-gradient(135deg,#f59e0b,#d97706);
+
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171;
+    --radius: 18px; --radius-sm: 10px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { height:100%; background:var(--bg); font-family:'Be Vietnam Pro',sans-serif; color:var(--text); overflow:hidden; }
+
+  /* ===== PHONE FRAME ===== */
+  .phone-wrap { display:flex; align-items:center; justify-content:center; height:100vh; padding:12px; }
+  .phone {
+    width:100%; max-width:400px; height:100%; max-height:860px;
+    background:var(--bg); border-radius:44px;
+    border:1.5px solid rgba(255,255,255,0.1);
+    box-shadow:0 40px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
+    display:flex; flex-direction:column; overflow:hidden; position:relative;
+  }
+  .status-bar {
+    padding:14px 24px 6px; display:flex; justify-content:space-between; align-items:center;
+    font-size:11px; font-weight:600; color:var(--text2); flex-shrink:0;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display:none; flex-direction:column; flex:1; overflow:hidden; }
+  .screen.active { display:flex; }
+
+  /* ===== SCROLL AREA ===== */
+  .scroll { flex:1; overflow-y:auto; padding:0 16px 16px; -webkit-overflow-scrolling:touch; }
+  .scroll::-webkit-scrollbar { display:none; }
+
+  /* ===== NAV ===== */
+  .nav {
+    flex-shrink:0; background:var(--surface); border-top:1px solid var(--border);
+    display:flex; padding:10px 0 20px;
+  }
+  .nav-btn {
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:none; border:none; color:var(--text3); cursor:pointer;
+    font-size:9px; font-family:inherit; font-weight:600; letter-spacing:.5px; text-transform:uppercase;
+    transition:color .2s;
+  }
+  .nav-btn.active { color:var(--j2); }
+  .nav-btn svg { width:22px; height:22px; }
+
+  /* ===== HEADER ===== */
+  .page-header { padding:16px 0 12px; flex-shrink:0; }
+  .page-title { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; }
+  .page-sub { font-size:12px; color:var(--text2); margin-top:2px; }
+
+  /* ===== TOTAL BALANCE CARD ===== */
+  .balance-card {
+    background:linear-gradient(135deg,#1a2a4a,#0f1929);
+    border:1px solid rgba(96,165,250,0.2); border-radius:var(--radius);
+    padding:20px; margin-bottom:16px; position:relative; overflow:hidden;
+  }
+  .balance-card::before {
+    content:''; position:absolute; top:-40px; right:-40px;
+    width:140px; height:140px; border-radius:50%;
+    background:radial-gradient(circle,rgba(96,165,250,0.15),transparent 70%);
+  }
+  .balance-label { font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:1px; }
+  .balance-amount { font-size:32px; font-weight:800; margin:6px 0 4px; letter-spacing:-1px; }
+  .balance-amount span { font-size:16px; font-weight:500; color:var(--text2); }
+  .balance-meta { display:flex; gap:16px; margin-top:12px; }
+  .balance-meta-item { display:flex; align-items:center; gap:6px; font-size:12px; }
+  .dot { width:8px; height:8px; border-radius:50%; }
+
+  /* ===== JAR GRID ===== */
+  .jar-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .jar-card {
+    background:var(--surface); border-radius:var(--radius); padding:14px;
+    border:1px solid var(--border); cursor:pointer; transition:transform .15s,box-shadow .15s;
+    position:relative; overflow:hidden;
+  }
+  .jar-card:active { transform:scale(.97); }
+  .jar-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .jar-card.j1::before { background:var(--j1g); }
+  .jar-card.j2::before { background:var(--j2g); }
+  .jar-card.j3::before { background:var(--j3g); }
+  .jar-card.j4::before { background:var(--j4g); }
+  .jar-card.j5::before { background:var(--j5g); }
+  .jar-card.j6::before { background:var(--j6g); }
+
+  .jar-icon { font-size:28px; margin-bottom:6px; display:block; }
+  .jar-name { font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.5px; }
+  .jar-amount { font-size:16px; font-weight:800; margin:4px 0 8px; }
+  .jar-bar-wrap { background:rgba(255,255,255,0.06); border-radius:99px; height:4px; overflow:hidden; }
+  .jar-bar { height:100%; border-radius:99px; transition:width .6s ease; }
+  .jar-pct { font-size:10px; color:var(--text3); margin-top:4px; }
+
+  /* ===== SECTION TITLE ===== */
+  .sec-title { font-size:13px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.8px; margin:16px 0 10px; }
+
+  /* ===== TRANSACTION LIST ===== */
+  .tx-card {
+    background:var(--surface); border-radius:var(--radius-sm); padding:12px 14px;
+    display:flex; align-items:center; gap:12px; margin-bottom:8px;
+    border:1px solid var(--border);
+  }
+  .tx-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .tx-info { flex:1; min-width:0; }
+  .tx-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tx-meta { font-size:11px; color:var(--text2); margin-top:2px; }
+  .tx-amount { font-size:14px; font-weight:700; flex-shrink:0; }
+  .tx-amount.income { color:var(--green); }
+  .tx-amount.expense { color:var(--red); }
+
+  /* ===== QUICK ACTION BUTTONS ===== */
+  .quick-row { display:flex; gap:10px; margin-bottom:16px; }
+  .quick-btn {
+    flex:1; padding:14px 10px; border:none; border-radius:var(--radius-sm); cursor:pointer;
+    font-family:inherit; font-size:12px; font-weight:700; display:flex; flex-direction:column;
+    align-items:center; gap:6px; transition:transform .15s;
+  }
+  .quick-btn:active { transform:scale(.95); }
+  .quick-btn.income { background:linear-gradient(135deg,rgba(74,222,128,.15),rgba(22,101,52,.3)); color:var(--green); border:1px solid rgba(74,222,128,.2); }
+  .quick-btn.expense { background:linear-gradient(135deg,rgba(248,113,113,.15),rgba(127,29,29,.3)); color:var(--red); border:1px solid rgba(248,113,113,.2); }
+  .quick-btn.transfer { background:linear-gradient(135deg,rgba(167,139,250,.15),rgba(59,31,110,.3)); color:var(--j5); border:1px solid rgba(167,139,250,.2); }
+  .quick-btn svg { width:22px; height:22px; }
+
+  /* ===== FAB ===== */
+  .fab {
+    position:absolute; bottom:90px; right:20px;
+    width:56px; height:56px; border-radius:50%;
+    background:linear-gradient(135deg,#3b82f6,#6d28d9);
+    border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 24px rgba(59,130,246,.4); z-index:10;
+    transition:transform .15s;
+  }
+  .fab:active { transform:scale(.92); }
+  .fab svg { width:24px; height:24px; color:#fff; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    display:none; position:absolute; inset:0; background:rgba(0,0,0,.7);
+    z-index:100; align-items:flex-end; backdrop-filter:blur(4px);
+  }
+  .modal-overlay.open { display:flex; }
+  .modal {
+    background:var(--surface); border-radius:28px 28px 0 0; width:100%;
+    padding:0 20px 32px; max-height:90%; overflow-y:auto;
+    animation:slideUp .25s ease;
+  }
+  @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+  .modal-handle { width:40px; height:4px; background:var(--border); border-radius:99px; margin:14px auto 20px; }
+  .modal-title { font-size:18px; font-weight:800; margin-bottom:20px; }
+
+  /* ===== FORM ELEMENTS ===== */
+  .form-label { font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; display:block; }
+  .form-input {
+    width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:12px;
+    padding:14px 16px; color:var(--text); font-family:inherit; font-size:15px; font-weight:600;
+    outline:none; transition:border-color .2s; margin-bottom:16px;
+  }
+  .form-input:focus { border-color:var(--j2); }
+  .form-input::placeholder { color:var(--text3); }
+
+  .jar-select-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+  .jar-sel {
+    padding:10px 6px; border-radius:10px; border:1.5px solid var(--border);
+    background:var(--surface2); cursor:pointer; text-align:center; transition:all .15s;
+  }
+  .jar-sel.selected { border-color:var(--j2); background:rgba(59,130,246,.15); }
+  .jar-sel .icon { font-size:22px; }
+  .jar-sel .lbl { font-size:9px; font-weight:700; color:var(--text2); margin-top:4px; text-transform:uppercase; letter-spacing:.3px; }
+
+  .cat-chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px; }
+  .cat-chip {
+    padding:6px 12px; border-radius:99px; font-size:11px; font-weight:600;
+    background:var(--surface2); border:1px solid var(--border); cursor:pointer; transition:all .15s;
+  }
+  .cat-chip.selected { background:rgba(59,130,246,.2); border-color:var(--j2); color:var(--j2); }
+
+  .type-toggle { display:flex; background:var(--surface2); border-radius:12px; padding:4px; margin-bottom:20px; }
+  .type-btn {
+    flex:1; padding:10px; border:none; border-radius:8px; font-family:inherit; font-size:13px;
+    font-weight:700; cursor:pointer; transition:all .2s; background:transparent; color:var(--text2);
+  }
+  .type-btn.active.income { background:linear-gradient(135deg,#166534,#14532d); color:var(--green); }
+  .type-btn.active.expense { background:linear-gradient(135deg,#7f1d1d,#991b1b); color:var(--red); }
+
+  .btn-primary {
+    width:100%; padding:16px; border:none; border-radius:14px; cursor:pointer;
+    font-family:inherit; font-size:15px; font-weight:800;
+    background:linear-gradient(135deg,#3b82f6,#6d28d9); color:#fff;
+    box-shadow:0 8px 20px rgba(59,130,246,.3); transition:transform .15s;
+  }
+  .btn-primary:active { transform:scale(.97); }
+
+  /* ===== SMART NUMPAD ===== */
+  .numpad-display {
+    background:var(--surface2); border-radius:16px; padding:14px 18px 10px;
+    margin-bottom:12px; border:1px solid var(--border); position:relative;
+  }
+  .numpad-expr {
+    font-size:12px; color:var(--text3); min-height:16px; letter-spacing:.3px;
+    font-family:'Be Vietnam Pro',monospace; margin-bottom:4px; white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis; direction:rtl; text-align:left;
+  }
+  .numpad-value {
+    font-size:30px; font-weight:800; letter-spacing:-1px; line-height:1.1;
+    transition:color .15s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    direction:rtl; text-align:left;
+  }
+  .numpad-value.has-value { color:var(--text); }
+  .numpad-value.zero { color:var(--text3); }
+  .numpad-hint {
+    font-size:10px; color:var(--text3); margin-top:4px; display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .numpad-hint span { background:rgba(255,255,255,.05); border-radius:4px; padding:2px 6px; }
+
+  .quick-amounts {
+    display:flex; gap:6px; margin-bottom:10px; overflow-x:auto; padding-bottom:2px;
+  }
+  .quick-amounts::-webkit-scrollbar { display:none; }
+  .qa-btn {
+    flex-shrink:0; padding:7px 13px; border-radius:99px; border:1px solid var(--border);
+    background:var(--surface2); color:var(--text2); font-family:inherit; font-size:12px;
+    font-weight:700; cursor:pointer; transition:all .15s; white-space:nowrap;
+  }
+  .qa-btn:active { background:var(--surface3); transform:scale(.95); }
+  .qa-btn.add { color:var(--green); border-color:rgba(74,222,128,.2); background:rgba(74,222,128,.06); }
+
+  .numpad-grid {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:12px;
+  }
+  .np-btn {
+    height:52px; border:none; border-radius:12px; font-family:inherit;
+    font-size:18px; font-weight:700; cursor:pointer; transition:transform .1s,background .1s;
+    display:flex; align-items:center; justify-content:center; gap:4px;
+  }
+  .np-btn:active { transform:scale(.93); }
+  .np-btn.digit { background:var(--surface2); color:var(--text); }
+  .np-btn.digit:active { background:var(--surface3); }
+  .np-btn.op { background:rgba(96,165,250,.12); color:var(--j2); font-size:22px; }
+  .np-btn.op:active { background:rgba(96,165,250,.22); }
+  .np-btn.del { background:rgba(248,113,113,.1); color:var(--red); }
+  .np-btn.del:active { background:rgba(248,113,113,.2); }
+  .np-btn.eq  { background:linear-gradient(135deg,#3b82f6,#6d28d9); color:#fff; font-size:20px; grid-column:span 1; }
+  .np-btn.zero-wide { grid-column:span 2; font-size:16px; letter-spacing:.5px; }
+  .np-btn.k-btn { background:var(--surface2); color:var(--j4); font-size:13px; font-weight:800; }
+  .np-btn.k-btn:active { background:var(--surface3); }
+
+  /* ===== SPLIT PREVIEW ===== */
+  .split-preview { background:var(--surface2); border-radius:12px; padding:14px; margin-bottom:16px; }
+  .split-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; font-size:12px; }
+  .split-row-label { display:flex; align-items:center; gap:8px; }
+  .split-dot { width:8px; height:8px; border-radius:50%; }
+  .split-val { font-weight:700; }
+
+  /* ===== REPORTS SCREEN ===== */
+  .report-tabs { display:flex; gap:6px; margin-bottom:16px; }
+  .rtab { padding:7px 14px; border-radius:99px; font-size:12px; font-weight:700; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; font-family:inherit; transition:all .2s; }
+  .rtab.active { background:var(--j2); color:#fff; border-color:var(--j2); }
+
+  .chart-bar-wrap { display:flex; align-items:flex-end; gap:6px; height:140px; margin-bottom:8px; }
+  .chart-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .chart-bar-inner { width:100%; border-radius:6px 6px 0 0; transition:height .5s ease; }
+  .chart-label { font-size:10px; color:var(--text3); }
+
+  .advice-card {
+    background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(251,191,36,.02));
+    border:1px solid rgba(251,191,36,.2); border-radius:var(--radius-sm); padding:14px;
+    display:flex; gap:12px; align-items:flex-start; margin-bottom:8px;
+  }
+  .advice-icon { font-size:20px; flex-shrink:0; }
+  .advice-text { font-size:12px; line-height:1.6; color:var(--text2); }
+  .advice-text strong { color:var(--text); display:block; margin-bottom:3px; font-size:13px; }
+
+  /* ===== GAME SCREEN ===== */
+  .streak-card {
+    background:linear-gradient(135deg,#1a1a2e,#16213e);
+    border:1px solid rgba(167,139,250,.2); border-radius:var(--radius); padding:20px;
+    text-align:center; margin-bottom:16px; position:relative; overflow:hidden;
+  }
+  .streak-num { font-size:56px; font-weight:800; background:var(--j5g); -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1; }
+  .streak-label { font-size:12px; color:var(--text2); margin-top:6px; }
+  .stars-row { display:flex; justify-content:center; gap:6px; margin-top:12px; font-size:22px; }
+
+  .badge-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+  .badge-card { background:var(--surface); border-radius:var(--radius-sm); padding:12px 8px; text-align:center; border:1px solid var(--border); }
+  .badge-icon { font-size:28px; margin-bottom:6px; }
+  .badge-name { font-size:10px; font-weight:700; color:var(--text2); }
+  .badge-card.locked { opacity:.35; }
+
+  .mission-card {
+    background:var(--surface); border-radius:var(--radius-sm); padding:14px;
+    border:1px solid var(--border); margin-bottom:8px;
+  }
+  .mission-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+  .mission-title { font-size:13px; font-weight:700; flex:1; }
+  .mission-badge { font-size:18px; }
+  .mission-bar-wrap { background:rgba(255,255,255,.06); border-radius:99px; height:5px; overflow:hidden; }
+  .mission-bar { height:100%; border-radius:99px; background:var(--j5g); transition:width .6s; }
+  .mission-meta { display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:var(--text3); }
+
+  /* ===== SETTINGS SCREEN ===== */
+  .settings-group { margin-bottom:20px; }
+  .settings-item {
+    background:var(--surface); border-radius:var(--radius-sm); padding:14px 16px;
+    display:flex; justify-content:space-between; align-items:center;
+    border:1px solid var(--border); margin-bottom:6px; cursor:pointer;
+  }
+  .settings-item-left { display:flex; align-items:center; gap:12px; }
+  .settings-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .settings-label { font-size:13px; font-weight:600; }
+  .settings-sub { font-size:11px; color:var(--text2); margin-top:2px; }
+  .settings-value { font-size:12px; color:var(--text2); }
+  .chevron { color:var(--text3); }
+
+  /* ===== ALERT ===== */
+  .alert-overlay {
+    display:none; position:absolute; inset:0; background:rgba(0,0,0,.8);
+    z-index:200; align-items:center; justify-content:center; padding:24px;
+    backdrop-filter:blur(6px);
+  }
+  .alert-overlay.open { display:flex; }
+  .alert-box {
+    background:var(--surface); border-radius:24px; padding:28px 24px; width:100%; text-align:center;
+    border:1px solid rgba(248,113,113,.2); animation:scaleIn .2s ease;
+  }
+  @keyframes scaleIn { from{transform:scale(.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .alert-emoji { font-size:44px; margin-bottom:12px; }
+  .alert-title { font-size:17px; font-weight:800; margin-bottom:8px; }
+  .alert-msg { font-size:13px; color:var(--text2); line-height:1.6; margin-bottom:20px; }
+  .alert-btns { display:flex; gap:10px; }
+  .alert-btn { flex:1; padding:13px; border-radius:12px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; border:none; }
+  .alert-btn.cancel { background:var(--surface2); color:var(--text2); }
+  .alert-btn.confirm { background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position:absolute; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--surface2); border-radius:99px; padding:10px 20px;
+    font-size:12px; font-weight:600; white-space:nowrap; z-index:300;
+    opacity:0; transition:all .3s; border:1px solid var(--border);
+    pointer-events:none;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* ===== SPLIT MODAL specific ===== */
+  .split-amount-big { font-size:36px; font-weight:800; text-align:center; margin:8px 0 20px; letter-spacing:-1px; }
+  .jar-ratio-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
+  .jar-ratio-icon { font-size:20px; }
+  .jar-ratio-name { flex:1; font-size:12px; font-weight:600; }
+  .jar-ratio-pct { font-size:12px; color:var(--text2); width:36px; text-align:right; }
+  .jar-ratio-val { font-size:13px; font-weight:700; width:90px; text-align:right; }
+
+  /* ===== STORAGE / SYNC MODAL ===== */
+  .sync-modal { background:var(--surface); border-radius:28px 28px 0 0; width:100%; padding:0 20px 36px; max-height:92%; overflow-y:auto; animation:slideUp .25s ease; }
+  .sync-section-title { font-size:11px; font-weight:800; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin:20px 0 10px; }
+  .sync-opt {
+    background:var(--surface2); border-radius:14px; padding:16px; margin-bottom:10px;
+    border:1.5px solid var(--border); cursor:pointer; transition:all .2s;
+    display:flex; align-items:center; gap:14px;
+  }
+  .sync-opt:active { transform:scale(.98); }
+  .sync-opt.active-opt { border-color:var(--j2); background:rgba(59,130,246,.08); }
+  .sync-opt-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .sync-opt-info { flex:1; }
+  .sync-opt-name { font-size:14px; font-weight:700; }
+  .sync-opt-desc { font-size:11px; color:var(--text2); margin-top:3px; line-height:1.5; }
+  .sync-check { width:20px; height:20px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; }
+  .sync-check.on { background:var(--j2); border-color:var(--j2); }
+
+  .backup-row { display:flex; gap:8px; margin-bottom:10px; }
+  .backup-btn {
+    flex:1; padding:13px 8px; border:none; border-radius:12px; cursor:pointer;
+    font-family:inherit; font-size:12px; font-weight:700; transition:transform .15s;
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+  }
+  .backup-btn:active { transform:scale(.95); }
+  .backup-btn.export-btn { background:linear-gradient(135deg,rgba(74,222,128,.15),rgba(22,101,52,.2)); color:var(--green); border:1px solid rgba(74,222,128,.2); }
+  .backup-btn.import-btn { background:linear-gradient(135deg,rgba(96,165,250,.15),rgba(30,58,95,.2)); color:var(--j2); border:1px solid rgba(96,165,250,.2); }
+  .backup-btn.cloud-btn { background:linear-gradient(135deg,rgba(167,139,250,.15),rgba(59,31,110,.2)); color:var(--j5); border:1px solid rgba(167,139,250,.2); }
+  .backup-btn svg { width:20px; height:20px; }
+
+  .last-sync-bar { background:var(--surface2); border-radius:10px; padding:11px 14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border:1px solid var(--border); font-size:12px; }
+  .sync-status-dot { width:8px; height:8px; border-radius:50%; background:var(--green); flex-shrink:0; box-shadow:0 0 6px var(--green); }
+  .sync-status-dot.warn { background:var(--yellow); box-shadow:0 0 6px var(--yellow); }
+
+  .progress-bar-wrap { background:rgba(255,255,255,.06); border-radius:99px; height:4px; overflow:hidden; margin:8px 0 4px; }
+  .progress-bar-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#3b82f6,#6d28d9); transition:width .4s ease; }
+
+  /* warning bar color thresholds */
+  .bar-ok { background:var(--j1g); }
+  .bar-warn { background:linear-gradient(90deg,#f59e0b,#d97706); }
+  .bar-danger { background:linear-gradient(90deg,#ef4444,#dc2626); }
+</style>
+</head>
+<body>
+<div class="phone-wrap">
+<div class="phone">
+  <div class="status-bar">
+    <span id="clock">9:41</span>
+    <span>🔋 87%</span>
+  </div>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <div class="screen active" id="screen-home">
+    <div style="padding:0 16px; flex-shrink:0;">
+      <div class="page-header">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--j2);text-transform:uppercase;margin-bottom:2px;">🪙 Hũ Vàng</div><div class="page-title">Xin chào, Lực 👋</div>
+            <div class="page-sub" id="wisdom-sub">Tháng 5 • 2026</div>
+          </div>
+          <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6d28d9);display:flex;align-items:center;justify-content:center;font-size:18px;">👤</div>
+        </div>
+      </div>
+
+      <div class="balance-card">
+        <div class="balance-label">Tổng tài sản</div>
+        <div class="balance-amount" id="total-display"><span>₫</span>0</div>
+        <div class="balance-meta">
+          <div class="balance-meta-item"><div class="dot" style="background:var(--green)"></div><span style="color:var(--text2);">Thu: </span><span id="total-income-display" style="color:var(--green);font-weight:700;margin-left:4px;">₫0</span></div>
+          <div class="balance-meta-item"><div class="dot" style="background:var(--red)"></div><span style="color:var(--text2);">Chi: </span><span id="total-expense-display" style="color:var(--red);font-weight:700;margin-left:4px;">₫0</span></div>
+        </div>
+      </div>
+
+      <div class="quick-row">
+        <button class="quick-btn income" onclick="openModal('income')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          Thu nhập
+        </button>
+        <button class="quick-btn expense" onclick="openModal('expense')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
+          Chi tiêu
+        </button>
+        <button class="quick-btn transfer" onclick="openModal('transfer')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4 4 4M17 8v12m0 0 4-4m-4 4-4-4"/></svg>
+          Mượn hũ
+        </button>
+      </div>
+    </div>
+
+    <div class="scroll">
+      <div id="wisdom-card-wrap" style="margin-bottom:16px;">
+        <div style="background:linear-gradient(135deg,rgba(251,191,36,.07),rgba(96,165,250,.04));border:1px solid rgba(251,191,36,.15);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;" onclick="wisdomToast()">
+          <div style="font-size:22px;flex-shrink:0;margin-top:1px;">💡</div>
+          <div>
+            <div style="font-size:9px;font-weight:800;color:var(--j6);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Châm ngôn hôm nay</div>
+            <div id="wisdom-card-text" style="font-size:11.5px;color:var(--text2);line-height:1.6;font-style:italic;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sec-title">6 Chiếc Hũ</div>
+      <div class="jar-grid" id="jar-grid"></div>
+      <div class="sec-title">Giao dịch gần đây</div>
+      <div id="tx-list"></div>
+    </div>
+  </div>
+
+  <!-- ===================== REPORTS ===================== -->
+  <div class="screen" id="screen-reports">
+    <div style="padding:0 16px;flex-shrink:0;">
+      <div class="page-header"><div class="page-title">Báo cáo 📊</div></div>
+      <div class="report-tabs">
+        <button class="rtab active" onclick="switchRTab(this,'month')">Tháng này</button>
+        <button class="rtab" onclick="switchRTab(this,'trend')">Xu hướng</button>
+        <button class="rtab" onclick="switchRTab(this,'diagnose')">Chẩn đoán</button>
+      </div>
+    </div>
+    <div class="scroll">
+      <div id="report-content"></div>
+    </div>
+  </div>
+
+  <!-- ===================== GAMIFICATION ===================== -->
+  <div class="screen" id="screen-game">
+    <div style="padding:0 16px;flex-shrink:0;">
+      <div class="page-header"><div class="page-title">Thành tích 🏆</div></div>
+    </div>
+    <div class="scroll">
+      <div class="streak-card">
+        <div class="streak-num" id="streak-num">0</div>
+        <div class="streak-label">Tháng kỷ luật liên tiếp 🔥</div>
+        <div class="stars-row" id="streak-stars"></div>
+      </div>
+      <div class="sec-title">Huy chương</div>
+      <div class="badge-grid" id="badge-grid"></div>
+      <div class="sec-title">Nhiệm vụ tháng này</div>
+      <div id="mission-list"></div>
+    </div>
+  </div>
+
+  <!-- ===================== SETTINGS ===================== -->
+  <div class="screen" id="screen-settings">
+    <div style="padding:0 16px;flex-shrink:0;">
+      <div class="page-header"><div class="page-title">Cài đặt ⚙️</div></div>
+    </div>
+    <div class="scroll">
+      <div class="sec-title">Tỷ lệ phân bổ</div>
+      <div id="ratio-settings"></div>
+      <div class="sec-title">Cài đặt chung</div>
+      <div class="settings-group">
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:rgba(74,222,128,.1)">🔔</div>
+            <div><div class="settings-label">Nhắc nhở hàng ngày</div><div class="settings-sub">Ghi chép chi tiêu lúc 21:00</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="settings-value">BẬT</div>
+            <div style="width:38px;height:22px;background:var(--green);border-radius:99px;position:relative;"><div style="position:absolute;right:2px;top:2px;width:18px;height:18px;background:white;border-radius:50%;"></div></div>
+          </div>
+        </div>
+        <div class="settings-item" onclick="openSyncModal()">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:rgba(96,165,250,.1)">☁️</div>
+            <div><div class="settings-label">Lưu & Đồng bộ dữ liệu</div><div class="settings-sub" id="sync-settings-sub">LocalStorage • Tự động lưu</div></div>
+          </div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="settings-item" onclick="doExportJSON()">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:rgba(74,222,128,.1)">📤</div>
+            <div><div class="settings-label">Xuất file sao lưu (.json)</div><div class="settings-sub">Tải về máy để dự phòng</div></div>
+          </div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="settings-item" onclick="triggerImport()">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:rgba(167,139,250,.1)">📥</div>
+            <div><div class="settings-label">Nhập dữ liệu từ file</div><div class="settings-sub">Khôi phục từ file .json</div></div>
+          </div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="settings-item" onclick="resetData()">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:rgba(248,113,113,.1)">🗑️</div>
+            <div><div class="settings-label">Xóa tất cả dữ liệu</div><div class="settings-sub">Bắt đầu lại từ đầu</div></div>
+          </div>
+          <div class="chevron">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <button class="nav-btn active" onclick="goScreen('home',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.75z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 22V12h6v10"/></svg>
+      Tổng quan
+    </button>
+    <button class="nav-btn" onclick="goScreen('reports',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      Báo cáo
+    </button>
+    <button class="nav-btn" onclick="goScreen('game',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+      Thành tích
+    </button>
+    <button class="nav-btn" onclick="goScreen('settings',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      Cài đặt
+    </button>
+  </nav>
+
+  <!-- ===== TRANSACTION MODAL ===== -->
+  <div class="modal-overlay" id="tx-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title" id="modal-title">Thêm giao dịch</div>
+
+      <div class="type-toggle" id="type-toggle">
+        <button class="type-btn active income" onclick="setType('income',this)">💰 Thu nhập</button>
+        <button class="type-btn expense" onclick="setType('expense',this)">💸 Chi tiêu</button>
+      </div>
+
+      <!-- SMART NUMPAD -->
+      <div class="numpad-display">
+        <div class="numpad-expr" id="np-expr"></div>
+        <div class="numpad-value zero" id="np-display">₫0</div>
+        <div class="numpad-hint"><span>Nhập biểu thức: 50+30k</span><span>k=×1.000</span><span>m=×1.000.000</span></div>
+      </div>
+      <div class="quick-amounts" id="quick-amounts"></div>
+      <div class="numpad-grid">
+        <button class="np-btn digit" onclick="npInput('7')">7</button>
+        <button class="np-btn digit" onclick="npInput('8')">8</button>
+        <button class="np-btn digit" onclick="npInput('9')">9</button>
+        <button class="np-btn digit" onclick="npInput('4')">4</button>
+        <button class="np-btn digit" onclick="npInput('5')">5</button>
+        <button class="np-btn digit" onclick="npInput('6')">6</button>
+        <button class="np-btn digit" onclick="npInput('1')">1</button>
+        <button class="np-btn digit" onclick="npInput('2')">2</button>
+        <button class="np-btn digit" onclick="npInput('3')">3</button>
+        <button class="np-btn k-btn" onclick="npInput('k')">K</button>
+        <button class="np-btn zero-wide digit" onclick="npInput000()">0 0 0</button>
+        <button class="np-btn op" onclick="npInput('+')">＋</button>
+        <button class="np-btn op" onclick="npInput('-')">－</button>
+        <button class="np-btn k-btn" onclick="npInput('m')">M</button>
+        <button class="np-btn del" onclick="npDel()">⌫</button>
+      </div>
+      <input type="hidden" id="tx-amount">
+
+      <div id="split-section">
+        <label class="form-label">Phân bổ tự động</label>
+        <div class="split-preview" id="split-preview"></div>
+      </div>
+
+      <div id="jar-section" style="display:none">
+        <label class="form-label">Chọn hũ</label>
+        <div class="jar-select-grid" id="jar-select-grid"></div>
+        <label class="form-label">Danh mục</label>
+        <div class="cat-chips" id="cat-chips"></div>
+      </div>
+
+      <label class="form-label">Ghi chú</label>
+      <input class="form-input" id="tx-note" placeholder="Mô tả giao dịch...">
+
+      <button class="btn-primary" onclick="submitTx()">✓ Lưu giao dịch</button>
+    </div>
+  </div>
+
+  <!-- ===== TRANSFER MODAL ===== -->
+  <div class="modal-overlay" id="transfer-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">🔄 Mượn tiền giữa các hũ</div>
+      <div class="numpad-display" style="margin-bottom:10px;">
+        <div class="numpad-expr" id="np-expr-tr"></div>
+        <div class="numpad-value zero" id="np-display-tr">₫0</div>
+      </div>
+      <div class="numpad-grid" style="margin-bottom:12px;">
+        <button class="np-btn digit" onclick="npInputTr('7')">7</button>
+        <button class="np-btn digit" onclick="npInputTr('8')">8</button>
+        <button class="np-btn digit" onclick="npInputTr('9')">9</button>
+        <button class="np-btn digit" onclick="npInputTr('4')">4</button>
+        <button class="np-btn digit" onclick="npInputTr('5')">5</button>
+        <button class="np-btn digit" onclick="npInputTr('6')">6</button>
+        <button class="np-btn digit" onclick="npInputTr('1')">1</button>
+        <button class="np-btn digit" onclick="npInputTr('2')">2</button>
+        <button class="np-btn digit" onclick="npInputTr('3')">3</button>
+        <button class="np-btn k-btn" onclick="npInputTr('k')">K</button>
+        <button class="np-btn zero-wide digit" onclick="npInputTr('0')">0 &nbsp; 0 &nbsp; 0</button>
+        <button class="np-btn del" onclick="npDelTr()">⌫</button>
+      </div>
+      <input type="hidden" id="tr-amount">
+      <label class="form-label">Hũ cho mượn (từ)</label>
+      <div class="jar-select-grid" id="from-jar-grid"></div>
+      <label class="form-label">Hũ mượn (đến)</label>
+      <div class="jar-select-grid" id="to-jar-grid"></div>
+      <div style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--j6);">⚠️ Khoản mượn nội bộ sẽ được ghi nhận và nhắc bù đắp vào tháng sau.</div>
+      <button class="btn-primary" onclick="submitTransfer()">✓ Xác nhận mượn</button>
+    </div>
+  </div>
+
+  <!-- ===== SYNC / STORAGE MODAL ===== -->
+  <div class="modal-overlay" id="sync-modal">
+    <div class="sync-modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">☁️ Lưu & Đồng bộ dữ liệu</div>
+
+      <!-- Last sync status -->
+      <div class="last-sync-bar">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="sync-status-dot" id="sync-dot"></div>
+          <div>
+            <div style="font-weight:700;font-size:12px;">Trạng thái</div>
+            <div id="sync-status-text" style="font-size:10px;color:var(--text2);margin-top:1px;">Đang kiểm tra...</div>
+          </div>
+        </div>
+        <div id="sync-size-badge" style="font-size:10px;color:var(--text3);background:var(--surface3);padding:4px 9px;border-radius:99px;"></div>
+      </div>
+
+      <!-- Storage options -->
+      <div class="sync-section-title">Phương thức lưu trữ</div>
+
+      <div class="sync-opt active-opt" id="opt-local" onclick="selectSyncOpt('local')">
+        <div class="sync-opt-icon" style="background:rgba(74,222,128,.12)">💾</div>
+        <div class="sync-opt-info">
+          <div class="sync-opt-name">Lưu cục bộ (LocalStorage)</div>
+          <div class="sync-opt-desc">Lưu ngay trên trình duyệt này. Nhanh, không cần mạng. Dữ liệu mất nếu xóa cache.</div>
+        </div>
+        <div class="sync-check on" id="check-local">✓</div>
+      </div>
+
+      <div class="sync-opt" id="opt-file" onclick="selectSyncOpt('file')">
+        <div class="sync-opt-icon" style="background:rgba(96,165,250,.12)">📁</div>
+        <div class="sync-opt-info">
+          <div class="sync-opt-name">Xuất file JSON</div>
+          <div class="sync-opt-desc">Lưu file .json về máy tính / iCloud Drive. Có thể chuyển sang thiết bị khác.</div>
+        </div>
+        <div class="sync-check" id="check-file"></div>
+      </div>
+
+      <div class="sync-opt" id="opt-icloud" onclick="selectSyncOpt('icloud')">
+        <div class="sync-opt-icon" style="background:rgba(167,139,250,.12)">🌥️</div>
+        <div class="sync-opt-info">
+          <div class="sync-opt-name">iCloud / Google Drive</div>
+          <div class="sync-opt-desc">Sao chép link mã hóa Base64, dán vào ghi chú iCloud Notes hoặc Google Keep để đồng bộ đa thiết bị.</div>
+        </div>
+        <div class="sync-check" id="check-icloud"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="sync-section-title">Hành động</div>
+
+      <div class="backup-row">
+        <button class="backup-btn export-btn" onclick="doExport()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M8 12l4 4m0 0l4-4m-4 4V4"/></svg>
+          Xuất / Lưu
+        </button>
+        <button class="backup-btn import-btn" onclick="triggerImport()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M8 8l4-4m0 0l4 4m-4-4v12"/></svg>
+          Nhập / Khôi phục
+        </button>
+        <button class="backup-btn cloud-btn" onclick="copyCloudCode()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Sao chép mã
+        </button>
+      </div>
+
+      <!-- Import from cloud code -->
+      <div id="cloud-import-section" style="display:none;margin-bottom:14px;">
+        <div class="sync-section-title">Dán mã đồng bộ</div>
+        <textarea id="cloud-code-input" placeholder="Dán mã Base64 từ iCloud Notes / Google Keep vào đây..."
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--text);font-family:inherit;font-size:11px;resize:none;height:80px;outline:none;margin-bottom:8px;"></textarea>
+        <button class="btn-primary" style="padding:12px;" onclick="importFromCode()">✓ Khôi phục từ mã</button>
+      </div>
+
+      <!-- Storage usage -->
+      <div class="sync-section-title">Dung lượng đã dùng</div>
+      <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;">
+          <span>LocalStorage</span>
+          <span id="storage-used-text" style="color:var(--j2);font-weight:700;">0 KB / 5 MB</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="storage-bar" style="width:0%"></div></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px;" id="tx-count-text">0 giao dịch đã lưu</div>
+      </div>
+
+      <div style="margin-top:16px;"></div>
+      <button class="btn-primary" style="background:var(--surface2);color:var(--text2);box-shadow:none;" onclick="document.getElementById('sync-modal').classList.remove('open')">Đóng</button>
+    </div>
+  </div>
+
+  <input type="file" id="import-file-input" accept=".json,.txt" style="display:none" onchange="handleImportFile(event)">
+
+  <!-- ===== ALERT ===== -->
+  <div class="alert-overlay" id="alert-overlay">
+    <div class="alert-box">
+      <div class="alert-emoji">⚠️</div>
+      <div class="alert-title" id="alert-title">Cảnh báo kỷ luật!</div>
+      <div class="alert-msg" id="alert-msg">Bạn đang dùng tiền từ hũ quan trọng cho chi tiêu thường ngày!</div>
+      <div class="alert-btns">
+        <button class="alert-btn cancel" onclick="closeAlert(false)">Hủy bỏ</button>
+        <button class="alert-btn confirm" onclick="closeAlert(true)">Vẫn tiếp tục</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast" id="toast"></div>
+  <div style="position:absolute;bottom:72px;left:0;right:0;text-align:center;font-size:9px;color:var(--text3);letter-spacing:.3px;pointer-events:none;padding:0 12px;">
+    🪙 <strong style="color:var(--text2);">Hũ Vàng</strong> &nbsp;|&nbsp; © 2026 <strong style="color:var(--text2);">Vũ Tiến Lực</strong> &nbsp;|&nbsp; 0969 068 849
+  </div>
+</div>
+</div>
+
+<script>
+// ===== DATA =====
+const JARS = [
+  { id:'j1', name:'Thiết yếu',    icon:'🏠', color:'var(--j1)', ratio:55, cats:['Ăn uống','Điện nước','Đi lại','Y tế'] },
+  { id:'j2', name:'Tự do TC',     icon:'💎', color:'var(--j2)', ratio:10, cats:['Đầu tư','Cổ phiếu','Crypto'] },
+  { id:'j3', name:'Tiết kiệm',    icon:'🎯', color:'var(--j3)', ratio:10, cats:['Tiết kiệm','Dự phòng'] },
+  { id:'j4', name:'Hưởng thụ',    icon:'🎉', color:'var(--j4)', ratio:10, cats:['Du lịch','Giải trí','Mua sắm'] },
+  { id:'j5', name:'Giáo dục',     icon:'📚', color:'var(--j5)', ratio:10, cats:['Khóa học','Sách','Học phí'] },
+  { id:'j6', name:'Từ thiện',     icon:'💝', color:'var(--j6)', ratio:5,  cats:['Quà tặng','Từ thiện','Hỗ trợ'] },
+];
+
+const PROTECTED = ['j2','j3']; // jars that trigger warning on expense
+
+let state = loadState();
+
+function loadState() {
+  const s = localStorage.getItem('6hu_state');
+  if (s) return JSON.parse(s);
+  return {
+    jars: JARS.reduce((o,j) => { o[j.id] = { balance:0, limit:0 }; return o; }, {}),
+    txs: [],
+    loans: [],
+    streak: 0,
+    missions: [
+      { id:'m1', title:'Tiêu hết hũ Hưởng thụ có ý nghĩa', target:100, current:0, badge:'🎊', jar:'j4' },
+      { id:'m2', title:'Giảm 5% chi tiêu hũ Thiết yếu', target:100, current:60, badge:'📉', jar:'j1' },
+      { id:'m3', title:'Không vượt hạn mức bất kỳ hũ nào', target:100, current:85, badge:'🏅', jar:null },
+    ],
+    ratios: JARS.reduce((o,j) => { o[j.id]=j.ratio; return o; }, {}),
+  };
+}
+
+function saveState() { localStorage.setItem('6hu_state', JSON.stringify(state)); }
+
+// ===== FORMAT =====
+function fmt(n) {
+  if (n >= 1e9) return (n/1e9).toFixed(1).replace(/\.0$/,'') + ' tỷ';
+  if (n >= 1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'') + 'tr';
+  if (n >= 1e3) return (n/1e3).toFixed(0) + 'k';
+  return n.toLocaleString('vi-VN');
+}
+function fmtFull(n) { return n.toLocaleString('vi-VN'); }
+
+// ===== CLOCK =====
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.getHours()+':'+(now.getMinutes()+'').padStart(2,'0');
+}
+setInterval(updateClock, 10000); updateClock();
+
+// ===== SCREEN NAV =====
+function goScreen(id, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  btn.classList.add('active');
+  if (id==='reports') renderReports('month');
+  if (id==='game') renderGame();
+  if (id==='settings') renderSettings();
+}
+
+// ===== RENDER HOME =====
+function renderHome() {
+  const totalBalance = Object.values(state.jars).reduce((s,j) => s+j.balance, 0);
+  const totalIncome = state.txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
+  const totalExpense = state.txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+
+  document.getElementById('total-display').innerHTML = `<span>₫</span>${fmt(totalBalance)}`;
+  document.getElementById('total-income-display').textContent = '₫'+fmt(totalIncome);
+  document.getElementById('total-expense-display').textContent = '₫'+fmt(totalExpense);
+
+  // Jar grid
+  const grid = document.getElementById('jar-grid');
+  grid.innerHTML = '';
+  JARS.forEach(j => {
+    const bal = state.jars[j.id].balance;
+    const lim = state.jars[j.id].limit;
+    const pct = lim > 0 ? Math.min(100, Math.round((lim - bal) / lim * 100)) : 0;
+    // spent vs limit
+    const spent = lim - bal; const spentPct = lim > 0 ? Math.min(100,(spent/lim*100)) : 0;
+    let barClass = 'bar-ok';
+    if (spentPct > 80) barClass = 'bar-danger';
+    else if (spentPct > 60) barClass = 'bar-warn';
+
+    grid.innerHTML += `
+      <div class="jar-card ${j.id}" onclick="showJarDetail('${j.id}')">
+        <span class="jar-icon">${j.icon}</span>
+        <div class="jar-name">${j.name}</div>
+        <div class="jar-amount" style="color:${j.color}">₫${fmt(bal)}</div>
+        <div class="jar-bar-wrap"><div class="jar-bar ${barClass}" style="width:${spentPct}%"></div></div>
+        <div class="jar-pct">${lim>0? Math.round(spentPct)+'% đã dùng':'Chưa có hạn mức'}</div>
+      </div>`;
+  });
+
+  // Transactions
+  const txList = document.getElementById('tx-list');
+  const recent = [...state.txs].reverse().slice(0,8);
+  if (!recent.length) {
+    txList.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">Chưa có giao dịch nào.<br>Nhấn + để bắt đầu ghi chép 🙂</div>`;
+    return;
+  }
+  txList.innerHTML = '';
+  recent.forEach(tx => {
+    const jar = JARS.find(j=>j.id===tx.jar);
+    const isIncome = tx.type==='income';
+    txList.innerHTML += `
+      <div class="tx-card">
+        <div class="tx-icon" style="background:${isIncome?'rgba(74,222,128,.12)':'rgba(248,113,113,.12)'}">
+          ${jar ? jar.icon : (isIncome?'💰':'💸')}
+        </div>
+        <div class="tx-info">
+          <div class="tx-name">${tx.note || (isIncome?'Thu nhập':'Chi tiêu')}</div>
+          <div class="tx-meta">${tx.cat||''} ${jar?'• '+jar.name:''} • ${tx.date}</div>
+        </div>
+        <div class="tx-amount ${isIncome?'income':'expense'}">${isIncome?'+':'-'}₫${fmt(tx.amount)}</div>
+      </div>`;
+  });
+}
+
+// ===== SMART NUMPAD =====
+let npExpr = '';  // raw expression string e.g. "50000+30k"
+let npTrExpr = '';
+
+const QUICK_AMOUNTS = [
+  { label:'50k', val:50000 },
+  { label:'100k', val:100000 },
+  { label:'200k', val:200000 },
+  { label:'500k', val:500000 },
+  { label:'1tr', val:1000000 },
+  { label:'2tr', val:2000000 },
+  { label:'5tr', val:5000000 },
+  { label:'10tr', val:10000000 },
+  { label:'20tr', val:20000000 },
+];
+
+function parseNpExpr(expr) {
+  if (!expr) return 0;
+  // expand k/m suffixes: 50k -> 50000, 1.5m -> 1500000
+  let e = expr.replace(/([\d.]+)k/gi, (_, n) => parseFloat(n) * 1000);
+  e = e.replace(/([\d.]+)m/gi, (_, n) => parseFloat(n) * 1000000);
+  // only allow safe math: digits, +, -, spaces
+  if (!/^[\d+\-. ]+$/.test(e)) return 0;
+  try { return Math.max(0, Math.round(Function('"use strict";return (' + e + ')')())); }
+  catch { return 0; }
+}
+
+function npDisplayStr(expr) {
+  const val = parseNpExpr(expr);
+  if (!val && !expr) return '₫0';
+  return '₫' + val.toLocaleString('vi-VN');
+}
+
+function npInput000() {
+  if (!npExpr) return; // don't allow leading zeros
+  const last = npExpr.slice(-1);
+  if (['+','-','k','m'].includes(last)) return;
+  npExpr += '000';
+  updateNpDisplay();
+}
+
+function npInput(ch) {
+  const ops = ['+','-'];
+  const lastChar = npExpr.slice(-1);
+
+  if (ch === '0' && !npExpr) return; // leading zero guard
+
+  // prevent double operators
+  if (ops.includes(ch) && ops.includes(lastChar)) {
+    npExpr = npExpr.slice(0,-1) + ch;
+  } else if (ch === 'k' || ch === 'm') {
+    // only attach to last number segment
+    if (/[\dk]/.test(lastChar)) {
+      // replace existing suffix
+      if (lastChar === 'k' || lastChar === 'm') npExpr = npExpr.slice(0,-1);
+      npExpr += ch;
+    }
+  } else {
+    npExpr += ch;
+  }
+
+  updateNpDisplay();
+}
+
+function npDel() {
+  npExpr = npExpr.slice(0,-1);
+  updateNpDisplay();
+}
+
+function npClear() {
+  npExpr = '';
+  updateNpDisplay();
+}
+
+function npAddQuick(val) {
+  const lastChar = npExpr.slice(-1);
+  // if expression ends with operator or empty, just append number
+  if (!npExpr || ['+','-'].includes(lastChar)) {
+    npExpr += val;
+  } else {
+    npExpr += '+' + val;
+  }
+  updateNpDisplay();
+}
+
+function updateNpDisplay() {
+  const val = parseNpExpr(npExpr);
+  const disp = document.getElementById('np-display');
+  const expr = document.getElementById('np-expr');
+  const hidden = document.getElementById('tx-amount');
+  if (!disp) return;
+
+  // show expression if it has operators
+  const hasOp = /[+\-]/.test(npExpr);
+  expr.textContent = hasOp ? npExpr : '';
+
+  if (!npExpr || val === 0) {
+    disp.textContent = '₫0';
+    disp.className = 'numpad-value zero';
+    hidden.value = '0';
+  } else {
+    disp.textContent = '₫' + val.toLocaleString('vi-VN');
+    disp.className = 'numpad-value has-value';
+    hidden.value = val;
+  }
+  // update split preview if income
+  if (document.getElementById('split-section').style.display !== 'none') {
+    updateSplitPreview();
+  }
+}
+
+function renderQuickAmounts() {
+  const container = document.getElementById('quick-amounts');
+  if (!container) return;
+  container.innerHTML = '';
+  QUICK_AMOUNTS.forEach(q => {
+    container.innerHTML += `<button class="qa-btn add" onclick="npAddQuick(${q.val})">${q.label}</button>`;
+  });
+  // clear button
+  container.innerHTML += `<button class="qa-btn" style="color:var(--red);border-color:rgba(248,113,113,.2);background:rgba(248,113,113,.06);" onclick="npClear()">✕ Xóa</button>`;
+}
+
+// Transfer numpad
+function npInputTr(ch) {
+  const ops = ['+','-'];
+  const lastChar = npTrExpr.slice(-1);
+  if (ch === '0' && !npTrExpr) return;
+  if (ops.includes(ch) && ops.includes(lastChar)) { npTrExpr = npTrExpr.slice(0,-1) + ch; }
+  else if (ch === 'k' || ch === 'm') {
+    if (/[\dk]/.test(lastChar)) {
+      if (lastChar === 'k' || lastChar === 'm') npTrExpr = npTrExpr.slice(0,-1);
+      npTrExpr += ch;
+    }
+  } else { npTrExpr += ch; }
+  updateNpTrDisplay();
+}
+
+function npDelTr() { npTrExpr = npTrExpr.slice(0,-1); updateNpTrDisplay(); }
+
+function updateNpTrDisplay() {
+  const val = parseNpExpr(npTrExpr);
+  const disp = document.getElementById('np-display-tr');
+  const expr = document.getElementById('np-expr-tr');
+  const hidden = document.getElementById('tr-amount');
+  if (!disp) return;
+  const hasOp = /[+\-]/.test(npTrExpr);
+  if (expr) expr.textContent = hasOp ? npTrExpr : '';
+  if (!npTrExpr || val === 0) {
+    disp.textContent = '₫0'; disp.className = 'numpad-value zero'; hidden.value = '0';
+  } else {
+    disp.textContent = '₫' + val.toLocaleString('vi-VN');
+    disp.className = 'numpad-value has-value'; hidden.value = val;
+  }
+}
+
+// ===== MODAL =====
+let currentType = 'income';
+let selectedJar = null;
+let selectedCat = null;
+
+function openModal(type) {
+  if (type === 'transfer') {
+    renderTransferModal();
+    document.getElementById('transfer-modal').classList.add('open');
+    return;
+  }
+  currentType = type;
+  selectedJar = null; selectedCat = null;
+  npExpr = '';
+  updateNpDisplay();
+  renderQuickAmounts();
+  document.getElementById('tx-note').value = '';
+  document.getElementById('modal-title').textContent = type==='income' ? '💰 Thêm thu nhập' : '💸 Ghi chi tiêu';
+
+  // type toggle
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.querySelector(`.type-btn.${type}`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  const splitSec = document.getElementById('split-section');
+  const jarSec = document.getElementById('jar-section');
+  if (type === 'income') { splitSec.style.display='block'; jarSec.style.display='none'; updateSplitPreview(); }
+  else { splitSec.style.display='none'; jarSec.style.display='block'; renderJarSelect(); renderCatChips(); }
+
+  document.getElementById('tx-modal').classList.add('open');
+}
+
+function setType(type, btn) {
+  currentType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const splitSec = document.getElementById('split-section');
+  const jarSec = document.getElementById('jar-section');
+  if (type==='income') { splitSec.style.display='block'; jarSec.style.display='none'; updateSplitPreview(); }
+  else { splitSec.style.display='none'; jarSec.style.display='block'; renderJarSelect(); renderCatChips(); }
+}
+
+function updateSplitPreview() {
+  const amount = parseFloat(document.getElementById('tx-amount').value) || 0; // fed by numpad
+  const container = document.getElementById('split-preview');
+  container.innerHTML = '';
+  JARS.forEach(j => {
+    const ratio = state.ratios[j.id];
+    const val = Math.round(amount * ratio / 100);
+    container.innerHTML += `
+      <div class="split-row">
+        <div class="split-row-label">
+          <div class="split-dot" style="background:${j.color}"></div>
+          <span>${j.icon} ${j.name}</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <span style="color:var(--text2);font-size:11px">${ratio}%</span>
+          <span class="split-val" style="color:${j.color}">₫${fmt(val)}</span>
+        </div>
+      </div>`;
+  });
+}
+
+function renderJarSelect() {
+  const grid = document.getElementById('jar-select-grid');
+  grid.innerHTML = '';
+  JARS.forEach(j => {
+    grid.innerHTML += `
+      <div class="jar-sel" id="jsel-${j.id}" onclick="selectJar('${j.id}')">
+        <div class="icon">${j.icon}</div>
+        <div class="lbl">${j.name}</div>
+      </div>`;
+  });
+}
+
+function selectJar(id) {
+  selectedJar = id;
+  document.querySelectorAll('.jar-sel').forEach(el => el.classList.remove('selected'));
+  document.getElementById('jsel-'+id).classList.add('selected');
+  renderCatChips(id);
+}
+
+function renderCatChips(jarId) {
+  const container = document.getElementById('cat-chips');
+  const jar = JARS.find(j=>j.id===(jarId||selectedJar));
+  const cats = jar ? jar.cats : ['Ăn uống','Mua sắm','Giải trí','Khác'];
+  container.innerHTML = '';
+  cats.forEach(c => {
+    container.innerHTML += `<div class="cat-chip" onclick="selectCat(this,'${c}')">${c}</div>`;
+  });
+}
+
+function selectCat(el, cat) {
+  selectedCat = cat;
+  document.querySelectorAll('.cat-chip').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+let alertCallback = null;
+function showAlert(title, msg, cb) {
+  document.getElementById('alert-title').textContent = title;
+  document.getElementById('alert-msg').textContent = msg;
+  document.getElementById('alert-overlay').classList.add('open');
+  alertCallback = cb;
+}
+function closeAlert(confirmed) {
+  document.getElementById('alert-overlay').classList.remove('open');
+  if (alertCallback) alertCallback(confirmed);
+  alertCallback = null;
+}
+
+function submitTx() {
+  const amount = parseNpExpr(npExpr) || parseFloat(document.getElementById('tx-amount').value) || 0;
+  const note = document.getElementById('tx-note').value;
+  if (!amount || amount <= 0) { showToast('⚠️ Nhập số tiền hợp lệ!'); return; }
+
+  const doSubmit = () => {
+    const now = new Date();
+    const dateStr = now.getDate()+'/'+(now.getMonth()+1);
+
+    if (currentType === 'income') {
+      JARS.forEach(j => {
+        const val = Math.round(amount * state.ratios[j.id] / 100);
+        state.jars[j.id].balance += val;
+        if (state.jars[j.id].limit === 0) state.jars[j.id].limit = val * 1.5;
+        else state.jars[j.id].limit += val;
+      });
+      state.txs.push({ type:'income', amount, note:note||'Thu nhập', date:dateStr, jar:null, cat:'Thu nhập' });
+      showToast('✅ Đã phân bổ vào 6 hũ!');
+    } else {
+      if (!selectedJar) { showToast('⚠️ Chọn hũ chi tiêu!'); return; }
+      state.jars[selectedJar].balance = Math.max(0, state.jars[selectedJar].balance - amount);
+      state.txs.push({ type:'expense', amount, note:note||selectedCat||'Chi tiêu', date:dateStr, jar:selectedJar, cat:selectedCat||'' });
+      showToast('✅ Đã ghi nhận chi tiêu!');
+    }
+    saveState();
+    renderHome();
+    document.getElementById('tx-modal').classList.remove('open');
+  };
+
+  // Warning for protected jars
+  if (currentType === 'expense' && selectedJar && PROTECTED.includes(selectedJar)) {
+    const jar = JARS.find(j=>j.id===selectedJar);
+    showAlert('⚠️ Vi phạm kỷ luật!',
+      `Bạn đang dùng hũ "${jar.name}" để chi tiêu thường ngày. Đây là hũ quan trọng cần được bảo vệ!`,
+      (confirmed) => { if (confirmed) doSubmit(); });
+    return;
+  }
+  doSubmit();
+}
+
+// Transfer
+let fromJar = null, toJar = null;
+function renderTransferModal() {
+  fromJar = null; toJar = null;
+  npTrExpr = '';
+  updateNpTrDisplay();
+  ['from','to'].forEach(prefix => {
+    const grid = document.getElementById(prefix+'-jar-grid');
+    grid.innerHTML = '';
+    JARS.forEach(j => {
+      grid.innerHTML += `
+        <div class="jar-sel" id="${prefix}-jsel-${j.id}" onclick="selectTransferJar('${prefix}','${j.id}')">
+          <div class="icon">${j.icon}</div>
+          <div class="lbl" style="font-size:8px">${j.name}</div>
+        </div>`;
+    });
+  });
+}
+
+function selectTransferJar(prefix, id) {
+  if (prefix==='from') fromJar = id;
+  else toJar = id;
+  document.querySelectorAll(`#${prefix}-jar-grid .jar-sel`).forEach(e=>e.classList.remove('selected'));
+  document.getElementById(`${prefix}-jsel-${id}`).classList.add('selected');
+}
+
+function submitTransfer() {
+  const amount = parseNpExpr(npTrExpr) || parseFloat(document.getElementById('tr-amount').value) || 0;
+  if (!amount || !fromJar || !toJar) { showToast('⚠️ Điền đầy đủ thông tin!'); return; }
+  if (fromJar === toJar) { showToast('⚠️ Chọn 2 hũ khác nhau!'); return; }
+  if (state.jars[fromJar].balance < amount) { showToast('⚠️ Hũ cho mượn không đủ tiền!'); return; }
+  state.jars[fromJar].balance -= amount;
+  state.jars[toJar].balance += amount;
+  state.loans.push({ from:fromJar, to:toJar, amount, date:new Date().toLocaleDateString('vi-VN') });
+  const fj = JARS.find(j=>j.id===fromJar), tj = JARS.find(j=>j.id===toJar);
+  state.txs.push({ type:'expense', amount, note:`Mượn: ${fj.name} → ${tj.name}`, date:new Date().getDate()+'/'+(new Date().getMonth()+1), jar:fromJar, cat:'Mượn nội bộ' });
+  saveState(); renderHome();
+  document.getElementById('transfer-modal').classList.remove('open');
+  showToast('✅ Đã ghi nhận khoản mượn nội bộ!');
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== JAR DETAIL =====
+function showJarDetail(id) {
+  const jar = JARS.find(j=>j.id===id);
+  const bal = state.jars[id].balance;
+  openModal('expense');
+  selectJar(id);
+  document.getElementById('modal-title').textContent = `${jar.icon} ${jar.name}  •  ₫${fmt(bal)}`;
+}
+
+// ===== REPORTS =====
+let currentRTab = 'month';
+function switchRTab(btn, tab) {
+  currentRTab = tab;
+  document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderReports(tab);
+}
+
+function renderReports(tab) {
+  const container = document.getElementById('report-content');
+
+  if (tab === 'month') {
+    // Jar status table
+    let html = '<div class="sec-title">Trạng thái các hũ</div>';
+    JARS.forEach(j => {
+      const bal = state.jars[j.id].balance;
+      const lim = state.jars[j.id].limit;
+      const spent = lim - bal;
+      const spentPct = lim > 0 ? Math.min(100, Math.round(spent/lim*100)) : 0;
+      let barClass = 'bar-ok';
+      if (spentPct > 80) barClass = 'bar-danger';
+      else if (spentPct > 60) barClass = 'bar-warn';
+      html += `
+        <div style="background:var(--surface);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;border:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:20px">${j.icon}</span><span style="font-size:13px;font-weight:700">${j.name}</span></div>
+            <span style="font-size:14px;font-weight:800;color:${j.color}">₫${fmt(bal)}</span>
+          </div>
+          <div class="jar-bar-wrap" style="height:6px;"><div class="jar-bar ${barClass}" style="width:${spentPct}%"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--text3);">
+            <span>Đã chi: ₫${fmt(Math.max(0,spent))}</span>
+            <span>${spentPct}% ngân sách</span>
+          </div>
+        </div>`;
+    });
+    container.innerHTML = html;
+
+  } else if (tab === 'trend') {
+    // Simulated monthly data
+    const months = ['T1','T2','T3','T4','T5'];
+    const incomes = [18000000,20000000,19500000,21000000, state.txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0)||22000000];
+    const expenses = [14000000,16000000,15000000,17000000, state.txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0)||14500000];
+    const maxVal = Math.max(...incomes,...expenses);
+
+    let barsHtml = '';
+    months.forEach((m,i) => {
+      const ih = Math.round(incomes[i]/maxVal*110);
+      const eh = Math.round(expenses[i]/maxVal*110);
+      barsHtml += `
+        <div class="chart-col">
+          <div style="display:flex;align-items:flex-end;gap:3px;height:120px;">
+            <div class="chart-bar-inner" style="height:${ih}px;background:rgba(74,222,128,.6);width:14px;"></div>
+            <div class="chart-bar-inner" style="height:${eh}px;background:rgba(248,113,113,.6);width:14px;"></div>
+          </div>
+          <div class="chart-label">${m}</div>
+        </div>`;
+    });
+
+    container.innerHTML = `
+      <div class="sec-title">Thu - Chi 5 tháng gần đây</div>
+      <div style="background:var(--surface);border-radius:var(--radius-sm);padding:16px;margin-bottom:12px;border:1px solid var(--border);">
+        <div style="display:flex;gap:16px;margin-bottom:12px;font-size:11px;">
+          <div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:2px;background:rgba(74,222,128,.6)"></div>Thu nhập</div>
+          <div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:2px;background:rgba(248,113,113,.6)"></div>Chi tiêu</div>
+        </div>
+        <div class="chart-bar-wrap" style="display:flex;align-items:flex-end;gap:8px;height:130px;">${barsHtml}</div>
+      </div>`;
+
+  } else if (tab === 'diagnose') {
+    const advices = [
+      { icon:'💡', title:'Thiết yếu vượt hạn mức', text:'Tháng này hũ Thiết yếu dùng nhiều hơn dự kiến. Hãy kiểm tra lại các khoản ăn ngoài và chi phí di chuyển.' },
+      { icon:'🎯', title:'Hũ Tự do TC đang tốt', text:'Bạn đã giữ đúng kỷ luật cho hũ đầu tư. Tiếp tục streak này thêm 2 tháng nữa để nhận huy chương!' },
+      { icon:'📉', title:'Gợi ý tiết kiệm', text:'Nếu giảm 10% chi tiêu thiết yếu, bạn có thể tích lũy thêm ~2 triệu/tháng vào hũ đầu tư.' },
+    ];
+    container.innerHTML = '<div class="sec-title">Lời khuyên thông minh</div>' +
+      advices.map(a => `<div class="advice-card"><div class="advice-icon">${a.icon}</div><div class="advice-text"><strong>${a.title}</strong>${a.text}</div></div>`).join('');
+  }
+}
+
+// ===== GAME =====
+const BADGES = [
+  { icon:'🥇', name:'Khởi đầu', desc:'Giao dịch đầu tiên' },
+  { icon:'🔥', name:'3 tháng streak', desc:'Kỷ luật 3 tháng', locked: true },
+  { icon:'💎', name:'Nhà đầu tư', desc:'Tiết kiệm 6 tháng', locked: true },
+  { icon:'🏆', name:'Bậc thầy', desc:'Hoàn thành 10 nhiệm vụ', locked: true },
+  { icon:'🌟', name:'Siêu sao', desc:'Streak 12 tháng', locked: true },
+  { icon:'🎯', name:'Mục tiêu', desc:'Đạt mục tiêu đầu tiên', locked: state.txs.length === 0 },
+];
+
+function renderGame() {
+  const streak = state.streak || (state.txs.length > 0 ? 1 : 0);
+  document.getElementById('streak-num').textContent = streak;
+  const stars = document.getElementById('streak-stars');
+  stars.innerHTML = Array(Math.min(streak,5)).fill('⭐').join('') || '☆☆☆☆☆';
+
+  const badgeGrid = document.getElementById('badge-grid');
+  badgeGrid.innerHTML = '';
+  BADGES.forEach(b => {
+    const locked = b.locked || (b.name==='Khởi đầu' && state.txs.length===0);
+    badgeGrid.innerHTML += `
+      <div class="badge-card ${locked?'locked':''}">
+        <div class="badge-icon">${b.icon}</div>
+        <div class="badge-name">${b.name}</div>
+      </div>`;
+  });
+
+  const missionList = document.getElementById('mission-list');
+  missionList.innerHTML = '';
+  state.missions.forEach(m => {
+    missionList.innerHTML += `
+      <div class="mission-card">
+        <div class="mission-top">
+          <div class="mission-title">${m.title}</div>
+          <div class="mission-badge">${m.badge}</div>
+        </div>
+        <div class="mission-bar-wrap"><div class="mission-bar" style="width:${m.current}%"></div></div>
+        <div class="mission-meta"><span>${m.current}% hoàn thành</span><span>${m.current>=100?'✅ Xong':'Đang thực hiện'}</span></div>
+      </div>`;
+  });
+}
+
+// ===== SETTINGS =====
+function renderSettings() {
+  const container = document.getElementById('ratio-settings');
+  container.innerHTML = '';
+  JARS.forEach(j => {
+    container.innerHTML += `
+      <div class="settings-item">
+        <div class="settings-item-left">
+          <div class="settings-icon" style="background:rgba(255,255,255,.05)">${j.icon}</div>
+          <div><div class="settings-label">${j.name}</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="number" value="${state.ratios[j.id]}" min="0" max="100"
+            style="width:48px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 8px;color:var(--text);font-family:inherit;font-size:13px;font-weight:700;text-align:center;outline:none;"
+            onchange="updateRatio('${j.id}',this.value)">
+          <span style="color:var(--text2);font-size:13px;">%</span>
+        </div>
+      </div>`;
+  });
+}
+
+function updateRatio(jarId, val) {
+  state.ratios[jarId] = parseFloat(val) || 0;
+  saveState();
+  showToast('✅ Đã cập nhật tỷ lệ!');
+}
+
+function resetData() {
+  showAlert('🗑️ Xóa tất cả dữ liệu?', 'Toàn bộ giao dịch và số dư sẽ bị xóa vĩnh viễn. Không thể hoàn tác!', (confirmed) => {
+    if (confirmed) {
+      localStorage.removeItem('6hu_state');
+      state = loadState();
+      renderHome();
+      showToast('✅ Đã xóa toàn bộ dữ liệu!');
+    }
+  });
+}
+
+// ===== STORAGE & SYNC =====
+let currentSyncOpt = 'local';
+
+const STORAGE_KEY = '6hu_state';
+const BACKUP_KEY  = '6hu_backup_meta';
+
+function openSyncModal() {
+  updateStorageStats();
+  updateSyncStatus();
+  document.getElementById('sync-modal').classList.add('open');
+}
+
+function selectSyncOpt(opt) {
+  currentSyncOpt = opt;
+  ['local','file','icloud'].forEach(o => {
+    document.getElementById('opt-' + o).classList.toggle('active-opt', o === opt);
+    const chk = document.getElementById('check-' + o);
+    chk.classList.toggle('on', o === opt);
+    chk.textContent = o === opt ? '✓' : '';
+  });
+  document.getElementById('cloud-import-section').style.display = opt === 'icloud' ? 'block' : 'none';
+}
+
+function updateStorageStats() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY) || '';
+    const bytes = new Blob([raw]).size;
+    const kb = (bytes / 1024).toFixed(1);
+    const pct = Math.min(100, (bytes / (5 * 1024 * 1024)) * 100).toFixed(1);
+    document.getElementById('storage-used-text').textContent = kb + ' KB / 5 MB';
+    document.getElementById('storage-bar').style.width = pct + '%';
+    document.getElementById('tx-count-text').textContent = state.txs.length + ' giao dịch đã lưu • cập nhật ' + new Date().toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit'});
+    document.getElementById('sync-size-badge').textContent = kb + ' KB';
+  } catch(e) {}
+}
+
+function updateSyncStatus() {
+  const meta = JSON.parse(localStorage.getItem(BACKUP_KEY) || '{}');
+  const dot = document.getElementById('sync-dot');
+  const txt = document.getElementById('sync-status-text');
+  if (!txt) return;
+  if (meta.lastSave) {
+    const d = new Date(meta.lastSave);
+    const ago = Math.round((Date.now() - d) / 60000);
+    dot.className = 'sync-status-dot';
+    txt.textContent = 'Đã lưu ' + (ago < 1 ? 'vừa xong' : ago + ' phút trước') + ' • ' + (meta.method || 'LocalStorage');
+  } else {
+    dot.className = 'sync-status-dot warn';
+    txt.textContent = 'Chưa có bản sao lưu thủ công';
+  }
+  // also update settings subtitle
+  const sub = document.getElementById('sync-settings-sub');
+  if (sub && meta.lastSave) {
+    const d = new Date(meta.lastSave);
+    sub.textContent = 'Lưu lần cuối: ' + d.toLocaleDateString('vi-VN') + ' ' + d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+  }
+}
+
+function saveMeta(method) {
+  localStorage.setItem(BACKUP_KEY, JSON.stringify({ lastSave: new Date().toISOString(), method }));
+}
+
+// --- Export JSON file (download) ---
+function doExportJSON() {
+  const data = JSON.stringify(state, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const now = new Date();
+  a.href = url;
+  a.download = 'hu-vang-backup-' + now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  saveMeta('File JSON');
+  showToast('✅ Đã tải file sao lưu về máy!');
+}
+
+// --- doExport: context-aware based on selected option ---
+function doExport() {
+  if (currentSyncOpt === 'local') {
+    saveState();
+    saveMeta('LocalStorage');
+    updateStorageStats();
+    updateSyncStatus();
+    showToast('✅ Đã lưu vào LocalStorage!');
+  } else if (currentSyncOpt === 'file') {
+    doExportJSON();
+    updateStorageStats();
+  } else if (currentSyncOpt === 'icloud') {
+    copyCloudCode();
+  }
+}
+
+// --- Copy Base64 cloud sync code ---
+function copyCloudCode() {
+  const data = JSON.stringify(state);
+  const encoded = btoa(unescape(encodeURIComponent(data)));
+  const tag = '[[HU_VANG_V1:' + encoded + ':END]]';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(tag).then(() => {
+      saveMeta('iCloud/Cloud Code');
+      showToast('✅ Đã sao chép mã! Dán vào iCloud Notes / Google Keep.');
+    }).catch(() => fallbackCopy(tag));
+  } else {
+    fallbackCopy(tag);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); showToast('✅ Đã sao chép mã đồng bộ!'); saveMeta('iCloud/Cloud Code'); }
+  catch(e) { showToast('⚠️ Hãy sao chép thủ công từ ô bên dưới'); }
+  document.body.removeChild(ta);
+}
+
+// --- Import from cloud code string ---
+function importFromCode() {
+  const raw = document.getElementById('cloud-code-input').value.trim();
+  const match = raw.match(/\[\[HU_VANG_V1:([\s\S]+?):END\]\]/);
+  if (!match) { showToast('⚠️ Mã không hợp lệ. Kiểm tra lại!'); return; }
+  try {
+    const decoded = decodeURIComponent(escape(atob(match[1])));
+    const parsed = JSON.parse(decoded);
+    if (!parsed.jars || !parsed.txs) throw new Error('bad structure');
+    state = parsed;
+    saveState();
+    renderHome();
+    document.getElementById('cloud-code-input').value = '';
+    document.getElementById('sync-modal').classList.remove('open');
+    showToast('✅ Đã khôi phục dữ liệu thành công!');
+  } catch(e) {
+    showToast('⚠️ Lỗi giải mã: ' + e.message);
+  }
+}
+
+// --- Import from JSON file ---
+function triggerImport() {
+  document.getElementById('import-file-input').click();
+}
+
+function handleImportFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      let parsed;
+      const text = e.target.result.trim();
+      // support both raw JSON and cloud-code format
+      const match = text.match(/\[\[HU_VANG_V1:([\s\S]+?):END\]\]/);
+      if (match) {
+        parsed = JSON.parse(decodeURIComponent(escape(atob(match[1]))));
+      } else {
+        parsed = JSON.parse(text);
+      }
+      if (!parsed.jars || !parsed.txs) throw new Error('Cấu trúc file không đúng');
+      state = parsed;
+      saveState();
+      renderHome();
+      document.getElementById('sync-modal').classList.remove('open');
+      showToast('✅ Đã nhập dữ liệu: ' + parsed.txs.length + ' giao dịch!');
+    } catch(err) {
+      showToast('⚠️ Lỗi đọc file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// Auto-save every 30 seconds silently
+setInterval(() => {
+  saveState();
+  const sub = document.getElementById('sync-settings-sub');
+  if (sub) {
+    const now = new Date();
+    sub.textContent = 'Lưu lần cuối: ' + now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+  }
+}, 30000);
+
+// ===== INIT =====
+
+// ===== WISDOM / THÀNH NGỮ =====
+const WISDOMS = [
+  { text: '"Tích tiểu thành đại – mỗi nghìn đồng tiết kiệm hôm nay là nền móng của tự do tài chính ngày mai."', src: '— Tục ngữ Việt Nam' },
+  { text: '"Người biết chi tiêu không phải người nghèo nhất, mà là người thông minh nhất."', src: '— Khuyết danh' },
+  { text: '"Đừng để tiền làm chủ bạn; hãy học cách làm chủ đồng tiền."', src: '— T. Harv Eker' },
+  { text: '"Của bền tại người – tài sản thực sự nằm ở thói quen, không phải số dư."', src: '— Tục ngữ Việt Nam' },
+  { text: '"Tiết kiệm không phải là thiếu hụt, mà là lựa chọn ưu tiên cho tương lai."', src: '— Warren Buffett (diễn giải)' },
+  { text: '"Mưa dầm thấm lâu – đầu tư đều đặn mỗi tháng đánh bại mọi cú đặt cược lớn."', src: '— Phương pháp DCA' },
+  { text: '"Hũ Thiết yếu no đủ, hũ Tự do TC lớn dần – đó là con đường đến bình an tài chính."', src: '— Phương pháp 6 Chiếc Hũ' },
+  { text: '"Đừng bao giờ phụ thuộc vào một nguồn thu nhập duy nhất."', src: '— Warren Buffett' },
+  { text: '"Có làm thì mới có ăn – nhưng biết giữ mới thực sự giàu."', src: '— Tục ngữ Việt Nam' },
+  { text: '"Chi tiêu ít hơn những gì bạn kiếm được – đó là toàn bộ bí quyết tài chính."', src: '— Samuel Johnson' },
+  { text: '"Kẻ thù lớn nhất của kế hoạch tài chính là sự bốc đồng."', src: '— Dave Ramsey' },
+  { text: '"Giàu không phải do kiếm nhiều mà do tiêu ít hơn thu."', src: '— Benjamin Franklin' },
+  { text: '"Hãy trả lương cho bản thân trước – để dành trước khi tiêu."', src: '— George S. Clason' },
+  { text: '"Tiền không mọc trên cây, nhưng thói quen tốt thì có thể trồng được."', src: '— Khuyết danh' },
+  { text: '"Biết mình biết ta – theo dõi chi tiêu là bước đầu tiên để làm chủ tiền bạc."', src: '— Lời khuyên tài chính' },
+  { text: '"Con chim khôn chọn cành mà đậu – đầu tư khôn ngoan chọn thời điểm mà vào."', src: '— Tục ngữ Việt Nam (ứng dụng)' },
+  { text: '"Đồng tiền liền khúc ruột – hãy yêu quý, trân trọng và quản lý nó thật tốt."', src: '— Tục ngữ Việt Nam' },
+  { text: '"Không lập kế hoạch là kế hoạch cho sự thất bại."', src: '— Benjamin Franklin' },
+  { text: '"Lãi kép là kỳ diệu thứ tám của thế giới – ai hiểu sẽ kiếm được nó, ai không hiểu sẽ phải trả nó."', src: '— Albert Einstein (diễn giải)' },
+  { text: '"Khéo ăn thì no, khéo co thì ấm – quản tài chính là nghệ thuật của sự cân bằng."', src: '— Tục ngữ Việt Nam' },
+];
+
+let wisdomIdx = Math.floor(Math.random() * WISDOMS.length);
+
+function showWisdom() {
+  const w = WISDOMS[wisdomIdx % WISDOMS.length];
+  const el = document.getElementById('wisdom-sub');
+  if (el) el.innerHTML = '<span style="font-style:italic;color:var(--text2);font-size:10.5px;line-height:1.5;display:block;margin-top:4px;">' + w.text + ' <span style="color:var(--text3);">' + w.src + '</span></span>';
+  const card = document.getElementById('wisdom-card-text');
+  if (card) card.innerHTML = w.text + ' <span style="font-size:10px;color:var(--text3);font-style:normal;">' + w.src + '</span>';
+  wisdomIdx++;
+}
+
+// Wisdom toast popup (bottom)
+function wisdomToast() {
+  const w = WISDOMS[Math.floor(Math.random() * WISDOMS.length)];
+  const t = document.getElementById('toast');
+  t.innerHTML = '💡 ' + w.text;
+  t.style.maxWidth = '90%';
+  t.style.whiteSpace = 'normal';
+  t.style.textAlign = 'center';
+  t.style.padding = '12px 16px';
+  t.style.lineHeight = '1.5';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 5000);
+}
+
+showWisdom();
+// rotate wisdom in header every 12 seconds
+setInterval(showWisdom, 12000);
+// show wisdom toast every 60s
+setTimeout(function loop() { wisdomToast(); setTimeout(loop, 60000); }, 15000);
+
+renderHome();
+</script>
+</body>
+</html>
