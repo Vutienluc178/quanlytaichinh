@@ -1311,6 +1311,7 @@
   <div class="modal-overlay" id="tx-modal">
     <div class="modal" style="padding-bottom:28px;">
       <div class="modal-handle"></div>
+      <div style="text-align:center;font-size:14px;font-weight:800;margin-bottom:10px;" id="modal-title">💰 Thêm thu nhập</div>
 
       <!-- Type + Amount header -->
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
@@ -1318,7 +1319,7 @@
           <button class="type-btn active income" onclick="setType('income',this)">💰 Thu</button>
           <button class="type-btn expense" onclick="setType('expense',this)">💸 Chi</button>
         </div>
-        <div id="np-display-badge" style="background:var(--surface2);border-radius:10px;padding:8px 14px;font-size:16px;font-weight:800;min-width:90px;text-align:center;color:var(--text3);">₫0</div>
+        <div id="np-display" style="background:var(--surface2);border-radius:10px;padding:8px 14px;font-size:16px;font-weight:800;min-width:90px;text-align:center;color:var(--text3);" class="numpad-value zero">₫0</div>
       </div>
 
       <!-- Quick expense row (shown for expense) -->
@@ -2023,11 +2024,11 @@ function updateNpDisplay() {
 
   if (!npExpr || val === 0) {
     disp.textContent = '₫0';
-    disp.className = 'numpad-value zero';
+    disp.style.color = 'var(--text3)';
     hidden.value = '0';
   } else {
     disp.textContent = '₫' + val.toLocaleString('vi-VN');
-    disp.className = 'numpad-value has-value';
+    disp.style.color = 'var(--text)';
     hidden.value = val;
   }
   // update amount badge
@@ -2149,11 +2150,11 @@ function openModal(type) {
   renderQuickAmounts();
   document.getElementById('tx-note').value = '';
   document.getElementById('jar-balance-info').style.display = 'none';
-  document.getElementById('modal-title').textContent = type==='income' ? '💰 Thêm thu nhập' : '💸 Ghi chi tiêu';
+  var mtEl = document.getElementById('modal-title'); if (mtEl) mtEl.textContent = type==='income' ? '💰 Thêm thu nhập' : '💸 Ghi chi tiêu';
 
   // type toggle
   document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-  const activeBtn = document.querySelector(`.type-btn.${type}`);
+  var activeBtn = document.querySelector('.type-btn.' + type);
   if (activeBtn) activeBtn.classList.add('active');
 
   const splitSec = document.getElementById('split-section');
@@ -2488,7 +2489,7 @@ function showJarDetail(id) {
   const bal = state.jars[id].balance;
   openModal('expense');
   selectJar(id);
-  document.getElementById('modal-title').textContent = `${jar.icon} ${jar.name}  •  ₫${fmt(bal)}`;
+  var mtEl = document.getElementById('modal-title'); if (mtEl) mtEl.textContent = jar.icon + ' ' + jar.name + '  •  ₫' + fmt(bal);
 }
 
 // ===== REPORTS =====
