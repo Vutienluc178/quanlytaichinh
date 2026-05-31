@@ -774,12 +774,18 @@
 <div class="phone-wrap">
 
 <div class="phone">
-  <div class="status-bar">
-    <span id="clock">9:41</span>
-    <button id="theme-toggle" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:99px;display:flex;align-items:center;gap:5px;transition:background .2s;" title="Đổi giao diện">
-      <span id="theme-icon" style="font-size:15px;">🌙</span>
-      <span id="theme-label" style="font-size:10px;font-weight:700;color:var(--text2);">Tối</span>
-    </button>
+  <div class="status-bar" style="flex-direction:column;align-items:stretch;gap:0;padding-bottom:8px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <span id="clock" style="font-size:13px;font-weight:700;"></span>
+        <span id="solar-date" style="font-size:11px;color:var(--text2);margin-left:7px;"></span>
+      </div>
+      <button id="theme-toggle" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:99px;display:flex;align-items:center;gap:5px;transition:background .2s;" title="Đổi giao diện">
+        <span id="theme-icon" style="font-size:15px;">🌙</span>
+        <span id="theme-label" style="font-size:10px;font-weight:700;color:var(--text2);">Tối</span>
+      </button>
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-top:2px;" id="lunar-date"></div>
   </div>
 
   <!-- ===================== DASHBOARD ===================== -->
@@ -789,7 +795,7 @@
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div>
             <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--j2);text-transform:uppercase;margin-bottom:2px;">🪙 Hũ Vàng</div><div class="page-title">Xin chào, Lực 👋</div>
-            <div class="page-sub" id="wisdom-sub">Tháng 5 • 2026</div>
+            <div class="page-sub" id="wisdom-sub"></div>
           </div>
           <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6d28d9);display:flex;align-items:center;justify-content:center;font-size:18px;">👤</div>
         </div>
@@ -1534,9 +1540,7 @@
 
   <!-- ===== TOAST ===== -->
   <div class="toast" id="toast"></div>
-  <div style="position:absolute;bottom:72px;left:0;right:0;text-align:center;font-size:9px;color:var(--text3);letter-spacing:.3px;pointer-events:none;padding:0 12px;">
-    🪙 <strong style="color:var(--text2);">Hũ Vàng</strong> &nbsp;|&nbsp; © 2026 <strong style="color:var(--text2);">Vũ Tiến Lực</strong> &nbsp;|&nbsp; 0969 068 849
-  </div>
+
 
   <!-- INSTALL BANNER (mobile) -->
   <div class="install-banner" id="install-banner">
@@ -1612,11 +1616,142 @@ function fmt(n) {
 function fmtFull(n) { return n.toLocaleString('vi-VN'); }
 
 // ===== CLOCK =====
-function updateClock() {
-  const now = new Date();
-  document.getElementById('clock').textContent = now.getHours()+':'+(now.getMinutes()+'').padStart(2,'0');
+// ===== VIETNAMESE LUNAR CALENDAR =====
+// Algorithm: based on Ho Ngoc Duc's Vietnamese lunar calendar calculation
+var LUNAR_MONTHS_29 = [0];
+
+function jdFromDate(dd, mm, yy) {
+  var a = Math.floor((14 - mm) / 12);
+  var y = yy + 4800 - a;
+  var m = mm + 12 * a - 3;
+  var jd = dd + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+  if (jd < 2299161) jd = dd + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - 32083;
+  return jd;
 }
-setInterval(updateClock, 10000); updateClock();
+
+function jdToDate(jd) {
+  var a, b, c, d, e, m;
+  if (jd > 2299160) {
+    a = jd + 32044; b = Math.floor((4 * a + 3) / 146097); c = a - Math.floor(146097 * b / 4);
+  } else { b = 0; c = jd + 32082; }
+  d = Math.floor((4 * c + 3) / 1461);
+  e = c - Math.floor(1461 * d / 4);
+  m = Math.floor((5 * e + 2) / 153);
+  var day = e - Math.floor((153 * m + 2) / 5) + 1;
+  var month = m + 3 - 12 * Math.floor(m / 10);
+  var year = 100 * b + d - 4800 + Math.floor(m / 10);
+  return [day, month, year];
+}
+
+function getNewMoonDay(k, timeZone) {
+  var T = k / 1236.85;
+  var T2 = T * T; var T3 = T2 * T;
+  var dr = Math.PI / 180;
+  var Jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * T2 - 0.000000155 * T3;
+  Jd1 += 0.00033 * Math.sin((166.56 + 132.87 * T - 0.009173 * T2) * dr);
+  var M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3;
+  var Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3;
+  var F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3;
+  var C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * dr * M);
+  C1 -= 0.4068 * Math.sin(Mpr * dr) + 0.0161 * Math.sin(dr * 2 * Mpr);
+  C1 -= 0.0004 * Math.sin(dr * 3 * Mpr);
+  C1 += 0.0104 * Math.sin(dr * 2 * F) - 0.0051 * Math.sin(dr * (M + Mpr));
+  C1 -= 0.0074 * Math.sin(dr * (M - Mpr)) + 0.0004 * Math.sin(dr * (2 * F + M));
+  C1 -= 0.0004 * Math.sin(dr * (2 * F - M)) - 0.0006 * Math.sin(dr * (2 * F + Mpr));
+  C1 += 0.0010 * Math.sin(dr * (2 * F - Mpr)) + 0.0005 * Math.sin(dr * (M + 2 * Mpr));
+  var delT;
+  if (T < -11) { delT = 0.001 + 0.000839 * T + 0.0002261 * T2 - 0.00000845 * T3 - 0.000000081 * T * T3; }
+  else { delT = -0.000278 + 0.000265 * T + 0.000262 * T2; }
+  return Math.floor(Jd1 + C1 - delT + 0.5 + timeZone / 24);
+}
+
+function getSunLongitude(jdn, timeZone) {
+  var T = (jdn - 2451545.5 - timeZone / 24) / 36525;
+  var T2 = T * T;
+  var dr = Math.PI / 180;
+  var M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2;
+  var L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2;
+  var DL = (1.9146 - 0.004817 * T - 0.000014 * T2) * Math.sin(dr * M);
+  DL += (0.019993 - 0.000101 * T) * Math.sin(dr * 2 * M) + 0.00029 * Math.sin(dr * 3 * M);
+  var L = L0 + DL;
+  L = L * dr; L -= 2 * Math.PI * Math.floor(L / (2 * Math.PI));
+  return Math.floor(L / Math.PI * 6);
+}
+
+function getLunarMonth11(yy, timeZone) {
+  var off = jdFromDate(31, 12, yy) - 2415021;
+  var k = Math.floor(off / 29.530588853);
+  var nm = getNewMoonDay(k, timeZone);
+  var sunLong = getSunLongitude(nm, timeZone);
+  if (sunLong >= 9) nm = getNewMoonDay(k - 1, timeZone);
+  return nm;
+}
+
+function getLeapMonthOffset(a11, timeZone) {
+  var k = Math.floor((a11 - 2415021.076998695) / 29.530588853 + 0.5);
+  var last, i = 1, arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+  do {
+    last = arc;
+    i++;
+    arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+  } while (arc !== last && i < 14);
+  return i - 1;
+}
+
+function convertSolar2Lunar(dd, mm, yy, timeZone) {
+  var dayNumber = jdFromDate(dd, mm, yy);
+  var k = Math.floor((dayNumber - 2415021.076998695) / 29.530588853);
+  var monthStart = getNewMoonDay(k + 1, timeZone);
+  if (monthStart > dayNumber) monthStart = getNewMoonDay(k, timeZone);
+  var a11 = getLunarMonth11(yy, timeZone);
+  var b11 = a11;
+  var lunarYear;
+  if (a11 >= monthStart) { lunarYear = yy; a11 = getLunarMonth11(yy - 1, timeZone); }
+  else { lunarYear = yy + 1; b11 = getLunarMonth11(yy + 1, timeZone); }
+  var lunarDay = dayNumber - monthStart + 1;
+  var diff = Math.floor((monthStart - a11) / 29);
+  var lunarLeap = false; var lunarMonth = diff + 11;
+  if (b11 - a11 > 365) {
+    var leapMonthDiff = getLeapMonthOffset(a11, timeZone);
+    if (diff >= leapMonthDiff) {
+      lunarMonth = diff + 10;
+      if (diff === leapMonthDiff) lunarLeap = true;
+    }
+  }
+  if (lunarMonth > 12) lunarMonth -= 12;
+  if (lunarMonth >= 11 && diff < 4) lunarYear -= 1;
+  return [lunarDay, lunarMonth, lunarYear, lunarLeap ? 1 : 0];
+}
+
+var CAN = ['Giáp','Ất','Bính','Đinh','Mậu','Kỷ','Canh','Tân','Nhâm','Quý'];
+var CHI = ['Tý','Sửu','Dần','Mão','Thìn','Tỵ','Ngọ','Mùi','Thân','Dậu','Tuất','Hợi'];
+
+function getLunarYearName(year) {
+  return CAN[(year + 6) % 10] + ' ' + CHI[(year + 8) % 12];
+}
+
+function updateClock() {
+  var now = new Date();
+  var h = now.getHours(), m = now.getMinutes();
+  var timeStr = (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+
+  var DAYS_VN = ['CN','T2','T3','T4','T5','T6','T7'];
+  var dayOfWeek = DAYS_VN[now.getDay()];
+  var solarStr = dayOfWeek + ' ' + now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear();
+
+  var lunar = convertSolar2Lunar(now.getDate(), now.getMonth()+1, now.getFullYear(), 7);
+  var lunarDay = lunar[0], lunarMonth = lunar[1], lunarYear = lunar[2], isLeap = lunar[3];
+  var lunarStr = '🌙 ' + lunarDay + '/' + lunarMonth + (isLeap?' (nhuận)':'') + ' ' + getLunarYearName(lunarYear);
+
+  var clockEl = document.getElementById('clock');
+  var solarEl = document.getElementById('solar-date');
+  var lunarEl = document.getElementById('lunar-date');
+  if (clockEl) clockEl.textContent = timeStr;
+  if (solarEl) solarEl.textContent = solarStr;
+  if (lunarEl) lunarEl.textContent = lunarStr;
+}
+setInterval(updateClock, 1000);
+updateClock();
 
 // ===== SCREEN NAV =====
 function goScreen(id, btn) {
@@ -3305,10 +3440,8 @@ const WISDOMS = [
 let wisdomIdx = Math.floor(Math.random() * WISDOMS.length);
 
 function showWisdom() {
-  const w = WISDOMS[wisdomIdx % WISDOMS.length];
-  const el = document.getElementById('wisdom-sub');
-  if (el) el.innerHTML = '<span style="font-style:italic;color:var(--text2);font-size:10.5px;line-height:1.5;display:block;margin-top:4px;">' + w.text + ' <span style="color:var(--text3);">' + w.src + '</span></span>';
-  const card = document.getElementById('wisdom-card-text');
+  var w = WISDOMS[wisdomIdx % WISDOMS.length];
+  var card = document.getElementById('wisdom-card-text');
   if (card) card.innerHTML = w.text + ' <span style="font-size:10px;color:var(--text3);font-style:normal;">' + w.src + '</span>';
   wisdomIdx++;
 }
@@ -4272,8 +4405,7 @@ showWisdom();
 initInstallBanner();
 // rotate wisdom in header every 12 seconds
 setInterval(showWisdom, 12000);
-// show wisdom toast every 60s
-setTimeout(function loop() { wisdomToast(); setTimeout(loop, 60000); }, 15000);
+// wisdomToast available on card tap only
 
 renderHome();
 </script>
