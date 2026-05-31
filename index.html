@@ -575,6 +575,142 @@
 
   [data-theme="light"] .note-card { box-shadow:0 1px 6px rgba(0,0,0,.05); }
 
+  /* ===== INVEST SCREEN ===== */
+  .invest-tabs { display:flex; gap:6px; overflow-x:auto; margin-bottom:14px; }
+  .invest-tabs::-webkit-scrollbar { display:none; }
+
+  .market-hero { background:linear-gradient(135deg,#0f2548,#1a1a3e); border-radius:16px; padding:18px; margin-bottom:12px; border:1px solid rgba(96,165,250,.15); position:relative; overflow:hidden; }
+  .market-hero::before { content:''; position:absolute; top:-30px; right:-30px; width:120px; height:120px; border-radius:50%; background:radial-gradient(circle,rgba(96,165,250,.1),transparent 70%); }
+  .market-index-row { display:flex; gap:8px; margin-bottom:8px; }
+  .market-index { flex:1; background:rgba(255,255,255,.05); border-radius:10px; padding:10px; text-align:center; }
+  .mi-name { font-size:9px; font-weight:800; color:var(--text3); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+  .mi-val { font-size:16px; font-weight:800; margin-bottom:2px; }
+  .mi-chg { font-size:11px; font-weight:700; }
+  .mi-chg.up { color:var(--green); }
+  .mi-chg.down { color:var(--red); }
+
+  .stock-card { background:var(--surface); border-radius:12px; padding:12px 14px; margin-bottom:8px; border:1px solid var(--border); display:flex; align-items:center; gap:12px; cursor:pointer; transition:all .15s; }
+  .stock-card:active { transform:scale(.98); }
+  .stock-ticker { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; }
+  .stock-info { flex:1; min-width:0; }
+  .stock-name { font-size:13px; font-weight:700; }
+  .stock-sector { font-size:10px; color:var(--text3); margin-top:2px; }
+  .stock-price-col { text-align:right; flex-shrink:0; }
+  .stock-price { font-size:14px; font-weight:800; }
+  .stock-chg { font-size:11px; font-weight:700; padding:2px 7px; border-radius:99px; margin-top:3px; display:inline-block; }
+  .stock-chg.up { background:rgba(74,222,128,.12); color:var(--green); }
+  .stock-chg.down { background:rgba(248,113,113,.12); color:var(--red); }
+  .stock-chg.flat { background:rgba(255,255,255,.06); color:var(--text3); }
+
+  .mini-chart { display:flex; align-items:flex-end; gap:2px; height:28px; }
+  .mini-bar { width:5px; border-radius:2px; }
+
+  .knowledge-card { background:var(--surface); border-radius:14px; padding:16px; margin-bottom:10px; border:1px solid var(--border); cursor:pointer; transition:all .15s; }
+  .knowledge-card:active { transform:scale(.98); }
+  .knowledge-card-header { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .kc-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+  .kc-title { font-size:14px; font-weight:700; }
+  .kc-level { font-size:9px; font-weight:800; padding:2px 8px; border-radius:99px; text-transform:uppercase; letter-spacing:.4px; }
+  .kc-body { font-size:12px; color:var(--text2); line-height:1.7; }
+  .kc-tags { display:flex; gap:5px; flex-wrap:wrap; margin-top:8px; }
+  .kc-tag { font-size:9px; font-weight:700; padding:2px 8px; border-radius:99px; background:rgba(255,255,255,.06); color:var(--text3); }
+
+  .tip-invest { background:var(--surface2); border-left:3px solid var(--j2); border-radius:0 10px 10px 0; padding:12px 14px; margin-bottom:8px; }
+  .tip-invest strong { font-size:12px; font-weight:800; display:block; margin-bottom:3px; }
+  .tip-invest p { font-size:11.5px; color:var(--text2); line-height:1.65; margin:0; }
+
+  /* ===== PORTFOLIO / WATCHLIST / JOURNAL / CALC / CALENDAR / RISK ===== */
+  .port-summary { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+  .port-kpi { background:var(--surface); border-radius:12px; padding:12px; border:1px solid var(--border); }
+  .port-kpi-label { font-size:9px; font-weight:800; color:var(--text3); text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px; }
+  .port-kpi-val { font-size:18px; font-weight:800; }
+  .port-kpi-sub { font-size:10px; color:var(--text3); margin-top:3px; }
+
+  .holding-card { background:var(--surface); border-radius:12px; padding:13px 14px; margin-bottom:8px; border:1px solid var(--border); }
+  .holding-top { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .holding-ticker { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; }
+  .holding-info { flex:1; }
+  .holding-name { font-size:13px; font-weight:700; }
+  .holding-meta { font-size:10px; color:var(--text3); margin-top:2px; }
+  .holding-pnl { text-align:right; }
+  .holding-pnl-val { font-size:14px; font-weight:800; }
+  .holding-pnl-pct { font-size:11px; font-weight:700; padding:2px 7px; border-radius:99px; margin-top:3px; display:inline-block; }
+  .holding-weight-bar { background:rgba(255,255,255,.06); border-radius:99px; height:3px; margin-top:6px; overflow:hidden; }
+  .holding-weight-fill { height:100%; border-radius:99px; }
+
+  .watch-card { background:var(--surface); border-radius:12px; padding:12px 14px; margin-bottom:8px; border:1px solid var(--border); display:flex; gap:10px; align-items:flex-start; }
+  .watch-ticker-box { width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; flex-shrink:0; }
+  .watch-info { flex:1; min-width:0; }
+  .watch-name { font-size:13px; font-weight:700; }
+  .watch-thesis { font-size:11px; color:var(--text2); margin-top:3px; line-height:1.5; }
+  .watch-targets { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+  .watch-target { font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; }
+  .watch-target.buy { background:rgba(74,222,128,.12); color:var(--green); }
+  .watch-target.sell { background:rgba(248,113,113,.12); color:var(--red); }
+  .watch-target.current { background:rgba(255,255,255,.07); color:var(--text2); }
+
+  .journal-card { background:var(--surface); border-radius:12px; padding:13px 14px; margin-bottom:8px; border:1px solid var(--border); border-left:3px solid var(--border); }
+  .journal-card.buy-j { border-left-color:var(--green); }
+  .journal-card.sell-j { border-left-color:var(--red); }
+  .journal-card.win { border-left-color:#4ade80; }
+  .journal-card.loss { border-left-color:#f87171; }
+  .journal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .journal-ticker { font-size:14px; font-weight:800; }
+  .journal-type { font-size:10px; font-weight:800; padding:2px 9px; border-radius:99px; }
+  .journal-reason { font-size:11px; color:var(--text2); line-height:1.6; margin-bottom:5px; }
+  .journal-stats { display:flex; gap:10px; flex-wrap:wrap; }
+  .j-stat { font-size:10px; color:var(--text3); }
+  .j-stat span { color:var(--text); font-weight:700; }
+
+  .calc-section { background:var(--surface); border-radius:14px; padding:16px; margin-bottom:12px; border:1px solid var(--border); }
+  .calc-title { font-size:13px; font-weight:800; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .calc-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .calc-label { font-size:11px; color:var(--text2); flex:1; }
+  .calc-input { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:7px 10px; color:var(--text); font-family:inherit; font-size:13px; font-weight:700; width:110px; outline:none; text-align:right; }
+  .calc-input:focus { border-color:var(--j2); }
+  .calc-result { background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(109,40,217,.08)); border-radius:10px; padding:12px 14px; margin-top:8px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .calc-res-item { text-align:center; }
+  .calc-res-val { font-size:16px; font-weight:800; }
+  .calc-res-lbl { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:.5px; margin-top:2px; }
+
+  .event-card { background:var(--surface); border-radius:12px; padding:12px 14px; margin-bottom:8px; border:1px solid var(--border); display:flex; gap:12px; align-items:flex-start; }
+  .event-date-box { width:44px; text-align:center; flex-shrink:0; background:var(--surface2); border-radius:8px; padding:6px 4px; }
+  .event-day { font-size:18px; font-weight:800; line-height:1; }
+  .event-month { font-size:9px; font-weight:800; color:var(--text3); text-transform:uppercase; margin-top:2px; }
+  .event-info { flex:1; }
+  .event-title { font-size:13px; font-weight:700; }
+  .event-ticker { font-size:10px; font-weight:800; padding:2px 8px; border-radius:99px; margin-top:4px; display:inline-block; }
+  .event-desc { font-size:11px; color:var(--text2); margin-top:4px; line-height:1.5; }
+  .event-type-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+
+  .risk-gauge { background:var(--surface); border-radius:14px; padding:16px; margin-bottom:12px; border:1px solid var(--border); }
+  .risk-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .risk-bar-label { font-size:11px; font-weight:600; flex-shrink:0; width:90px; }
+  .risk-bar-track { flex:1; background:rgba(255,255,255,.06); border-radius:99px; height:8px; overflow:hidden; }
+  .risk-bar-fill { height:100%; border-radius:99px; transition:width .6s; }
+  .risk-bar-val { font-size:11px; font-weight:800; width:36px; text-align:right; flex-shrink:0; }
+  .risk-alert { background:rgba(248,113,113,.08); border:1px solid rgba(248,113,113,.2); border-radius:10px; padding:10px 13px; font-size:11px; color:var(--red); line-height:1.6; margin-bottom:8px; }
+  .risk-ok { background:rgba(74,222,128,.06); border:1px solid rgba(74,222,128,.15); border-radius:10px; padding:10px 13px; font-size:11px; color:var(--green); line-height:1.6; margin-bottom:8px; }
+
+  .add-holding-btn { width:100%; padding:13px; border:1.5px dashed rgba(96,165,250,.3); border-radius:12px; background:rgba(96,165,250,.04); color:var(--j2); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:14px; transition:all .2s; }
+  .add-holding-btn:active { background:rgba(96,165,250,.1); }
+
+  /* Modal for add holding/watchlist/journal */
+  .invest-modal { background:var(--surface); border-radius:28px 28px 0 0; width:100%; padding:0 20px 32px; max-height:85%; overflow-y:auto; animation:slideUp .25s ease; }
+
+  .source-link { display:flex; align-items:center; gap:10px; background:var(--surface2); border-radius:10px; padding:12px 14px; margin-bottom:8px; border:1px solid var(--border); cursor:pointer; text-decoration:none; }
+  .source-link:active { opacity:.7; }
+  .sl-icon { font-size:22px; flex-shrink:0; }
+  .sl-info { flex:1; }
+  .sl-name { font-size:13px; font-weight:700; color:var(--text); }
+  .sl-desc { font-size:11px; color:var(--text2); margin-top:2px; }
+  .sl-badge { font-size:9px; font-weight:800; padding:2px 8px; border-radius:99px; background:rgba(74,222,128,.12); color:var(--green); flex-shrink:0; }
+
+  .data-disclaimer { background:rgba(251,191,36,.06); border:1px solid rgba(251,191,36,.15); border-radius:10px; padding:10px 13px; font-size:10px; color:var(--j6); line-height:1.6; margin-bottom:12px; }
+
+  [data-theme="light"] .market-hero { background:linear-gradient(135deg,#1e3a6e,#1a1a4e); }
+  [data-theme="light"] .market-index { background:rgba(255,255,255,.1); }
+
   .bar-ok { background:var(--j1g); }
   .bar-warn { background:linear-gradient(90deg,#f59e0b,#d97706); }
   .bar-danger { background:linear-gradient(90deg,#ef4444,#dc2626); }
@@ -777,9 +913,16 @@
       <div id="ratio-settings"></div>
       <div class="sec-title">Cài đặt chung</div>
       <div class="settings-group">
+        <div class="settings-item" onclick="goScreen('game',document.querySelector('.nav-btn:nth-child(3)'))">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:rgba(251,191,36,.12)">🏆</div>
+            <div><div class="settings-label">Thành tích & Nhiệm vụ</div><div class="settings-sub" id="game-settings-sub">Xem huy chương, streak và nhiệm vụ</div></div>
+          </div>
+          <div class="chevron">›</div>
+        </div>
         <div class="settings-item" onclick="goToTipsScreen()">
           <div class="settings-item-left">
-            <div class="settings-icon" style="background:rgba(251,191,36,.12)">💡</div>
+            <div class="settings-icon" style="background:rgba(167,139,250,.12)">💡</div>
             <div><div class="settings-label">Mẹo & Hướng dẫn sử dụng</div><div class="settings-sub">12 mẹo + hướng dẫn cài app</div></div>
           </div>
           <div class="chevron">›</div>
@@ -930,6 +1073,112 @@
     </div>
   </div>
 
+  <!-- ===== INVEST SCREEN ===== -->
+  <div class="screen" id="screen-invest">
+    <div style="padding:0 16px;flex-shrink:0;">
+      <div class="page-header">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div class="page-title">Đầu tư 📈</div><div class="page-sub" id="invest-update-time">Dữ liệu minh hoạ · cập nhật hàng ngày</div></div>
+          <button onclick="openInvestSources()" style="background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.2);border-radius:10px;padding:6px 12px;color:var(--j2);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;">🔗 Nguồn thật</button>
+        </div>
+      </div>
+      <div class="invest-tabs" id="invest-tab-bar">
+        <button class="rtab active" onclick="switchInvestTab('market',this)">📊 TT</button>
+        <button class="rtab" onclick="switchInvestTab('portfolio',this)">💼 Danh mục</button>
+        <button class="rtab" onclick="switchInvestTab('watchlist',this)">👁 Watchlist</button>
+        <button class="rtab" onclick="switchInvestTab('journal',this)">📓 Nhật ký</button>
+        <button class="rtab" onclick="switchInvestTab('calc',this)">🧮 Định giá</button>
+        <button class="rtab" onclick="switchInvestTab('calendar',this)">📅 Sự kiện</button>
+        <button class="rtab" onclick="switchInvestTab('risk',this)">⚠️ Rủi ro</button>
+        <button class="rtab" onclick="switchInvestTab('stocks',this)">🏢 CP</button>
+        <button class="rtab" onclick="switchInvestTab('knowledge',this)">📚 KT</button>
+        <button class="rtab" onclick="switchInvestTab('tips',this)">💡 KN</button>
+        <button class="rtab" onclick="switchInvestTab('howto',this)">🚀 BĐ</button>
+      </div>
+    </div>
+    <div class="scroll" id="invest-content"></div>
+  </div>
+
+  <!-- INVEST ADD HOLDING MODAL -->
+  <div class="modal-overlay" id="holding-modal">
+    <div class="invest-modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title" id="holding-modal-title">➕ Thêm cổ phiếu</div>
+      <label class="form-label">Mã cổ phiếu</label>
+      <input class="form-input" id="h-ticker" placeholder="VD: VNM, FPT, HPG..." style="text-transform:uppercase;">
+      <label class="form-label">Tên công ty</label>
+      <input class="form-input" id="h-name" placeholder="VD: Vinamilk">
+      <label class="form-label">Số lượng (cổ phiếu)</label>
+      <input class="form-input" id="h-qty" type="number" placeholder="VD: 1000">
+      <label class="form-label">Giá vốn trung bình (₫/CP)</label>
+      <input class="form-input" id="h-cost" type="number" placeholder="VD: 70000">
+      <label class="form-label">Giá hiện tại (₫/CP)</label>
+      <input class="form-input" id="h-price" type="number" placeholder="VD: 68900">
+      <label class="form-label">Ngành</label>
+      <input class="form-input" id="h-sector" placeholder="VD: FMCG, Ngân hàng, Công nghệ...">
+      <button class="btn-primary" onclick="saveHolding()">✓ Lưu vào danh mục</button>
+      <div style="height:8px"></div>
+      <button id="h-delete-btn" class="btn-primary" style="background:rgba(248,113,113,.12);color:var(--red);box-shadow:none;border:1px solid rgba(248,113,113,.2);display:none;" onclick="deleteHolding()">🗑️ Xóa</button>
+    </div>
+  </div>
+
+  <!-- WATCHLIST ADD MODAL -->
+  <div class="modal-overlay" id="watch-modal">
+    <div class="invest-modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">👁 Thêm vào Watchlist</div>
+      <label class="form-label">Mã cổ phiếu</label>
+      <input class="form-input" id="w-ticker" placeholder="VD: TCB, MBB..." style="text-transform:uppercase;">
+      <label class="form-label">Tên công ty</label>
+      <input class="form-input" id="w-name" placeholder="VD: Techcombank">
+      <label class="form-label">Giá hiện tại (₫/CP)</label>
+      <input class="form-input" id="w-price" type="number" placeholder="VD: 24100">
+      <label class="form-label">Giá mua mục tiêu (₫/CP)</label>
+      <input class="form-input" id="w-buy" type="number" placeholder="VD: 22000">
+      <label class="form-label">Giá bán mục tiêu (₫/CP)</label>
+      <input class="form-input" id="w-sell" type="number" placeholder="VD: 28000">
+      <label class="form-label">Luận điểm đầu tư</label>
+      <textarea class="form-input" id="w-thesis" placeholder="Tại sao bạn quan tâm cổ phiếu này?" style="min-height:70px;resize:none;line-height:1.5;"></textarea>
+      <button class="btn-primary" onclick="saveWatch()">✓ Thêm vào Watchlist</button>
+    </div>
+  </div>
+
+  <!-- JOURNAL ADD MODAL -->
+  <div class="modal-overlay" id="journal-modal">
+    <div class="invest-modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">📓 Ghi nhật ký giao dịch</div>
+      <div class="type-toggle" style="margin-bottom:16px;">
+        <button class="type-btn active income" id="jt-buy" onclick="setJType('buy')">🟢 Mua</button>
+        <button class="type-btn expense" id="jt-sell" onclick="setJType('sell')">🔴 Bán</button>
+      </div>
+      <label class="form-label">Mã cổ phiếu</label>
+      <input class="form-input" id="j-ticker" placeholder="VD: HPG" style="text-transform:uppercase;">
+      <label class="form-label">Số lượng</label>
+      <input class="form-input" id="j-qty" type="number" placeholder="VD: 500">
+      <label class="form-label">Giá giao dịch (₫/CP)</label>
+      <input class="form-input" id="j-price" type="number" placeholder="VD: 27600">
+      <label class="form-label">Ngày giao dịch</label>
+      <input class="form-input" id="j-date" type="date" style="color-scheme:dark;">
+      <label class="form-label">Lý do giao dịch</label>
+      <textarea class="form-input" id="j-reason" placeholder="Tại sao bạn mua/bán lúc này? FA/TA nào hỗ trợ?" style="min-height:70px;resize:none;line-height:1.5;"></textarea>
+      <label class="form-label">Kết quả & Bài học (cho lệnh bán)</label>
+      <textarea class="form-input" id="j-lesson" placeholder="Lãi/lỗ bao nhiêu? Học được gì?" style="min-height:60px;resize:none;line-height:1.5;"></textarea>
+      <button class="btn-primary" onclick="saveJournal()">✓ Lưu nhật ký</button>
+    </div>
+  </div>
+
+  <!-- INVEST SOURCES MODAL -->
+  <div class="modal-overlay" id="invest-sources-modal">
+    <div class="tips-modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">🔗 Xem dữ liệu thật</div>
+      <div class="data-disclaimer">⚠️ App dùng dữ liệu minh hoạ. Bấm các link bên dưới để xem giá chứng khoán thực tế trực tiếp từ các nền tảng uy tín.</div>
+      <div id="invest-sources-list"></div>
+      <button class="btn-primary" style="background:var(--surface2);color:var(--text2);box-shadow:none;margin-top:8px;" onclick="document.getElementById('invest-sources-modal').classList.remove('open')">Đóng</button>
+    </div>
+  </div>
+
   <!-- ===== TIPS SCREEN ===== -->
   <div class="screen" id="screen-tips">
     <div style="padding:0 16px;flex-shrink:0;">
@@ -982,9 +1231,9 @@
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
       Báo cáo
     </button>
-    <button class="nav-btn" onclick="goScreen('game',this)">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-      Thành tích
+    <button class="nav-btn" onclick="goScreen('invest',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+      Đầu tư
     </button>
     <button class="nav-btn" onclick="goScreen('notes',this)" id="nav-notes">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
@@ -1336,6 +1585,9 @@ function loadState() {
     loans: [],
     streak: 0,
     notes: [],
+    holdings: [],
+    watchlist: [],
+    journals: [],
     currentMonth: new Date().getMonth() + 1,
     currentYear: new Date().getFullYear(),
     monthHistory: [],
@@ -1376,6 +1628,7 @@ function goScreen(id, btn) {
   if (id==='game') renderGame();
   if (id==='settings') renderSettings();
   if (id==='notes') renderNotes();
+  if (id==='invest') renderInvestContent('market');
 }
 
 // ===== RENDER HOME =====
@@ -3365,6 +3618,629 @@ function addFromAI(el, text, type, prio) {
   el.querySelector('div:last-child').textContent = '✓';
   showToast('✅ Đã thêm vào ghi chú!');
 }
+
+// ===== INVEST =====
+const MOCK_DATE = new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});
+
+const MARKET_INDICES = [
+  { code:'VN-Index', val:1287.45, chg:12.3,  pct:0.96,  up:true,  color:'#4ade80', vol:'521 triệu' },
+  { code:'HNX',      val:234.12,  chg:-1.8,  pct:-0.76, up:false, color:'#f87171', vol:'89 triệu' },
+  { code:'UPCOM',    val:98.74,   chg:0.44,  pct:0.45,  up:true,  color:'#4ade80', vol:'67 triệu' },
+];
+
+const TOP_STOCKS = [
+  { ticker:'VIC', name:'Vingroup',    sector:'Bất động sản', price:52800,  chg:2.3,  up:true,  color:'#1d4ed8', chart:[40,38,42,45,44,48,52] },
+  { ticker:'VHM', name:'Vinhomes',    sector:'Bất động sản', price:38200,  chg:-1.1, up:false, color:'#7c3aed', chart:[45,43,41,40,39,38,38] },
+  { ticker:'HPG', name:'Hòa Phát',    sector:'Thép',         price:27600,  chg:3.7,  up:true,  color:'#b45309', chart:[20,22,24,23,25,26,27] },
+  { ticker:'VCB', name:'Vietcombank', sector:'Ngân hàng',    price:84500,  chg:0.6,  up:true,  color:'#065f46', chart:[80,81,82,81,83,84,84] },
+  { ticker:'FPT', name:'FPT Corp',    sector:'Công nghệ',    price:136200, chg:1.9,  up:true,  color:'#0369a1', chart:[120,122,126,128,130,133,136] },
+  { ticker:'VNM', name:'Vinamilk',    sector:'FMCG',         price:68900,  chg:-0.5, up:false, color:'#dc2626', chart:[72,71,70,69,70,69,68] },
+  { ticker:'MSN', name:'Masan',       sector:'Tiêu dùng',    price:78400,  chg:2.1,  up:true,  color:'#d97706', chart:[70,72,73,74,75,77,78] },
+  { ticker:'TCB', name:'Techcombank', sector:'Ngân hàng',    price:24100,  chg:-1.8, up:false, color:'#dc2626', chart:[28,27,26,25,25,24,24] },
+  { ticker:'MBB', name:'MB Bank',     sector:'Ngân hàng',    price:22400,  chg:0.9,  up:true,  color:'#7c3aed', chart:[21,21,22,22,22,22,22] },
+  { ticker:'NLG', name:'Nam Long',    sector:'Bất động sản', price:30100,  chg:4.2,  up:true,  color:'#0891b2', chart:[24,25,26,27,28,29,30] },
+];
+
+const SECTORS = [
+  {name:'Ngân hàng',chg:0.8,up:true},{name:'Bất động sản',chg:1.4,up:true},
+  {name:'Thép',chg:3.2,up:true},{name:'Công nghệ',chg:1.1,up:true},
+  {name:'FMCG',chg:-0.3,up:false},{name:'Dầu khí',chg:-0.9,up:false},
+  {name:'Dược',chg:0.5,up:true},{name:'Tiện ích',chg:-0.2,up:false},
+];
+
+const KNOWLEDGE = [
+  { icon:'📖', level:'Cơ bản', lc:'rgba(74,222,128,.15)', lt:'var(--green)', title:'Chứng khoán là gì?',
+    body:'Khi bạn mua cổ phiếu VNM, bạn trở thành cổ đông — sở hữu một phần nhỏ Vinamilk và hưởng lợi khi công ty tăng trưởng. Cổ phiếu = quyền sở hữu. Trái phiếu = cho công ty vay tiền. ETF = giỏ nhiều cổ phiếu cùng lúc.',
+    tags:['Cổ phiếu','Trái phiếu','ETF'] },
+  { icon:'📊', level:'Cơ bản', lc:'rgba(74,222,128,.15)', lt:'var(--green)', title:'VN-Index, HNX, UPCOM — khác nhau thế nào?',
+    body:'VN-Index là chỉ số sàn HoSE (TP.HCM) — ~400 công ty lớn như VIC, VCB, FPT. HNX là sàn Hà Nội, công ty vừa và nhỏ hơn. UPCOM là sàn phi niêm yết — thanh khoản thấp, rủi ro cao hơn. Người mới nên tập trung VN-Index.',
+    tags:['HoSE','HNX','UPCOM','Chỉ số'] },
+  { icon:'💵', level:'Cơ bản', lc:'rgba(74,222,128,.15)', lt:'var(--green)', title:'Cách đọc bảng giá chứng khoán',
+    body:'Giá trần (xanh đậm) = +7% so với tham chiếu. Giá sàn (tím) = -7%. Giá tham chiếu = giá đóng cửa hôm qua. Khối lượng = số cổ phiếu giao dịch. P/E = giá / lợi nhuận — P/E thấp thường rẻ hơn trung bình ngành.',
+    tags:['Bảng giá','Giá trần','P/E','Khối lượng'] },
+  { icon:'📈', level:'Trung cấp', lc:'rgba(96,165,250,.15)', lt:'var(--j2)', title:'Phân tích cơ bản (FA)',
+    body:'FA tìm cổ phiếu có giá thực cao hơn giá thị trường. Xem: EPS (lợi nhuận/cổ phiếu), P/E (định giá), ROE (sinh lời — nên >15%), Debt/Equity (nợ — nên <1). Kết hợp FA + xu hướng ngành để chọn cổ phiếu dài hạn.',
+    tags:['EPS','P/E','ROE','Báo cáo tài chính'] },
+  { icon:'📉', level:'Trung cấp', lc:'rgba(96,165,250,.15)', lt:'var(--j2)', title:'Phân tích kỹ thuật (TA)',
+    body:'TA đọc biểu đồ giá và khối lượng để dự đoán xu hướng ngắn hạn. Công cụ phổ biến: MA (trung bình động), RSI (lực mua/bán, ngưỡng 30/70), MACD (tín hiệu mua bán). Nguyên tắc: không giao dịch ngược xu hướng lớn.',
+    tags:['MA','RSI','MACD','Biểu đồ nến'] },
+  { icon:'🏦', level:'Trung cấp', lc:'rgba(96,165,250,.15)', lt:'var(--j2)', title:'Cổ tức — có nên ưu tiên?',
+    body:'Cổ tức là phần lợi nhuận chia cho cổ đông (1-2 lần/năm). Cổ phiếu cổ tức cao (VNM, REE) phù hợp đầu tư ổn định. Công ty trả cổ tức thấp thường tái đầu tư tăng trưởng nhanh hơn (FPT, HPG). Cân nhắc dividend yield vs tăng trưởng giá.',
+    tags:['Cổ tức','Dividend Yield','Dài hạn'] },
+  { icon:'⚠️', level:'Nâng cao', lc:'rgba(248,113,113,.15)', lt:'var(--red)', title:'Quản lý rủi ro & Cắt lỗ',
+    body:'Quy tắc vàng: không để cổ phiếu nào >10% danh mục. Đặt điểm cắt lỗ TRƯỚC khi mua (-7% đến -10%). Không bình quân giá xuống khi xu hướng đang giảm. Vốn bảo toàn quan trọng hơn lợi nhuận kỳ vọng.',
+    tags:['Cắt lỗ','Stop-loss','Diversification'] },
+  { icon:'🌱', level:'Nâng cao', lc:'rgba(248,113,113,.15)', lt:'var(--red)', title:'DCA — Đầu tư đều đặn mỗi tháng',
+    body:'Dollar Cost Averaging: đầu tư cố định mỗi tháng bất kể giá lên hay xuống. Kết quả: mua nhiều khi giá thấp, ít khi giá cao — tự giảm rủi ro thời điểm. Lý tưởng kết hợp hũ Tự do TC: chuyển vào ETF VNINDEX mỗi tháng.',
+    tags:['DCA','ETF','Tự động','Dài hạn'] },
+];
+
+const INVEST_TIPS = [
+  { icon:'🎯', title:'Chỉ đầu tư tiền từ hũ Tự do TC', body:'Không bao giờ dùng tiền sinh hoạt, tiền vay, hay tiền của các hũ khác để đầu tư chứng khoán. Hũ Tự do TC (10%) là tiền bạn sẵn sàng giam 3-5 năm mà không ảnh hưởng cuộc sống.' },
+  { icon:'📅', title:'Kiên nhẫn là vũ khí số 1', body:'Warren Buffett: "Thị trường là cỗ máy chuyển tiền từ người thiếu kiên nhẫn sang người kiên nhẫn." VN-Index 2020: 659 điểm → 2024: 1.300+ điểm. Người giữ 4 năm lãi gần 100%.' },
+  { icon:'🔍', title:'Hiểu trước khi mua', body:'Không mua cổ phiếu vì "nghe nói hot". Hỏi: Công ty kiếm tiền từ đâu? Ngành có tăng trưởng? Ai là đối thủ? Không trả lời được — đừng mua.' },
+  { icon:'📊', title:'ETF cho người mới bắt đầu', body:'E1VFVN30, FUEVFVND cho phép sở hữu 30 cổ phiếu lớn nhất VN cùng lúc, phí thấp ~0.5%/năm, không cần chọn cổ phiếu riêng lẻ. Tỷ suất sinh lời dài hạn theo thị trường chung.' },
+  { icon:'📰', title:'Cẩn thận hội nhóm Zalo/Telegram', body:'80% tip cổ phiếu trên mạng xã hội là từ người muốn bán ra khi bạn mua vào. Quyết định đầu tư phải dựa trên báo cáo tài chính, không phải tin đồn.' },
+  { icon:'💸', title:'Thuế & Phí giao dịch', body:'Phí giao dịch: 0.15-0.25%/lệnh tùy CTCK. Thuế TNCN bán CK: 0.1% giá trị bán (kể cả khi lỗ!). Luôn tính phí vào giá thành trước khi quyết định.' },
+  { icon:'🧘', title:'Đừng check giá quá nhiều', body:'Xem giá liên tục gây stress và quyết định cảm tính. Review danh mục 1 lần/tuần là đủ. Đầu tư dài hạn thì biến động ngày không quan trọng.' },
+  { icon:'📋', title:'Nhật ký giao dịch', body:'Ghi lại: lý do mua, giá mua, mục tiêu giá, điểm cắt lỗ. Sau 6 tháng nhìn lại để rút kinh nghiệm. Không nhật ký = không học được từ sai lầm.' },
+];
+
+const HOWTO_STEPS = [
+  { step:'01', icon:'🏦', title:'Mở tài khoản chứng khoán', body:'Chọn CTCK uy tín: VNDIRECT, SSI, VPS, MBS, TCBS. Cần CCCD + tài khoản ngân hàng. Mở online ~15 phút, thường miễn phí. Phí giao dịch 0.1–0.25%.' },
+  { step:'02', icon:'💳', title:'Nạp tiền và làm quen giao diện', body:'Nạp tối thiểu 1-5 triệu để làm quen. Khám phá bảng giá, lệnh ATO/ATC/LO, lịch sử giao dịch. Dành 1-2 tuần quan sát thị trường trước khi mua.' },
+  { step:'03', icon:'🔎', title:'Chọn cổ phiếu đầu tiên', body:'Người mới nên bắt đầu với ETF (E1VFVN30) hoặc bluechip ổn định (VCB, FPT, VNM). Tránh penny stock (<5.000đ), công ty lỗ nhiều năm.' },
+  { step:'04', icon:'📥', title:'Đặt lệnh mua', body:'Lệnh LO: đặt giá cụ thể, khớp khi thị trường chạm giá. ATO/ATC: khớp giá mở/đóng cửa. Phiên giao dịch: 9:00–11:30 sáng và 13:00–14:30 chiều.' },
+  { step:'05', icon:'📊', title:'Theo dõi và quản lý danh mục', body:'Đặt alert khi giá chạm mục tiêu hoặc cắt lỗ. Review 1 lần/tuần. Tái cân bằng danh mục mỗi 6 tháng. Không hoảng loạn khi thị trường điều chỉnh.' },
+  { step:'06', icon:'📈', title:'Kết nối với hũ Tự do TC', body:'Mỗi tháng: 10% thu nhập → hũ Tự do TC → DCA vào ETF/cổ phiếu chọn lọc. Đây là vòng lặp xây dựng tài sản bền vững của phương pháp 6 hũ.' },
+];
+
+const INVEST_SOURCES = [
+  { icon:'📊', name:'FireAnt', desc:'Bảng giá, biểu đồ, tín hiệu kỹ thuật — tốt nhất cho trader VN', url:'https://fireant.vn', badge:'Miễn phí' },
+  { icon:'🏦', name:'CafeF', desc:'Tin tức tài chính, phân tích cổ phiếu, báo cáo doanh nghiệp', url:'https://cafef.vn', badge:'Tin tức' },
+  { icon:'📈', name:'VNDIRECT', desc:'Nền tảng giao dịch + phân tích FA/TA chuyên sâu', url:'https://www.vndirect.com.vn', badge:'Broker' },
+  { icon:'💹', name:'SSI iBoard', desc:'Bảng điện tử real-time của SSI Securities', url:'https://iboard.ssi.com.vn', badge:'Real-time' },
+  { icon:'📰', name:'Vietstock', desc:'Dữ liệu lịch sử, tài chính doanh nghiệp, thống kê VN-Index', url:'https://vietstock.vn', badge:'Data' },
+  { icon:'🌐', name:'TCBS', desc:'App đầu tư + trái phiếu + quỹ, UX tốt cho người mới', url:'https://www.tcbs.com.vn', badge:'App' },
+];
+
+let investTab = 'market';
+
+function switchInvestTab(tab, btn) {
+  investTab = tab;
+  document.querySelectorAll('#invest-tab-bar .rtab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderInvestContent(tab);
+}
+
+function renderInvestContent(tab) {
+  var el = document.getElementById('invest-content');
+  if (!el) return;
+  var sub = document.getElementById('invest-update-time');
+  if (sub) sub.textContent = 'Dữ liệu minh hoạ · ' + MOCK_DATE;
+
+  if (tab === 'market') {
+    var idxHtml = '<div class="market-index-row">';
+    MARKET_INDICES.forEach(function(idx) {
+      idxHtml += '<div class="market-index">' +
+        '<div class="mi-name">' + idx.code + '</div>' +
+        '<div class="mi-val" style="color:' + idx.color + '">' + idx.val.toLocaleString('vi-VN') + '</div>' +
+        '<div class="mi-chg ' + (idx.up ? 'up' : 'down') + '">' + (idx.up ? '▲' : '▼') + ' ' + Math.abs(idx.pct) + '%</div>' +
+        '</div>';
+    });
+    idxHtml += '</div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:8px;text-align:right;">KL: ' + MARKET_INDICES[0].vol + ' cp &nbsp;|&nbsp; ' + MOCK_DATE + '</div>';
+
+    var heatHtml = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:10px;">';
+    SECTORS.forEach(function(s) {
+      var bg = s.up ? 'rgba(74,222,128,' + (0.4 + Math.abs(s.chg)*0.1) + ')' : 'rgba(248,113,113,' + (0.4 + Math.abs(s.chg)*0.1) + ')';
+      heatHtml += '<div style="background:' + bg + ';border-radius:6px;padding:7px 4px;text-align:center;">' +
+        '<div style="font-size:9px;font-weight:800;color:#fff;line-height:1.2;">' + s.name + '</div>' +
+        '<div style="font-size:10px;font-weight:800;color:#fff;margin-top:3px;">' + (s.up ? '+' : '') + s.chg + '%</div></div>';
+    });
+    heatHtml += '</div>';
+
+    el.innerHTML = '<div style="padding:0 16px;">' +
+      '<div class="data-disclaimer">📌 Dữ liệu minh hoạ — bấm "Nguồn thật" để xem giá thực từ FireAnt, SSI, CafeF.</div>' +
+      '<div class="market-hero">' + idxHtml + heatHtml + '</div>' +
+      '<div class="sec-title">Top cổ phiếu hôm nay</div>' + buildStockList(TOP_STOCKS.slice(0,5)) +
+      '</div>';
+
+  } else if (tab === 'stocks') {
+    el.innerHTML = '<div style="padding:0 16px;">' +
+      '<div class="data-disclaimer">📌 Dữ liệu minh hoạ — không phải giá thực.</div>' +
+      '<div class="sec-title">Blue-chip VN30</div>' + buildStockList(TOP_STOCKS) + '</div>';
+
+  } else if (tab === 'knowledge') {
+    var html = '<div style="padding:0 16px;">';
+    KNOWLEDGE.forEach(function(k) {
+      html += '<div class="knowledge-card"><div class="knowledge-card-header">' +
+        '<div class="kc-icon" style="background:' + k.lc + '">' + k.icon + '</div>' +
+        '<div style="flex:1;"><div class="kc-title">' + k.title + '</div>' +
+        '<span class="kc-level" style="background:' + k.lc + ';color:' + k.lt + ';margin-top:4px;display:inline-block;">' + k.level + '</span></div>' +
+        '</div><div class="kc-body">' + k.body + '</div>' +
+        '<div class="kc-tags">' + k.tags.map(function(t){return '<span class="kc-tag">'+t+'</span>';}).join('') + '</div></div>';
+    });
+    el.innerHTML = html + '</div>';
+
+  } else if (tab === 'tips') {
+    var html = '<div style="padding:0 16px;"><div style="background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(109,40,217,.06));border:1px solid rgba(96,165,250,.15);border-radius:12px;padding:13px 15px;margin-bottom:14px;font-size:12px;color:var(--text2);line-height:1.7;">💡 <strong style="color:var(--text);">' + INVEST_TIPS.length + ' kinh nghiệm thực chiến</strong> từ các nhà đầu tư lâu năm trên thị trường VN.</div>';
+    INVEST_TIPS.forEach(function(t) {
+      html += '<div class="tip-invest"><strong>' + t.icon + ' ' + t.title + '</strong><p>' + t.body + '</p></div>';
+    });
+    el.innerHTML = html + '</div>';
+
+  } else if (tab === 'howto') {
+    var html = '<div style="padding:0 16px;"><div style="background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(22,101,52,.06));border:1px solid rgba(74,222,128,.15);border-radius:12px;padding:13px 15px;margin-bottom:14px;"><div style="font-size:12px;font-weight:800;color:var(--green);margin-bottom:4px;">🚀 Lộ trình bắt đầu đầu tư chứng khoán VN</div><div style="font-size:11px;color:var(--text2);line-height:1.6;">6 bước từ zero đến danh mục đầu tư — liên kết với hũ Tự do TC.</div></div>';
+    HOWTO_STEPS.forEach(function(s, i) {
+      var isLast = i === HOWTO_STEPS.length - 1;
+      html += '<div style="display:flex;gap:14px;margin-bottom:' + (isLast?'0':'16px') + ';">' +
+        '<div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">' +
+        '<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6d28d9);display:flex;align-items:center;justify-content:center;font-size:16px;">' + s.icon + '</div>' +
+        (!isLast ? '<div style="width:2px;flex:1;background:rgba(255,255,255,.08);margin:6px 0;min-height:20px;"></div>' : '') +
+        '</div>' +
+        '<div style="flex:1;background:var(--surface);border-radius:12px;padding:14px;border:1px solid var(--border)' + (isLast?';border-color:rgba(74,222,128,.3);':';') + '">' +
+        '<div style="font-size:9px;font-weight:800;color:var(--text3);margin-bottom:4px;">BƯỚC ' + s.step + '</div>' +
+        '<div style="font-size:13px;font-weight:800;margin-bottom:6px;">' + s.title + '</div>' +
+        '<div style="font-size:12px;color:var(--text2);line-height:1.65;">' + s.body + '</div>' +
+        '</div></div>';
+    });
+    el.innerHTML = html + '</div>';
+  }
+}
+
+function buildStockList(stocks) {
+  var html = '';
+  stocks.forEach(function(s) {
+    var chartMax = Math.max.apply(null, s.chart), chartMin = Math.min.apply(null, s.chart);
+    var bars = '';
+    s.chart.forEach(function(v) {
+      var h = Math.max(4, Math.round((v - chartMin) / (chartMax - chartMin + 0.01) * 22) + 4);
+      bars += '<div class="mini-bar" style="height:' + h + 'px;background:' + (s.up ? 'rgba(74,222,128,.6)' : 'rgba(248,113,113,.6)') + '"></div>';
+    });
+    html += '<div class="stock-card">' +
+      '<div class="stock-ticker" style="background:' + s.color + '22;color:' + s.color + ';">' + s.ticker + '</div>' +
+      '<div class="stock-info"><div class="stock-name">' + s.name + '</div><div class="stock-sector">' + s.sector + '</div></div>' +
+      '<div class="mini-chart">' + bars + '</div>' +
+      '<div class="stock-price-col"><div class="stock-price">' + s.price.toLocaleString('vi-VN') + '</div>' +
+      '<div class="stock-chg ' + (s.up ? 'up' : 'down') + '">' + (s.up ? '+' : '') + s.chg + '%</div></div>' +
+      '</div>';
+  });
+  return html;
+}
+
+function openInvestSources() {
+  var list = document.getElementById('invest-sources-list');
+  list.innerHTML = '';
+  INVEST_SOURCES.forEach(function(s) {
+    list.innerHTML += '<a href="' + s.url + '" target="_blank" rel="noopener" class="source-link">' +
+      '<div class="sl-icon">' + s.icon + '</div>' +
+      '<div class="sl-info"><div class="sl-name">' + s.name + '</div><div class="sl-desc">' + s.desc + '</div></div>' +
+      '<div class="sl-badge">' + s.badge + '</div></a>';
+  });
+  document.getElementById('invest-sources-modal').classList.add('open');
+}
+
+// ===== INVEST PORTFOLIO / WATCHLIST / JOURNAL / CALC / CALENDAR / RISK =====
+
+// --- State init ---
+if (!state.holdings)  state.holdings  = [];
+if (!state.watchlist) state.watchlist = [];
+if (!state.journals)  state.journals  = [];
+
+// ==================== PORTFOLIO ====================
+var editingHoldingId = null;
+
+function renderPortfolio() {
+  var el = document.getElementById('invest-content');
+  var holdings = state.holdings || [];
+  var totalCost = 0, totalVal = 0;
+  holdings.forEach(function(h){ totalCost += h.qty * h.cost; totalVal += h.qty * h.price; });
+  var totalPnl = totalVal - totalCost;
+  var totalPct = totalCost > 0 ? ((totalPnl/totalCost)*100).toFixed(2) : 0;
+  var pnlColor = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
+
+  var kpis = '<div class="port-summary">' +
+    '<div class="port-kpi"><div class="port-kpi-label">Giá trị danh mục</div><div class="port-kpi-val" style="color:var(--j2)">₫'+fmt(totalVal)+'</div><div class="port-kpi-sub">'+holdings.length+' cổ phiếu</div></div>' +
+    '<div class="port-kpi"><div class="port-kpi-label">Lãi/Lỗ tổng</div><div class="port-kpi-val" style="color:'+pnlColor+'">'+(totalPnl>=0?'+':'')+'₫'+fmt(Math.abs(totalPnl))+'</div><div class="port-kpi-sub" style="color:'+pnlColor+'">'+(totalPnl>=0?'+':'')+totalPct+'%</div></div>' +
+    '<div class="port-kpi"><div class="port-kpi-label">Tổng vốn bỏ ra</div><div class="port-kpi-val">₫'+fmt(totalCost)+'</div></div>' +
+    '<div class="port-kpi"><div class="port-kpi-label">% Hũ Tự do TC</div><div class="port-kpi-val" style="color:var(--j5)">'+(state.jars['j2']?Math.round(totalVal/(Math.max(state.jars['j2'].balance+totalVal,1))*100)+'%':'—')+'</div><div class="port-kpi-sub">của hũ đầu tư</div></div>' +
+  '</div>';
+
+  var addBtn = '<button class="add-holding-btn" onclick="openHoldingModal(null)">➕ Thêm cổ phiếu vào danh mục</button>';
+
+  var list = '';
+  if (!holdings.length) {
+    list = '<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">📭 Chưa có cổ phiếu nào.<br>Thêm cổ phiếu đang nắm giữ để theo dõi lãi/lỗ.</div>';
+  } else {
+    holdings.forEach(function(h) {
+      var val = h.qty * h.price, cost = h.qty * h.cost;
+      var pnl = val - cost, pct = cost > 0 ? ((pnl/cost)*100).toFixed(1) : 0;
+      var up = pnl >= 0;
+      var weight = totalVal > 0 ? Math.round(val/totalVal*100) : 0;
+      var warnWeight = weight > 20;
+      list += '<div class="holding-card" onclick="openHoldingModal(\"'+h.id+'\")">' +
+        '<div class="holding-top">' +
+          '<div class="holding-ticker" style="background:rgba(96,165,250,.12);color:var(--j2);">'+h.ticker+'</div>' +
+          '<div class="holding-info"><div class="holding-name">'+h.name+'</div><div class="holding-meta">'+h.qty.toLocaleString('vi-VN')+' CP · Giá vốn ₫'+fmt(h.cost)+' · '+h.sector+'</div></div>' +
+          '<div class="holding-pnl"><div class="holding-pnl-val" style="color:var(--j2)">₫'+fmt(val)+'</div><div class="holding-pnl-pct '+(up?'up':'down')+'">'+( up?'+':'')+pct+'%</div></div>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px;"><span>Tỷ trọng: '+weight+'%'+(warnWeight?' ⚠️':'')+' </span><span style="color:'+(up?'var(--green)':'var(--red)')+';">'+(up?'+':'')+'₫'+fmt(pnl)+'</span></div>' +
+        '<div class="holding-weight-bar"><div class="holding-weight-fill" style="width:'+Math.min(100,weight)+'%;background:'+(warnWeight?'var(--red)':'var(--j2)')+'"></div></div>' +
+      '</div>';
+    });
+  }
+  el.innerHTML = '<div style="padding:0 16px;">' + kpis + addBtn + list + '</div>';
+}
+
+function openHoldingModal(id) {
+  editingHoldingId = id;
+  var h = id ? (state.holdings||[]).find(function(x){return x.id===id;}) : null;
+  document.getElementById('holding-modal-title').textContent = h ? '✏️ Cập nhật cổ phiếu' : '➕ Thêm cổ phiếu';
+  document.getElementById('h-ticker').value  = h ? h.ticker  : '';
+  document.getElementById('h-name').value    = h ? h.name    : '';
+  document.getElementById('h-qty').value     = h ? h.qty     : '';
+  document.getElementById('h-cost').value    = h ? h.cost    : '';
+  document.getElementById('h-price').value   = h ? h.price   : '';
+  document.getElementById('h-sector').value  = h ? h.sector  : '';
+  document.getElementById('h-delete-btn').style.display = h ? 'block' : 'none';
+  document.getElementById('holding-modal').classList.add('open');
+}
+
+function saveHolding() {
+  var ticker = document.getElementById('h-ticker').value.trim().toUpperCase();
+  var name   = document.getElementById('h-name').value.trim();
+  var qty    = parseFloat(document.getElementById('h-qty').value)   || 0;
+  var cost   = parseFloat(document.getElementById('h-cost').value)  || 0;
+  var price  = parseFloat(document.getElementById('h-price').value) || 0;
+  var sector = document.getElementById('h-sector').value.trim() || 'Khác';
+  if (!ticker || !qty || !cost) { showToast('⚠️ Điền đầy đủ mã, số lượng, giá vốn!'); return; }
+  if (!state.holdings) state.holdings = [];
+  if (editingHoldingId) {
+    var h = state.holdings.find(function(x){return x.id===editingHoldingId;});
+    if (h) { h.ticker=ticker; h.name=name||ticker; h.qty=qty; h.cost=cost; h.price=price||cost; h.sector=sector; }
+  } else {
+    state.holdings.push({ id:Date.now().toString(), ticker, name:name||ticker, qty, cost, price:price||cost, sector, addedAt:Date.now() });
+  }
+  saveState();
+  document.getElementById('holding-modal').classList.remove('open');
+  renderPortfolio();
+  showToast('✅ Đã cập nhật danh mục!');
+}
+
+function deleteHolding() {
+  state.holdings = (state.holdings||[]).filter(function(x){return x.id!==editingHoldingId;});
+  saveState();
+  document.getElementById('holding-modal').classList.remove('open');
+  renderPortfolio();
+  showToast('🗑️ Đã xóa khỏi danh mục');
+}
+
+// ==================== WATCHLIST ====================
+function renderWatchlist() {
+  var el = document.getElementById('invest-content');
+  var list = state.watchlist || [];
+  var addBtn = '<button class="add-holding-btn" onclick="document.getElementById(&quot;watch-modal&quot;).classList.add(&quot;open&quot;);resetWatchForm()">👁 Thêm vào Watchlist</button>';
+  var html = '<div style="padding:0 16px;">' + addBtn;
+  if (!list.length) {
+    html += '<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">👁 Watchlist trống.<br>Thêm cổ phiếu bạn đang theo dõi và chưa mua.</div>';
+  } else {
+    list.forEach(function(w) {
+      var upside = w.sell && w.price ? Math.round((w.sell-w.price)/w.price*100) : null;
+      var downBuy = w.buy && w.price ? Math.round((w.price-w.buy)/w.price*100) : null;
+      html += '<div class="watch-card">' +
+        '<div class="watch-ticker-box" style="background:rgba(167,139,250,.12);color:var(--j5);">'+w.ticker+'</div>' +
+        '<div class="watch-info">' +
+          '<div class="watch-name">'+w.name+' <span style="font-size:10px;color:var(--text3);font-weight:400;">'+w.ticker+'</span></div>' +
+          (w.thesis?'<div class="watch-thesis">'+w.thesis+'</div>':'') +
+          '<div class="watch-targets">' +
+            (w.price?'<span class="watch-target current">Hiện: ₫'+fmt(w.price)+'</span>':'') +
+            (w.buy?'<span class="watch-target buy">Mua: ₫'+fmt(w.buy)+(downBuy?' (−'+downBuy+'%)':'')+'</span>':'') +
+            (w.sell?'<span class="watch-target sell">Bán: ₫'+fmt(w.sell)+(upside?' (+'+upside+'%)':'')+'</span>':'') +
+          '</div>' +
+        '</div>' +
+        '<button data-wid="'+w.id+'" onclick="removeWatchById(this)" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:2px;flex-shrink:0;">✕</button>' +
+      '</div>';
+    });
+  }
+  el.innerHTML = html + '</div>';
+}
+
+function resetWatchForm() {
+  ['w-ticker','w-name','w-price','w-buy','w-sell','w-thesis'].forEach(function(id){ document.getElementById(id).value=''; });
+}
+
+function saveWatch() {
+  var ticker = document.getElementById('w-ticker').value.trim().toUpperCase();
+  var name   = document.getElementById('w-name').value.trim();
+  var price  = parseFloat(document.getElementById('w-price').value) || 0;
+  var buy    = parseFloat(document.getElementById('w-buy').value)   || 0;
+  var sell   = parseFloat(document.getElementById('w-sell').value)  || 0;
+  var thesis = document.getElementById('w-thesis').value.trim();
+  if (!ticker) { showToast('⚠️ Nhập mã cổ phiếu!'); return; }
+  if (!state.watchlist) state.watchlist = [];
+  state.watchlist.unshift({ id:Date.now().toString(), ticker, name:name||ticker, price, buy, sell, thesis, addedAt:Date.now() });
+  saveState();
+  document.getElementById('watch-modal').classList.remove('open');
+  renderWatchlist();
+  showToast('✅ Đã thêm vào Watchlist!');
+}
+
+function removeWatchById(btn) { removeWatch(btn.getAttribute('data-wid')); }
+function removeWatch(id) {
+  state.watchlist = (state.watchlist||[]).filter(function(x){return x.id!==id;});
+  saveState(); renderWatchlist();
+}
+
+// ==================== JOURNAL ====================
+var journalType = 'buy';
+
+function setJType(t) {
+  journalType = t;
+  document.getElementById('jt-buy').className  = 'type-btn' + (t==='buy'?'  active income':'');
+  document.getElementById('jt-sell').className = 'type-btn' + (t==='sell'?' active expense':'');
+}
+
+function renderJournal() {
+  var el = document.getElementById('invest-content');
+  var jnls = (state.journals||[]);
+  var wins  = jnls.filter(function(j){return j.type==='sell'&&j.pnl>0;}).length;
+  var losses= jnls.filter(function(j){return j.type==='sell'&&j.pnl<0;}).length;
+  var totalPnlJ = jnls.filter(function(j){return j.type==='sell';}).reduce(function(s,j){return s+(j.pnl||0);},0);
+  var winRate = (wins+losses)>0 ? Math.round(wins/(wins+losses)*100) : 0;
+
+  var summary = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">' +
+    '<div class="port-kpi" style="text-align:center;"><div class="port-kpi-label">Win Rate</div><div class="port-kpi-val" style="color:'+(winRate>=50?'var(--green)':'var(--red)')+'">'+winRate+'%</div></div>' +
+    '<div class="port-kpi" style="text-align:center;"><div class="port-kpi-label">Tổng lãi/lỗ</div><div class="port-kpi-val" style="color:'+(totalPnlJ>=0?'var(--green)':'var(--red)')+'">'+( totalPnlJ>=0?'+':'')+'₫'+fmt(Math.abs(totalPnlJ))+'</div></div>' +
+    '<div class="port-kpi" style="text-align:center;"><div class="port-kpi-label">Số lệnh</div><div class="port-kpi-val">'+jnls.length+'</div></div>' +
+  '</div>';
+
+  var addBtn = '<button class="add-holding-btn" onclick="openJournalModal()">📓 Ghi nhật ký giao dịch</button>';
+  var list = '';
+  if (!jnls.length) {
+    list = '<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">📓 Chưa có nhật ký.<br>Ghi lại mỗi lệnh mua/bán để phân tích và cải thiện.</div>';
+  } else {
+    jnls.slice().reverse().forEach(function(j) {
+      var typeLabel = j.type==='buy'?'MUA':'BÁN';
+      var typeColor = j.type==='buy'?'var(--green)':'var(--red)';
+      var pnlStr = j.pnl && j.type==='sell' ? (j.pnl>=0?'+':'')+'₫'+fmt(Math.abs(j.pnl)) : '';
+      var cardClass = j.type==='buy' ? 'buy-j' : (j.pnl>=0?'win':'loss');
+      list += '<div class="journal-card '+cardClass+'">' +
+        '<div class="journal-header">' +
+          '<span class="journal-ticker">'+j.ticker+'</span>' +
+          '<div style="display:flex;gap:6px;align-items:center;">' +
+            (pnlStr?'<span style="font-size:12px;font-weight:800;color:'+(j.pnl>=0?'var(--green)':'var(--red)')+'">'+pnlStr+'</span>':'') +
+            '<span class="journal-type" style="background:'+typeColor+'22;color:'+typeColor+'">'+typeLabel+'</span>' +
+          '</div>' +
+        '</div>' +
+        (j.reason?'<div class="journal-reason">'+j.reason+'</div>':'') +
+        (j.lesson?'<div style="font-size:11px;color:var(--j5);margin-bottom:5px;font-style:italic;">💡 '+j.lesson+'</div>':'') +
+        '<div class="journal-stats">' +
+          '<div class="j-stat">SL: <span>'+j.qty.toLocaleString('vi-VN')+' CP</span></div>' +
+          '<div class="j-stat">Giá: <span>₫'+fmt(j.price)+'</span></div>' +
+          '<div class="j-stat">Ngày: <span>'+j.date+'</span></div>' +
+        '</div>' +
+      '</div>';
+    });
+  }
+  el.innerHTML = '<div style="padding:0 16px;">' + summary + addBtn + list + '</div>';
+}
+
+function openJournalModal() {
+  journalType = 'buy'; setJType('buy');
+  ['j-ticker','j-qty','j-price','j-reason','j-lesson'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('j-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('journal-modal').classList.add('open');
+}
+
+function saveJournal() {
+  var ticker = document.getElementById('j-ticker').value.trim().toUpperCase();
+  var qty    = parseFloat(document.getElementById('j-qty').value)   || 0;
+  var price  = parseFloat(document.getElementById('j-price').value) || 0;
+  var date   = document.getElementById('j-date').value   || new Date().toLocaleDateString('vi-VN');
+  var reason = document.getElementById('j-reason').value.trim();
+  var lesson = document.getElementById('j-lesson').value.trim();
+  if (!ticker || !qty || !price) { showToast('⚠️ Điền đầy đủ mã, số lượng, giá!'); return; }
+  // calc pnl for sell: find avg cost from holdings
+  var pnl = 0;
+  if (journalType === 'sell') {
+    var h = (state.holdings||[]).find(function(x){return x.ticker===ticker;});
+    if (h) pnl = (price - h.cost) * qty;
+  }
+  if (!state.journals) state.journals = [];
+  state.journals.push({ id:Date.now().toString(), ticker, qty, price, date, type:journalType, reason, lesson, pnl, addedAt:Date.now() });
+  saveState();
+  document.getElementById('journal-modal').classList.remove('open');
+  renderJournal();
+  showToast('✅ Đã lưu nhật ký giao dịch!');
+}
+
+// ==================== CALCULATOR ====================
+function renderCalc() {
+  var el = document.getElementById('invest-content');
+  el.innerHTML = '<div style="padding:0 16px;">' +
+
+  // P/E & Định giá
+  '<div class="calc-section">' +
+    '<div class="calc-title">📊 Định giá theo P/E</div>' +
+    '<div class="calc-row"><div class="calc-label">EPS (₫/cổ phiếu)</div><input class="calc-input" id="c-eps" type="number" placeholder="5000" oninput="calcPE()"></div>' +
+    '<div class="calc-row"><div class="calc-label">P/E mục tiêu</div><input class="calc-input" id="c-pe" type="number" placeholder="12" oninput="calcPE()"></div>' +
+    '<div class="calc-row"><div class="calc-label">P/E ngành TB</div><input class="calc-input" id="c-pe-industry" type="number" placeholder="10" oninput="calcPE()"></div>' +
+    '<div class="calc-result" id="calc-pe-result"><div class="calc-res-item"><div class="calc-res-val" id="r-fair">—</div><div class="calc-res-lbl">Giá hợp lý</div></div><div class="calc-res-item"><div class="calc-res-val" id="r-industry-fair">—</div><div class="calc-res-lbl">Theo ngành</div></div></div>' +
+  '</div>' +
+
+  // Lãi/Lỗ & ROI
+  '<div class="calc-section">' +
+    '<div class="calc-title">💸 Tính Lãi/Lỗ & ROI</div>' +
+    '<div class="calc-row"><div class="calc-label">Giá mua (₫/CP)</div><input class="calc-input" id="c-buy" type="number" placeholder="50000" oninput="calcROI()"></div>' +
+    '<div class="calc-row"><div class="calc-label">Giá bán (₫/CP)</div><input class="calc-input" id="c-sell" type="number" placeholder="60000" oninput="calcROI()"></div>' +
+    '<div class="calc-row"><div class="calc-label">Số lượng (CP)</div><input class="calc-input" id="c-qty" type="number" placeholder="1000" oninput="calcROI()"></div>' +
+    '<div class="calc-row"><div class="calc-label">Phí 2 chiều (%)</div><input class="calc-input" id="c-fee" type="number" placeholder="0.3" oninput="calcROI()"></div>' +
+    '<div class="calc-result" id="calc-roi-result"><div class="calc-res-item"><div class="calc-res-val" id="r-pnl">—</div><div class="calc-res-lbl">Lãi/Lỗ ròng</div></div><div class="calc-res-item"><div class="calc-res-val" id="r-roi">—</div><div class="calc-res-lbl">ROI</div></div><div class="calc-res-item"><div class="calc-res-val" id="r-fee-total">—</div><div class="calc-res-lbl">Tổng phí + thuế</div></div><div class="calc-res-item"><div class="calc-res-val" id="r-break">—</div><div class="calc-res-lbl">Giá hoà vốn</div></div></div>' +
+  '</div>' +
+
+  // DCA Simulator
+  '<div class="calc-section">' +
+    '<div class="calc-title">📅 Mô phỏng DCA</div>' +
+    '<div class="calc-row"><div class="calc-label">Đầu tư hàng tháng (₫)</div><input class="calc-input" id="d-monthly" type="number" placeholder="1000000" oninput="calcDCA()"></div>' +
+    '<div class="calc-row"><div class="calc-label">Số tháng</div><input class="calc-input" id="d-months" type="number" placeholder="24" oninput="calcDCA()"></div>' +
+    '<div class="calc-row"><div class="calc-label">Lợi suất kỳ vọng (%/năm)</div><input class="calc-input" id="d-rate" type="number" placeholder="12" oninput="calcDCA()"></div>' +
+    '<div class="calc-result"><div class="calc-res-item"><div class="calc-res-val" id="d-total">—</div><div class="calc-res-lbl">Tổng vốn bỏ ra</div></div><div class="calc-res-item"><div class="calc-res-val" id="d-value">—</div><div class="calc-res-lbl">Giá trị cuối kỳ</div></div><div class="calc-res-item"><div class="calc-res-val" id="d-profit">—</div><div class="calc-res-lbl">Lợi nhuận</div></div><div class="calc-res-item"><div class="calc-res-val" id="d-roi2">—</div><div class="calc-res-lbl">ROI tổng</div></div></div>' +
+  '</div>' +
+
+  '</div>';
+}
+
+function calcPE() {
+  var eps = parseFloat(document.getElementById('c-eps').value)||0;
+  var pe  = parseFloat(document.getElementById('c-pe').value)||0;
+  var pei = parseFloat(document.getElementById('c-pe-industry').value)||0;
+  document.getElementById('r-fair').textContent         = eps&&pe  ? '₫'+fmt(Math.round(eps*pe))  : '—';
+  document.getElementById('r-industry-fair').textContent= eps&&pei ? '₫'+fmt(Math.round(eps*pei)) : '—';
+}
+
+function calcROI() {
+  var buy  = parseFloat(document.getElementById('c-buy').value)  || 0;
+  var sell = parseFloat(document.getElementById('c-sell').value) || 0;
+  var qty  = parseFloat(document.getElementById('c-qty').value)  || 0;
+  var fee  = parseFloat(document.getElementById('c-fee').value)  || 0.3;
+  if (!buy||!sell||!qty) { ['r-pnl','r-roi','r-fee-total','r-break'].forEach(function(id){document.getElementById(id).textContent='—';}); return; }
+  var feeAmt = (buy*qty*fee/100) + (sell*qty*fee/100) + (sell*qty*0.1/100); // tax on sell
+  var pnl = (sell-buy)*qty - feeAmt;
+  var roi = ((pnl/(buy*qty))*100).toFixed(2);
+  var breakEven = buy*(1 + fee/100) + (fee/100*sell*0 + 0.001*sell)*0; // simplified
+  breakEven = buy + (buy*fee/100*2 + sell*0.001)/qty;
+  document.getElementById('r-pnl').textContent = (pnl>=0?'+':'')+'₫'+fmt(Math.round(pnl));
+  document.getElementById('r-pnl').style.color = pnl>=0?'var(--green)':'var(--red)';
+  document.getElementById('r-roi').textContent = (roi>=0?'+':'')+roi+'%';
+  document.getElementById('r-roi').style.color = roi>=0?'var(--green)':'var(--red)';
+  document.getElementById('r-fee-total').textContent = '₫'+fmt(Math.round(feeAmt));
+  document.getElementById('r-break').textContent = '₫'+fmt(Math.round(buy + feeAmt/qty));
+}
+
+function calcDCA() {
+  var monthly = parseFloat(document.getElementById('d-monthly').value)||0;
+  var months  = parseFloat(document.getElementById('d-months').value)||0;
+  var rate    = parseFloat(document.getElementById('d-rate').value)||12;
+  if (!monthly||!months) return;
+  var mr = rate/100/12;
+  var fv = monthly * ((Math.pow(1+mr,months)-1)/mr);
+  var total = monthly * months;
+  var profit = fv - total;
+  var roi = ((profit/total)*100).toFixed(1);
+  document.getElementById('d-total').textContent  = '₫'+fmt(Math.round(total));
+  document.getElementById('d-value').textContent  = '₫'+fmt(Math.round(fv));
+  document.getElementById('d-profit').textContent = '+₫'+fmt(Math.round(profit));
+  document.getElementById('d-profit').style.color = 'var(--green)';
+  document.getElementById('d-roi2').textContent   = '+'+roi+'%';
+}
+
+// ==================== CALENDAR ====================
+function renderCalendar() {
+  var el = document.getElementById('invest-content');
+  var now = new Date();
+  var events = [
+    { day:2,  month:'T6', type:'dividend', ticker:'VNM', title:'Chốt danh sách cổ tức VNM', desc:'Cổ tức tiền mặt 2.000đ/CP. Ngày thanh toán 20/6/2026', color:'var(--j6)' },
+    { day:5,  month:'T6', type:'agm',      ticker:'FPT', title:'ĐHCĐ thường niên FPT',       desc:'Biểu quyết kế hoạch kinh doanh 2026, chia cổ tức 30%', color:'var(--j2)' },
+    { day:8,  month:'T6', type:'earnings', ticker:'VCB', title:'Kết quả Q2/2026 – VCB',       desc:'Công bố báo cáo tài chính quý 2. Dự phóng EPS 4.800đ', color:'var(--j5)' },
+    { day:12, month:'T6', type:'dividend', ticker:'REE', title:'Trả cổ tức REE',               desc:'Thanh toán cổ tức 1.500đ/CP cho cổ đông đã chốt', color:'var(--j6)' },
+    { day:15, month:'T6', type:'listing',  ticker:'MWG', title:'MWG phát hành thêm cổ phiếu', desc:'Phát hành 50 triệu CP ESOP cho nhân viên theo giá ưu đãi', color:'var(--green)' },
+    { day:20, month:'T6', type:'earnings', ticker:'HPG', title:'Kết quả Q2/2026 – HPG',        desc:'Hòa Phát công bố BCTC quý 2. Kỳ vọng lợi nhuận tăng 15% YoY', color:'var(--j5)' },
+    { day:25, month:'T6', type:'agm',      ticker:'VIC', title:'ĐHCĐ bất thường VIC',          desc:'Xem xét phát hành trái phiếu quốc tế 500 triệu USD', color:'var(--j2)' },
+    { day:30, month:'T6', type:'dividend', ticker:'TCB', title:'Chốt danh sách cổ tức TCB',    desc:'Cổ tức cổ phiếu 15% — mỗi 100 CP nhận thêm 15 CP', color:'var(--j6)' },
+  ];
+  var typeIcons = { dividend:'💝', agm:'🏛️', earnings:'📊', listing:'📋' };
+  var html = '<div style="padding:0 16px;">' +
+    '<div class="data-disclaimer">📌 Sự kiện minh hoạ tháng 6/2026 — xem lịch thực tại CafeF, Vietstock, FireAnt.</div>';
+  var types = [{key:'earnings',label:'📊 Báo cáo KQ'},{key:'dividend',label:'💝 Cổ tức'},{key:'agm',label:'🏛️ ĐHCĐ'},{key:'listing',label:'📋 Phát hành'}];
+  html += '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">' +
+    types.map(function(t){return '<span style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--surface2);color:var(--text2);">'+t.label+'</span>';}).join('') + '</div>';
+  events.forEach(function(e) {
+    html += '<div class="event-card">' +
+      '<div class="event-date-box"><div class="event-day">'+e.day+'</div><div class="event-month">'+e.month+'</div></div>' +
+      '<div class="event-info">' +
+        '<div class="event-title">'+e.title+'</div>' +
+        '<span class="event-ticker" style="background:'+e.color+'22;color:'+e.color+'">'+typeIcons[e.type]+' '+e.ticker+'</span>' +
+        '<div class="event-desc">'+e.desc+'</div>' +
+      '</div>' +
+    '</div>';
+  });
+  el.innerHTML = html + '</div>';
+}
+
+// ==================== RISK ANALYSIS ====================
+function renderRisk() {
+  var el = document.getElementById('invest-content');
+  var holdings = state.holdings || [];
+  var totalVal = holdings.reduce(function(s,h){return s+h.qty*h.price;},0);
+
+  var html = '<div style="padding:0 16px;">';
+
+  if (!holdings.length) {
+    html += '<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">⚠️ Chưa có danh mục.<br>Thêm cổ phiếu vào tab Danh mục để phân tích rủi ro.</div>';
+    el.innerHTML = html + '</div>'; return;
+  }
+
+  // Concentration risk
+  var alerts = [];
+  html += '<div class="risk-gauge"><div style="font-size:13px;font-weight:800;margin-bottom:12px;">📊 Tỷ trọng từng cổ phiếu</div>';
+  holdings.forEach(function(h) {
+    var val = h.qty*h.price;
+    var pct = totalVal>0?Math.round(val/totalVal*100):0;
+    var barColor = pct>20?'var(--red)':pct>10?'var(--yellow)':'var(--j2)';
+    if (pct>20) alerts.push('⛔ '+h.ticker+' chiếm '+pct+'% danh mục — vượt ngưỡng an toàn 20%. Cân nhắc chốt lời một phần.');
+    else if (pct>15) alerts.push('⚠️ '+h.ticker+' chiếm '+pct+'% — đang tiến gần ngưỡng tập trung rủi ro (20%).');
+    html += '<div class="risk-bar-row"><div class="risk-bar-label">'+h.ticker+'</div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:'+Math.min(100,pct)+'%;background:'+barColor+';"></div></div><div class="risk-bar-val" style="color:'+barColor+'">'+pct+'%</div></div>';
+  });
+  html += '</div>';
+
+  // Sector concentration
+  var sectors = {};
+  holdings.forEach(function(h){sectors[h.sector]=(sectors[h.sector]||0)+h.qty*h.price;});
+  html += '<div class="risk-gauge"><div style="font-size:13px;font-weight:800;margin-bottom:12px;">🏭 Phân bổ theo ngành</div>';
+  Object.keys(sectors).forEach(function(s) {
+    var pct = Math.round(sectors[s]/totalVal*100);
+    var barColor = pct>40?'var(--red)':pct>25?'var(--yellow)':'var(--green)';
+    if (pct>40) alerts.push('⛔ Ngành '+s+' chiếm '+pct+'% — tập trung quá cao, cần đa dạng hóa.');
+    html += '<div class="risk-bar-row"><div class="risk-bar-label" style="font-size:10px;">'+s+'</div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:'+Math.min(100,pct)+'%;background:'+barColor+';"></div></div><div class="risk-bar-val" style="color:'+barColor+'">'+pct+'%</div></div>';
+  });
+  html += '</div>';
+
+  // PnL risk
+  var pnlRisk = holdings.map(function(h){return {ticker:h.ticker,pnl:Math.round((h.price-h.cost)/h.cost*100*10)/10};});
+  var losers = pnlRisk.filter(function(x){return x.pnl<-7;});
+  losers.forEach(function(x){ alerts.push('🔴 '+x.ticker+' đang lỗ '+x.pnl+'% — đã chạm ngưỡng cắt lỗ khuyến nghị (-7%). Xem xét thoát vị thế.'); });
+
+  // Alerts
+  if (alerts.length) {
+    alerts.forEach(function(a){ html += '<div class="risk-alert">'+a+'</div>'; });
+  } else {
+    html += '<div class="risk-ok">✅ Danh mục đang phân bổ hợp lý. Không có cổ phiếu nào vượt ngưỡng cảnh báo tỷ trọng. Tiếp tục duy trì kỷ luật đầu tư!</div>';
+  }
+
+  // Recommendation
+  var numStocks = holdings.length;
+  var recMsg = numStocks < 5 ? '💡 Danh mục dưới 5 mã — rủi ro tập trung cao. Nên đa dạng hóa thêm 2-3 cổ phiếu từ ngành khác.' :
+               numStocks > 15 ? '💡 Danh mục trên 15 mã — khó theo dõi sát. Cân nhắc cắt giảm bớt các vị thế nhỏ, nhỏ hơn 3%.' :
+               '✅ Số lượng cổ phiếu ('+numStocks+') trong danh mục hợp lý cho nhà đầu tư cá nhân.';
+  html += '<div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--text2);line-height:1.6;">'+recMsg+'</div>';
+
+  el.innerHTML = html + '</div>';
+}
+
+// Patch switchInvestTab to handle new tabs
+var _origSwitch = switchInvestTab;
+switchInvestTab = function(tab, btn) {
+  investTab = tab;
+  document.querySelectorAll('#invest-tab-bar .rtab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  if (tab==='portfolio') renderPortfolio();
+  else if (tab==='watchlist') renderWatchlist();
+  else if (tab==='journal') renderJournal();
+  else if (tab==='calc') renderCalc();
+  else if (tab==='calendar') renderCalendar();
+  else if (tab==='risk') renderRisk();
+  else renderInvestContent(tab);
+};
 
 // ===== THEME =====
 function applyTheme(theme) {
