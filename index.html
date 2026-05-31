@@ -711,6 +711,58 @@
   [data-theme="light"] .market-hero { background:linear-gradient(135deg,#1e3a6e,#1a1a4e); }
   [data-theme="light"] .market-index { background:rgba(255,255,255,.1); }
 
+  /* ===== FULL CALENDAR ===== */
+  .cal-modal { background:var(--surface); border-radius:28px 28px 0 0; width:100%; padding:0 0 32px; max-height:94%; overflow-y:auto; animation:slideUp .25s ease; }
+  .cal-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 8px; position:sticky; top:0; background:var(--surface); z-index:5; border-bottom:1px solid var(--border); }
+  .cal-month-title { font-size:17px; font-weight:800; }
+  .cal-month-lunar { font-size:10px; color:var(--text3); margin-top:2px; }
+  .cal-nav-btn { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:7px 13px; color:var(--text); font-size:14px; cursor:pointer; font-family:inherit; font-weight:700; transition:all .15s; }
+  .cal-nav-btn:active { transform:scale(.93); background:var(--surface3); }
+
+  .cal-weekdays { display:grid; grid-template-columns:repeat(7,1fr); padding:8px 12px 4px; }
+  .cal-wd { text-align:center; font-size:10px; font-weight:800; color:var(--text3); text-transform:uppercase; letter-spacing:.3px; padding:4px 0; }
+  .cal-wd:first-child { color:var(--red); }
+  .cal-wd:last-child { color:var(--j2); }
+
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; padding:0 8px; }
+  .cal-cell { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:10px; cursor:pointer; transition:all .15s; position:relative; padding:2px; }
+  .cal-cell:active { transform:scale(.9); }
+  .cal-cell.empty { cursor:default; }
+  .cal-cell.today { background:linear-gradient(135deg,#3b82f6,#6d28d9) !important; }
+  .cal-cell.today .cal-solar { color:#fff !important; }
+  .cal-cell.today .cal-lunar-day { color:rgba(255,255,255,.7) !important; }
+  .cal-cell.selected-day { background:rgba(96,165,250,.18); border:1.5px solid var(--j2); }
+  .cal-cell.has-note::after { content:''; position:absolute; top:3px; right:4px; width:5px; height:5px; border-radius:50%; background:var(--j4); }
+  .cal-cell.sunday .cal-solar { color:var(--red); }
+  .cal-cell.saturday .cal-solar { color:var(--j2); }
+  .cal-cell.other-month .cal-solar { color:var(--text3); }
+  .cal-cell.other-month .cal-lunar-day { color:rgba(255,255,255,.2); }
+  .cal-solar { font-size:14px; font-weight:700; line-height:1; }
+  .cal-lunar-day { font-size:9px; color:var(--text3); margin-top:2px; line-height:1; font-weight:600; }
+  .cal-lunar-day.first-day { color:var(--j4); font-weight:800; }
+  .cal-lunar-day.first-month { color:var(--green); font-weight:800; }
+
+  /* Day note panel */
+  .cal-day-panel { padding:14px 20px; border-top:1px solid var(--border); margin-top:6px; }
+  .cal-day-panel-title { font-size:14px; font-weight:800; margin-bottom:4px; }
+  .cal-day-panel-lunar { font-size:11px; color:var(--text2); margin-bottom:12px; }
+  .cal-note-item { display:flex; align-items:flex-start; gap:10px; background:var(--surface2); border-radius:10px; padding:10px 12px; margin-bottom:8px; border-left:3px solid var(--j4); }
+  .cal-note-item .cni-text { flex:1; font-size:12px; line-height:1.55; }
+  .cal-note-item .cni-time { font-size:9px; color:var(--text3); margin-top:3px; }
+  .cal-note-del { background:none; border:none; color:var(--text3); cursor:pointer; font-size:14px; padding:0; flex-shrink:0; }
+  .cal-note-input-wrap { display:flex; gap:8px; margin-top:4px; }
+  .cal-note-input { flex:1; background:var(--surface2); border:1.5px solid var(--border); border-radius:10px; padding:10px 12px; color:var(--text); font-family:inherit; font-size:13px; outline:none; transition:border-color .2s; }
+  .cal-note-input:focus { border-color:var(--j2); }
+  .cal-note-input::placeholder { color:var(--text3); }
+  .cal-note-save-btn { background:linear-gradient(135deg,#3b82f6,#6d28d9); border:none; border-radius:10px; padding:10px 16px; color:#fff; font-family:inherit; font-size:13px; font-weight:800; cursor:pointer; flex-shrink:0; transition:transform .15s; }
+  .cal-note-save-btn:active { transform:scale(.93); }
+
+  /* Festival markers */
+  .cal-cell.festival .cal-solar { color:var(--j6) !important; }
+
+  [data-theme="light"] .cal-cell:hover:not(.empty) { background:rgba(0,0,0,.04); }
+  [data-theme="light"] .cal-cell.today { background:linear-gradient(135deg,#3b82f6,#6d28d9) !important; }
+
   .bar-ok { background:var(--j1g); }
   .bar-warn { background:linear-gradient(90deg,#f59e0b,#d97706); }
   .bar-danger { background:linear-gradient(90deg,#ef4444,#dc2626); }
@@ -776,9 +828,12 @@
 <div class="phone">
   <div class="status-bar" style="flex-direction:column;align-items:stretch;gap:0;padding-bottom:8px;">
     <div style="display:flex;justify-content:space-between;align-items:center;">
-      <div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button onclick="openCalendarModal()" style="background:none;border:none;cursor:pointer;padding:3px;display:flex;align-items:center;color:var(--text2);" title="Xem lịch">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </button>
         <span id="clock" style="font-size:13px;font-weight:700;"></span>
-        <span id="solar-date" style="font-size:11px;color:var(--text2);margin-left:7px;"></span>
+        <span id="solar-date" style="font-size:11px;color:var(--text2);"></span>
       </div>
       <button id="theme-toggle" onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:99px;display:flex;align-items:center;gap:5px;transition:background .2s;" title="Đổi giao diện">
         <span id="theme-icon" style="font-size:15px;">🌙</span>
@@ -1525,6 +1580,49 @@
 
   <input type="file" id="import-file-input" accept=".json,.txt" style="display:none" onchange="handleImportFile(event)">
 
+  <!-- ===== FULL CALENDAR MODAL ===== -->
+  <div class="modal-overlay" id="calendar-modal" style="align-items:flex-end;">
+    <div class="cal-modal">
+      <div class="modal-handle"></div>
+
+      <!-- Header: nav + month title -->
+      <div class="cal-header">
+        <button class="cal-nav-btn" onclick="calNavMonth(-1)">‹</button>
+        <div style="text-align:center;">
+          <div class="cal-month-title" id="cal-month-title"></div>
+          <div class="cal-month-lunar" id="cal-month-lunar"></div>
+        </div>
+        <button class="cal-nav-btn" onclick="calNavMonth(1)">›</button>
+      </div>
+
+      <!-- Weekday headers -->
+      <div class="cal-weekdays">
+        <div class="cal-wd">CN</div><div class="cal-wd">T2</div><div class="cal-wd">T3</div>
+        <div class="cal-wd">T4</div><div class="cal-wd">T5</div><div class="cal-wd">T6</div>
+        <div class="cal-wd">T7</div>
+      </div>
+
+      <!-- Calendar grid -->
+      <div class="cal-grid" id="cal-grid"></div>
+
+      <!-- Today button -->
+      <div style="text-align:center;padding:8px 0 4px;">
+        <button onclick="calGoToday()" style="background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.2);border-radius:99px;padding:6px 20px;color:var(--j2);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;">📅 Hôm nay</button>
+      </div>
+
+      <!-- Selected day note panel -->
+      <div class="cal-day-panel" id="cal-day-panel" style="display:none;">
+        <div class="cal-day-panel-title" id="cdp-title"></div>
+        <div class="cal-day-panel-lunar" id="cdp-lunar"></div>
+        <div id="cdp-notes-list"></div>
+        <div class="cal-note-input-wrap">
+          <input class="cal-note-input" id="cal-note-input" placeholder="Ghi chú cho ngày này..." onkeydown="calNoteEnter(event)">
+          <button class="cal-note-save-btn" onclick="saveCalNote()">＋</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== ALERT ===== -->
   <div class="alert-overlay" id="alert-overlay">
     <div class="alert-box">
@@ -1589,6 +1687,7 @@ function loadState() {
     loans: [],
     streak: 0,
     notes: [],
+    calNotes: {},
     holdings: [],
     watchlist: [],
     journals: [],
@@ -3462,6 +3561,7 @@ function wisdomToast() {
 
 // ===== NOTES =====
 if (!state.notes) state.notes = [];
+if (!state.calNotes) state.calNotes = {};
 
 const NOTE_TYPES = {
   finance: { label:'💰 Tài chính', color:'var(--j2)', bg:'rgba(96,165,250,.12)' },
@@ -3587,10 +3687,15 @@ function addChipNote(text) {
 }
 
 function toggleNote(id) {
-  const n = state.notes.find(n => n.id === id);
+  var n = (state.notes||[]).find(function(x){return x.id===id;});
   if (!n) return;
   n.done = !n.done;
   if (n.done) n.completedAt = Date.now();
+  // Sync done state back to calNote if it came from calendar
+  if (n.fromCalendar && n.due && state.calNotes && state.calNotes[n.due]) {
+    var cn = state.calNotes[n.due].find(function(x){return x.noteId===id;});
+    if (cn) cn.done = n.done;
+  }
   saveState();
   renderNotes();
   if (n.done) showToast('🎉 Hoàn thành: ' + n.text.substring(0,20) + '!');
@@ -4374,6 +4479,287 @@ switchInvestTab = function(tab, btn) {
   else if (tab==='risk') renderRisk();
   else renderInvestContent(tab);
 };
+
+// ===== FULL CALENDAR =====
+if (!state.calNotes) state.calNotes = {};
+
+var calViewYear  = new Date().getFullYear();
+var calViewMonth = new Date().getMonth(); // 0-based
+var calSelectedDate = null; // 'YYYY-MM-DD'
+
+// VN festivals: key = 'MM-DD' solar, or 'L-MM-DD' lunar
+var VN_FESTIVALS = {
+  '01-01': 'Tết Dương lịch',
+  '04-30': 'Ngày Giải phóng',
+  '05-01': 'Quốc tế Lao động',
+  '09-02': 'Quốc khánh',
+  'L-01-01': '🎆 Tết Nguyên Đán',
+  'L-01-02': 'Mùng 2 Tết',
+  'L-01-03': 'Mùng 3 Tết',
+  'L-01-15': 'Rằm tháng Giêng',
+  'L-03-10': 'Giỗ Tổ Hùng Vương',
+  'L-04-15': 'Phật Đản',
+  'L-07-15': 'Lễ Vu Lan / Rằm tháng 7',
+  'L-08-15': 'Tết Trung Thu',
+  'L-12-23': 'Ông Táo về trời',
+  'L-12-30': 'Tất niên',
+};
+
+function openCalendarModal() {
+  var now = new Date();
+  calViewYear  = now.getFullYear();
+  calViewMonth = now.getMonth();
+  calSelectedDate = null;
+  renderCalendar();
+  document.getElementById('cal-day-panel').style.display = 'none';
+  document.getElementById('calendar-modal').classList.add('open');
+}
+
+function calNavMonth(dir) {
+  calViewMonth += dir;
+  if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+  if (calViewMonth < 0)  { calViewMonth = 11; calViewYear--; }
+  calSelectedDate = null;
+  document.getElementById('cal-day-panel').style.display = 'none';
+  renderCalendar();
+}
+
+function calGoToday() {
+  var now = new Date();
+  calViewYear  = now.getFullYear();
+  calViewMonth = now.getMonth();
+  renderCalendar();
+  // select today
+  var key = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  selectCalDay(key);
+}
+
+var MONTH_VN = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+
+function renderCalendar() {
+  var now = new Date();
+  var todayStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+
+  // Header
+  document.getElementById('cal-month-title').textContent = MONTH_VN[calViewMonth] + ' ' + calViewYear;
+
+  // Lunar month name for this solar month
+  var lunarOfFirst = convertSolar2Lunar(1, calViewMonth+1, calViewYear, 7);
+  document.getElementById('cal-month-lunar').textContent = '(Tháng ' + lunarOfFirst[1] + ' - Tháng ' + (lunarOfFirst[1]===12?1:lunarOfFirst[1]+1) + ' Âm lịch ' + getLunarYearName(lunarOfFirst[2]) + ')';
+
+  // Build grid: first day of month
+  var firstDay = new Date(calViewYear, calViewMonth, 1).getDay(); // 0=Sun
+  var daysInMonth = new Date(calViewYear, calViewMonth+1, 0).getDate();
+  var daysInPrevMonth = new Date(calViewYear, calViewMonth, 0).getDate();
+
+  var cells = '';
+  var totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+  for (var i = 0; i < totalCells; i++) {
+    var day, month, year, isOtherMonth = false;
+    if (i < firstDay) {
+      day = daysInPrevMonth - firstDay + i + 1;
+      month = calViewMonth; year = calViewYear;
+      if (month === 0) { month = 12; year--; } else {}
+      isOtherMonth = true;
+    } else if (i - firstDay < daysInMonth) {
+      day = i - firstDay + 1;
+      month = calViewMonth + 1; year = calViewYear;
+    } else {
+      day = i - firstDay - daysInMonth + 1;
+      month = calViewMonth + 2; year = calViewYear;
+      if (month > 12) { month = 1; year++; }
+      isOtherMonth = true;
+    }
+
+    var dateKey = year + '-' + String(month).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+    var lunar = convertSolar2Lunar(day, month, year, 7);
+    var lDay = lunar[0], lMonth = lunar[1], lIsLeap = lunar[3];
+
+    // Determine classes
+    var cls = 'cal-cell';
+    var dow = (i % 7); // 0=Sun, 6=Sat
+    if (isOtherMonth) cls += ' other-month';
+    if (dow === 0) cls += ' sunday';
+    if (dow === 6) cls += ' saturday';
+    if (dateKey === todayStr) cls += ' today';
+    if (dateKey === calSelectedDate) cls += ' selected-day';
+    var hasCalNote = state.calNotes && state.calNotes[dateKey] && state.calNotes[dateKey].length > 0;
+    var hasNotesDue = (state.notes||[]).some(function(n){ return n.due === dateKey && !n.done; });
+    if (hasCalNote || hasNotesDue) cls += ' has-note';
+
+    // Festival check
+    var mdd = String(month).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+    var lmdd = 'L-' + String(lMonth).padStart(2,'0') + '-' + String(lDay).padStart(2,'0');
+    var festival = VN_FESTIVALS[mdd] || VN_FESTIVALS[lmdd] || '';
+    if (festival) cls += ' festival';
+
+    // Lunar display
+    var lunarLabel = '';
+    var lunarCls = 'cal-lunar-day';
+    if (lDay === 1) { lunarLabel = 'Mùng 1'; lunarCls += ' first-day'; }
+    else if (lMonth === 1 && lDay === 1) { lunarLabel = 'Mùng 1'; lunarCls += ' first-month'; }
+    else { lunarLabel = String(lDay); }
+
+    cells += '<div class="' + cls + '" onclick="selectCalDay(\'' + dateKey + '\')" title="' + (festival || '') + '">' +
+      '<span class="cal-solar">' + day + '</span>' +
+      '<span class="' + lunarCls + '">' + lunarLabel + '</span>' +
+      (festival ? '<div style="position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--j6);"></div>' : '') +
+    '</div>';
+  }
+
+  document.getElementById('cal-grid').innerHTML = cells;
+}
+
+function selectCalDay(dateKey) {
+  calSelectedDate = dateKey;
+  renderCalendar(); // re-render to update selection highlight
+
+  var parts = dateKey.split('-');
+  var d = parseInt(parts[2]), m = parseInt(parts[1]), y = parseInt(parts[0]);
+  var dow = new Date(y, m-1, d).getDay();
+  var DAYS_FULL = ['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+  var lunar = convertSolar2Lunar(d, m, y, 7);
+  var lDay = lunar[0], lMonth = lunar[1], lYear = lunar[2], lLeap = lunar[3];
+
+  var mdd = String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+  var lmdd = 'L-' + String(lMonth).padStart(2,'0') + '-' + String(lDay).padStart(2,'0');
+  var festival = VN_FESTIVALS[mdd] || VN_FESTIVALS[lmdd] || '';
+
+  var solarStr = DAYS_FULL[dow] + ', ' + d + '/' + m + '/' + y;
+  var lunarStr = '🌙 ' + lDay + '/' + lMonth + (lLeap?' (nhuận)':'') + ' ' + getLunarYearName(lYear);
+
+  document.getElementById('cdp-title').textContent = solarStr + (festival ? ' · ' + festival : '');
+  document.getElementById('cdp-lunar').textContent = lunarStr;
+  document.getElementById('cal-note-input').value = '';
+
+  renderDayNotes(dateKey);
+  document.getElementById('cal-day-panel').style.display = 'block';
+
+  // Scroll panel into view
+  setTimeout(function(){ document.getElementById('cal-day-panel').scrollIntoView({behavior:'smooth',block:'nearest'}); }, 100);
+}
+
+function renderDayNotes(dateKey) {
+  var calNotes = (state.calNotes && state.calNotes[dateKey]) ? state.calNotes[dateKey] : [];
+  // Notes from state.notes with matching due date (not from calendar = not already in calNotes)
+  var linkedNotes = (state.notes||[]).filter(function(n){
+    return n.due === dateKey && !n.fromCalendar;
+  });
+  var container = document.getElementById('cdp-notes-list');
+
+  if (!calNotes.length && !linkedNotes.length) {
+    container.innerHTML = '<div style="font-size:11px;color:var(--text3);margin-bottom:10px;padding:8px 0;">Chưa có ghi chú cho ngày này. Thêm bên dưới ↓</div>';
+    return;
+  }
+
+  var html = '';
+
+  // Show calendar-specific notes first
+  calNotes.forEach(function(n, idx) {
+    html += '<div class="cal-note-item">' +
+      '<div style="flex:1;">' +
+        '<div class="cni-text">' + escapeHtml(n.text) + '</div>' +
+        '<div class="cni-time">📅 ' + n.time + '</div>' +
+      '</div>' +
+      '<button class="cal-note-del" data-key="' + dateKey + '" data-idx="' + idx + '" onclick="deleteCalNote(this)">✕</button>' +
+    '</div>';
+  });
+
+  // Show linked notes from Notes screen (with due = dateKey)
+  if (linkedNotes.length) {
+    html += '<div style="font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin:8px 0 5px;">📝 Từ màn hình Ghi chú</div>';
+    linkedNotes.forEach(function(n) {
+      var NOTE_TYPES_MAP = { finance:'💰', goal:'🎯', remind:'🔔', other:'📝' };
+      var typeIcon = NOTE_TYPES_MAP[n.type] || '📝';
+      var prioColor = n.prio==='high'?'var(--red)':n.prio==='low'?'var(--green)':'var(--yellow)';
+      html += '<div class="cal-note-item" style="border-left-color:var(--j5);cursor:pointer;" onclick="goToNoteInApp(\'' + n.id + '\')">' +
+        '<div style="flex:1;">' +
+          '<div class="cni-text">' + typeIcon + ' ' + escapeHtml(n.text) + '</div>' +
+          '<div class="cni-time" style="display:flex;gap:6px;align-items:center;margin-top:4px;">' +
+            '<span style="font-size:9px;font-weight:800;padding:1px 6px;border-radius:99px;background:rgba(255,255,255,.06);color:'+prioColor+';">' + (n.prio==='high'?'🔴 Khẩn':n.prio==='low'?'🟢 Thấp':'🟡 Thường') + '</span>' +
+            (n.done?'<span style="font-size:9px;color:var(--green);">✅ Hoàn thành</span>':'') +
+          '</div>' +
+        '</div>' +
+        '<div style="font-size:9px;color:var(--text3);flex-shrink:0;">›</div>' +
+      '</div>';
+    });
+  }
+
+  container.innerHTML = html;
+}
+
+function goToNoteInApp(noteId) {
+  // Close calendar, go to notes screen, open edit modal
+  document.getElementById('calendar-modal').classList.remove('open');
+  var notesBtn = document.querySelector('#nav-notes');
+  if (notesBtn) goScreen('notes', notesBtn);
+  setTimeout(function(){ openNoteEdit(noteId); }, 200);
+}
+
+function saveCalNote() {
+  if (!calSelectedDate) return;
+  var input = document.getElementById('cal-note-input');
+  var text = input.value.trim();
+  if (!text) return;
+  if (!state.calNotes) state.calNotes = {};
+  if (!state.calNotes[calSelectedDate]) state.calNotes[calSelectedDate] = [];
+  var now = new Date();
+  var timeStr = now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}) + ' ' + now.toLocaleDateString('vi-VN');
+  var noteId = Date.now().toString();
+
+  // Push to calNotes (for calendar display)
+  state.calNotes[calSelectedDate].push({ text: text, time: timeStr, noteId: noteId });
+
+  // Also push to state.notes (for Notes screen sync)
+  if (!state.notes) state.notes = [];
+  var parts = calSelectedDate.split('-');
+  var dueDateDisplay = parts[2] + '/' + parts[1] + '/' + parts[0];
+  var noteType = 'remind';
+  if (/đầu tư|cổ phiếu|tài chính|hũ|tiền/i.test(text)) noteType = 'finance';
+  else if (/mục tiêu|kế hoạch|tiết kiệm/i.test(text)) noteType = 'goal';
+  state.notes.unshift({
+    id: noteId,
+    text: '📅 ' + dueDateDisplay + ' — ' + text,
+    type: noteType,
+    prio: 'med',
+    done: false,
+    jar: null,
+    due: calSelectedDate,
+    createdAt: Date.now(),
+    fromCalendar: true,
+  });
+
+  saveState();
+  input.value = '';
+  renderDayNotes(calSelectedDate);
+  renderCalendar();
+  // Refresh notes badge
+  if (typeof renderNotes === 'function') renderNotes();
+  showToast('✅ Đã lưu & đồng bộ sang Ghi chú!');
+}
+
+function deleteCalNote(btn) {
+  var key = btn.getAttribute('data-key');
+  var idx = parseInt(btn.getAttribute('data-idx'));
+  if (!state.calNotes || !state.calNotes[key]) return;
+  var note = state.calNotes[key][idx];
+  // Remove from calNotes
+  state.calNotes[key].splice(idx, 1);
+  if (!state.calNotes[key].length) delete state.calNotes[key];
+  // Remove from state.notes if synced
+  if (note && note.noteId) {
+    state.notes = (state.notes||[]).filter(function(n){ return n.id !== note.noteId; });
+  }
+  saveState();
+  renderDayNotes(key);
+  renderCalendar();
+  if (typeof renderNotes === 'function') renderNotes();
+}
+
+function calNoteEnter(e) {
+  if (e.key === 'Enter') { e.preventDefault(); saveCalNote(); }
+}
 
 // ===== THEME =====
 function applyTheme(theme) {
