@@ -350,15 +350,40 @@
   .badge-card.locked { opacity:.35; }
 
   .mission-card {
-    background:var(--surface); border-radius:var(--radius-sm); padding:14px;
-    border:1px solid var(--border); margin-bottom:8px;
+    background:var(--surface); border-radius:14px; padding:14px 16px;
+    border:1px solid var(--border); margin-bottom:10px; position:relative; overflow:hidden;
+    transition:transform .15s;
   }
-  .mission-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
-  .mission-title { font-size:13px; font-weight:700; flex:1; }
-  .mission-badge { font-size:18px; }
+  .mission-card:active { transform:scale(.98); }
+  .mission-card.done-card { opacity:.65; }
+  .mission-card.done-card::after {
+    content:'✅ Hoàn thành!'; position:absolute; top:0; right:0;
+    background:linear-gradient(135deg,rgba(74,222,128,.2),rgba(22,101,52,.3));
+    color:var(--green); font-size:9px; font-weight:800; padding:4px 10px;
+    border-radius:0 14px 0 10px; letter-spacing:.5px;
+  }
+  .mission-card.locked-card { opacity:.4; }
+  .mission-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+  .mission-card.diff-easy::before { background:linear-gradient(90deg,var(--green),#16a34a); }
+  .mission-card.diff-med::before  { background:linear-gradient(90deg,var(--yellow),#d97706); }
+  .mission-card.diff-hard::before { background:linear-gradient(90deg,var(--red),#dc2626); }
+  .mission-card.diff-special::before { background:linear-gradient(90deg,var(--j5),var(--j2)); }
+
+  .mission-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; gap:8px; }
+  .mission-title { font-size:13px; font-weight:700; flex:1; line-height:1.4; }
+  .mission-badge { font-size:22px; flex-shrink:0; }
+  .mission-desc { font-size:11px; color:var(--text2); line-height:1.5; margin-bottom:8px; }
   .mission-bar-wrap { background:rgba(255,255,255,.06); border-radius:99px; height:5px; overflow:hidden; }
-  .mission-bar { height:100%; border-radius:99px; background:var(--j5g); transition:width .6s; }
+  .mission-bar { height:100%; border-radius:99px; background:var(--j5g); transition:width .8s ease; }
   .mission-meta { display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:var(--text3); }
+  .mission-reward { display:inline-flex; align-items:center; gap:4px; background:rgba(251,191,36,.1); color:var(--j6); font-size:9px; font-weight:800; padding:2px 8px; border-radius:99px; margin-top:6px; letter-spacing:.3px; }
+  .mission-diff { display:inline-flex; align-items:center; gap:4px; font-size:9px; font-weight:800; padding:2px 8px; border-radius:99px; margin-top:6px; margin-left:5px; }
+  .diff-easy .mission-diff { background:rgba(74,222,128,.12); color:var(--green); }
+  .diff-med .mission-diff  { background:rgba(251,191,36,.12); color:var(--yellow); }
+  .diff-hard .mission-diff { background:rgba(248,113,113,.12); color:var(--red); }
+  .diff-special .mission-diff { background:rgba(167,139,250,.12); color:var(--j5); }
+
+  .mission-tabs { display:flex; gap:6px; margin-bottom:12px; }
 
   /* ===== SETTINGS SCREEN ===== */
   .settings-group { margin-bottom:20px; }
@@ -695,18 +720,50 @@
   <!-- ===================== GAMIFICATION ===================== -->
   <div class="screen" id="screen-game">
     <div style="padding:0 16px;flex-shrink:0;">
-      <div class="page-header"><div class="page-title">Thành tích 🏆</div></div>
+      <div class="page-header">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="page-title">Thành tích 🏆</div>
+          <div id="mission-score" style="font-size:10px;font-weight:700;color:var(--j6);background:rgba(251,191,36,.1);padding:5px 11px;border-radius:99px;"></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:0 16px;flex-shrink:0;">
+      <div class="mission-tabs">
+        <button class="rtab active" id="mtab-missions" onclick="switchGameTab('missions',this)">🎯 Nhiệm vụ</button>
+        <button class="rtab" id="mtab-badges" onclick="switchGameTab('badges',this)">🏅 Huy chương</button>
+        <button class="rtab" id="mtab-streak" onclick="switchGameTab('streak',this)">🔥 Streak</button>
+      </div>
     </div>
     <div class="scroll">
-      <div class="streak-card">
-        <div class="streak-num" id="streak-num">0</div>
-        <div class="streak-label">Tháng kỷ luật liên tiếp 🔥</div>
-        <div class="stars-row" id="streak-stars"></div>
+      <!-- MISSIONS TAB -->
+      <div id="gtab-missions">
+        <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;" id="mission-diff-filters">
+          <button class="rtab active" onclick="filterMissions('all',this)">Tất cả</button>
+          <button class="rtab" onclick="filterMissions('active',this)">⏳ Đang làm</button>
+          <button class="rtab" onclick="filterMissions('done',this)">✅ Xong</button>
+          <button class="rtab" onclick="filterMissions('easy',this)">🟢 Dễ</button>
+          <button class="rtab" onclick="filterMissions('hard',this)">🔴 Khó</button>
+        </div>
+        <div id="mission-list"></div>
       </div>
-      <div class="sec-title">Huy chương</div>
-      <div class="badge-grid" id="badge-grid"></div>
-      <div class="sec-title">Nhiệm vụ tháng này</div>
-      <div id="mission-list"></div>
+
+      <!-- BADGES TAB -->
+      <div id="gtab-badges" style="display:none;">
+        <div style="background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(251,191,36,.02));border:1px solid rgba(251,191,36,.15);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:11px;color:var(--text2);line-height:1.6;">
+          🏅 Hoàn thành nhiệm vụ để mở khóa huy chương. Mỗi huy chương đại diện cho một cột mốc tài chính.
+        </div>
+        <div class="badge-grid" id="badge-grid"></div>
+      </div>
+
+      <!-- STREAK TAB -->
+      <div id="gtab-streak" style="display:none;">
+        <div class="streak-card">
+          <div class="streak-num" id="streak-num">0</div>
+          <div class="streak-label">Tháng kỷ luật liên tiếp 🔥</div>
+          <div class="stars-row" id="streak-stars"></div>
+        </div>
+        <div id="streak-milestones"></div>
+      </div>
     </div>
   </div>
 
@@ -2131,6 +2188,213 @@ function buildDiagnosis() {
   return items;
 }
 
+// ===== MISSIONS =====
+const ALL_MISSIONS = [
+  // === DỄ ===
+  { id:'m_spend_enjoy', title:'Hưởng thụ đúng nghĩa', desc:'Tiêu hết hũ Hưởng thụ một cách ý nghĩa (du lịch, ăn uống đặc biệt, trải nghiệm mới)', badge:'🎊', diff:'easy', reward:50, jar:'j4',
+    check: () => { const st=getJarStatus('j4'); return st.pct>=90 ? 100 : st.pct; } },
+  { id:'m_log_7', title:'Kế toán 7 ngày', desc:'Ghi chép chi tiêu liên tục 7 ngày không bỏ sót', badge:'📒', diff:'easy', reward:30,
+    check: () => { const days=new Set(state.txs.filter(t=>t.type==='expense').map(t=>t.date)); return Math.min(100,days.size/7*100); } },
+  { id:'m_first_income', title:'Thu nhập đầu tiên', desc:'Nhập thu nhập và phân bổ vào 6 hũ lần đầu tiên', badge:'💰', diff:'easy', reward:20,
+    check: () => state.txs.some(t=>t.type==='income') ? 100 : 0 },
+  { id:'m_backup', title:'Sao lưu an toàn', desc:'Xuất file sao lưu dữ liệu ít nhất 1 lần trong tháng', badge:'☁️', diff:'easy', reward:20,
+    check: () => { const meta=JSON.parse(localStorage.getItem('6hu_backup_meta')||'{}'); return meta.lastSave ? 100 : 0; } },
+  { id:'m_note_3', title:'Lập kế hoạch', desc:'Tạo ít nhất 3 ghi chú nhiệm vụ tài chính', badge:'📝', diff:'easy', reward:25,
+    check: () => Math.min(100, ((state.notes||[]).length/3)*100) },
+
+  // === TRUNG BÌNH ===
+  { id:'m_reduce_essential', title:'Cắt giảm thiết yếu 5%', desc:'Giảm chi tiêu hũ Thiết yếu xuống dưới 95% so với tháng trước', badge:'📉', diff:'med', reward:80, jar:'j1',
+    check: () => { const st=getJarStatus('j1'); return st.pct<95 ? 100 : Math.max(0, (100-st.pct)*2); } },
+  { id:'m_no_overdraft', title:'Không vượt hạn mức', desc:'Giữ tất cả các hũ dưới 100% hạn mức trong suốt tháng', badge:'🏅', diff:'med', reward:100,
+    check: () => { const all=JARS.every(j=>{ const st=getJarStatus(j.id); return st.lim===0||st.pct<100; }); return all?100:60; } },
+  { id:'m_save_20', title:'Tỷ lệ tiết kiệm 20%', desc:'Đưa tỷ lệ tiết kiệm (hũ j2+j3) lên ít nhất 20% tổng thu nhập', badge:'💎', diff:'med', reward:100,
+    check: () => { const inc=state.txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0); if(!inc) return 0; const sav=state.jars['j2'].balance+state.jars['j3'].balance; return Math.min(100,sav/inc*100/0.2*100); } },
+  { id:'m_invest_j2', title:'Nạp hũ đầu tư', desc:'Giữ nguyên hũ Tự do TC không chi tiêu trong cả tháng', badge:'🔒', diff:'med', reward:80, jar:'j2',
+    check: () => { const spent=state.txs.filter(t=>t.type==='expense'&&t.jar==='j2').reduce((s,t)=>s+t.amount,0); return spent===0?100:0; } },
+  { id:'m_all_jars_funded', title:'Đủ 6 hũ', desc:'Đảm bảo tất cả 6 hũ đều có số dư lớn hơn 0', badge:'🪙', diff:'med', reward:60,
+    check: () => { const funded=JARS.filter(j=>state.jars[j.id].balance>0).length; return Math.round(funded/6*100); } },
+  { id:'m_complete_3_notes', title:'Hoàn thành 3 nhiệm vụ', desc:'Tick hoàn thành ít nhất 3 ghi chú việc cần làm', badge:'✅', diff:'med', reward:50,
+    check: () => { const done=(state.notes||[]).filter(n=>n.done).length; return Math.min(100,done/3*100); } },
+  { id:'m_charity', title:'Cho đi với tâm', desc:'Chi tiêu hũ Từ thiện ít nhất 1 lần trong tháng', badge:'💝', diff:'med', reward:40, jar:'j6',
+    check: () => { const done=state.txs.some(t=>t.type==='expense'&&t.jar==='j6'); return done?100:0; } },
+  { id:'m_edu', title:'Đầu tư bản thân', desc:'Dùng toàn bộ hũ Giáo dục cho sách/khóa học/học phí', badge:'📚', diff:'med', reward:60, jar:'j5',
+    check: () => { const st=getJarStatus('j5'); return st.pct>=80?100:Math.round(st.pct/0.8*100*0.8); } },
+
+  // === KHÓ ===
+  { id:'m_streak_3', title:'Kỷ luật 3 tháng', desc:'Duy trì streak 3 tháng không vi phạm kỷ luật hũ đầu tư', badge:'🔥', diff:'hard', reward:200,
+    check: () => Math.min(100, (state.streak||0)/3*100) },
+  { id:'m_zero_loan', title:'Không mượn hũ', desc:'Không sử dụng chức năng mượn hũ trong cả tháng', badge:'⛔', diff:'hard', reward:150,
+    check: () => { const m=state.currentMonth; return (state.loans||[]).length===0?100:0; } },
+  { id:'m_surplus_10', title:'Thặng dư 10%', desc:'Kết thúc tháng với tổng dư lớn hơn 10% thu nhập', badge:'📊', diff:'hard', reward:180,
+    check: () => { const inc=state.txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0); if(!inc) return 0; const bal=Object.values(state.jars).reduce((s,j)=>s+j.balance,0); return Math.min(100,bal/inc*100/0.1*100); } },
+  { id:'m_txs_20', title:'Ghi chép chăm chỉ', desc:'Ghi ít nhất 20 giao dịch trong tháng', badge:'🏆', diff:'hard', reward:120,
+    check: () => Math.min(100, state.txs.length/20*100) },
+
+  // === ĐẶC BIỆT ===
+  { id:'m_all_done', title:'Bách chiến bách thắng', desc:'Hoàn thành đồng thời 5 nhiệm vụ bất kỳ trong tháng', badge:'👑', diff:'special', reward:500,
+    check: () => { const done=computeMissionProgress().filter(m=>m.prog>=100).length; return Math.min(100,done/5*100); } },
+  { id:'m_month_close', title:'Chốt sổ hoàn hảo', desc:'Thực hiện Chốt tháng với thu nhập mới được nhập', badge:'🌟', diff:'special', reward:300,
+    check: () => (state.monthHistory||[]).length>0?100:0 },
+];
+
+function computeMissionProgress() {
+  return ALL_MISSIONS.map(m => {
+    let prog = 0;
+    try { prog = Math.round(m.check()); } catch(e) { prog = 0; }
+    prog = Math.max(0, Math.min(100, prog));
+    const done = state.completedMissions && state.completedMissions.includes(m.id);
+    return { ...m, prog, done };
+  });
+}
+
+let missionFilter = 'all';
+let gameTab = 'missions';
+
+function switchGameTab(tab, btn) {
+  gameTab = tab;
+  document.querySelectorAll('#screen-game .rtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['missions','badges','streak'].forEach(t=>{
+    const el=document.getElementById('gtab-'+t);
+    if(el) el.style.display=t===tab?'block':'none';
+  });
+  if(tab==='badges') renderBadges();
+  if(tab==='streak') renderStreak();
+  if(tab==='missions') renderMissions();
+}
+
+function filterMissions(f, btn) {
+  missionFilter = f;
+  document.querySelectorAll('#mission-diff-filters .rtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMissions();
+}
+
+function renderMissions() {
+  const list = document.getElementById('mission-list');
+  if(!list) return;
+  let missions = computeMissionProgress();
+
+  // auto-mark completed
+  if(!state.completedMissions) state.completedMissions = [];
+  missions.forEach(m => {
+    if(m.prog>=100 && !state.completedMissions.includes(m.id)) {
+      state.completedMissions.push(m.id);
+      saveState();
+    }
+  });
+
+  if(missionFilter==='active')  missions=missions.filter(m=>m.prog<100);
+  else if(missionFilter==='done')   missions=missions.filter(m=>m.prog>=100);
+  else if(missionFilter==='easy')   missions=missions.filter(m=>m.diff==='easy');
+  else if(missionFilter==='hard')   missions=missions.filter(m=>m.diff==='hard'||m.diff==='special');
+
+  // Sort: in-progress first, then done
+  missions.sort((a,b)=>{
+    if(a.prog>=100 && b.prog<100) return 1;
+    if(a.prog<100 && b.prog>=100) return -1;
+    return b.prog-a.prog;
+  });
+
+  const DIFF_LABELS = { easy:'🟢 Dễ', med:'🟡 Vừa', hard:'🔴 Khó', special:'✨ Đặc biệt' };
+  const BAR_COLORS = { easy:'linear-gradient(90deg,#22c55e,#16a34a)', med:'linear-gradient(90deg,#f59e0b,#d97706)', hard:'linear-gradient(90deg,#ef4444,#dc2626)', special:'linear-gradient(90deg,#8b5cf6,#3b82f6)' };
+
+  list.innerHTML = '';
+  missions.forEach(m=>{
+    const barColor = BAR_COLORS[m.diff]||'var(--j5g)';
+    const jar = m.jar ? JARS.find(j=>j.id===m.jar) : null;
+    list.innerHTML +=
+      '<div class="mission-card diff-'+m.diff+(m.prog>=100?' done-card':'')+(m.diff==='special'&&m.prog<100?' locked-card':'')+'">' +
+        '<div class="mission-top">' +
+          '<div>' +
+            '<div class="mission-title">'+m.badge+' '+m.title+'</div>' +
+            '<div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;">' +
+              '<span class="mission-diff">'+DIFF_LABELS[m.diff]+'</span>' +
+              '<span class="mission-reward">🪙 +'+m.reward+' điểm</span>' +
+              (jar?'<span style="font-size:9px;font-weight:800;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--text3);">'+jar.icon+' '+jar.name+'</span>':'') +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="mission-desc">'+m.desc+'</div>' +
+        '<div class="mission-bar-wrap"><div class="mission-bar" style="width:'+m.prog+'%;background:'+barColor+'"></div></div>' +
+        '<div class="mission-meta"><span>'+Math.round(m.prog)+'% hoàn thành</span><span>'+(m.prog>=100?'🎉 Xong!':m.prog>0?'Đang tiến hành':'Chưa bắt đầu')+'</span></div>' +
+      '</div>';
+  });
+
+  if(!missions.length) list.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">Không có nhiệm vụ nào trong mục này.</div>';
+
+  // Score display
+  const totalPts = computeMissionProgress().filter(m=>m.prog>=100).reduce((s,m)=>s+m.reward,0);
+  const countDone = computeMissionProgress().filter(m=>m.prog>=100).length;
+  const countAll  = ALL_MISSIONS.length;
+  const scoreEl = document.getElementById('mission-score');
+  if(scoreEl) scoreEl.innerHTML = '🪙 '+totalPts+' điểm &nbsp;|&nbsp; '+countDone+'/'+countAll+' nhiệm vụ';
+}
+
+function renderBadges() {
+  const FULL_BADGES = [
+    { icon:'🥇', name:'Khởi đầu', desc:'Giao dịch đầu tiên', unlocked:state.txs.length>0 },
+    { icon:'📒', name:'Kế toán', desc:'Ghi chép 7 ngày', unlocked:(()=>{const d=new Set(state.txs.filter(t=>t.type==='expense').map(t=>t.date));return d.size>=7;})() },
+    { icon:'💰', name:'Thu nhập', desc:'Phân bổ thu nhập đầu tiên', unlocked:state.txs.some(t=>t.type==='income') },
+    { icon:'🏅', name:'Kỷ luật', desc:'Không vượt hạn mức tháng', unlocked:JARS.every(j=>{const st=getJarStatus(j.id);return st.lim===0||st.pct<100;}) },
+    { icon:'🔥', name:'Streak 3', desc:'3 tháng liên tiếp', unlocked:(state.streak||0)>=3 },
+    { icon:'💎', name:'Nhà đầu tư', desc:'Không dùng hũ Tự do TC', unlocked:!state.txs.some(t=>t.type==='expense'&&t.jar==='j2') },
+    { icon:'📊', name:'Nhà phân tích', desc:'Thặng dư 10% thu nhập', unlocked:(()=>{const inc=state.txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);const bal=Object.values(state.jars).reduce((s,j)=>s+j.balance,0);return inc>0&&bal/inc>=0.1;})() },
+    { icon:'🌟', name:'Chốt sổ', desc:'Chốt tháng lần đầu', unlocked:(state.monthHistory||[]).length>0 },
+    { icon:'☁️', name:'Sao lưu', desc:'Xuất dữ liệu 1 lần', unlocked:!!JSON.parse(localStorage.getItem('6hu_backup_meta')||'{}').lastSave },
+    { icon:'✅', name:'Hoàn thành 3', desc:'Tick 3 nhiệm vụ ghi chú', unlocked:((state.notes||[]).filter(n=>n.done).length>=3) },
+    { icon:'💝', name:'Tấm lòng', desc:'Chi hũ Từ thiện', unlocked:state.txs.some(t=>t.type==='expense'&&t.jar==='j6') },
+    { icon:'👑', name:'Bách chiến', desc:'Hoàn thành 5 nhiệm vụ', unlocked:(state.completedMissions||[]).length>=5 },
+    { icon:'🏆', name:'Bậc thầy', desc:'Hoàn thành 10 nhiệm vụ', unlocked:(state.completedMissions||[]).length>=10 },
+    { icon:'🎯', name:'Tiết kiệm 20%', desc:'Tiết kiệm ≥20% thu nhập', unlocked:(()=>{const inc=state.txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);const sav=state.jars['j2'].balance+state.jars['j3'].balance;return inc>0&&sav/inc>=0.2;})() },
+    { icon:'⛔', name:'Kỷ luật sắt', desc:'Không mượn hũ cả tháng', unlocked:(state.loans||[]).length===0 },
+    { icon:'🔒', name:'Bất khả xâm phạm', desc:'Streak 6 tháng', unlocked:(state.streak||0)>=6 },
+    { icon:'🌙', name:'Người đêm', desc:'Ghi chép sau 22h', unlocked:false },
+    { icon:'🚀', name:'Tự do TC', desc:'Streak 12 tháng', unlocked:(state.streak||0)>=12 },
+  ];
+  const grid=document.getElementById('badge-grid'); if(!grid) return;
+  const unlocked=FULL_BADGES.filter(b=>b.unlocked).length;
+  grid.innerHTML='<div style="grid-column:1/-1;text-align:center;font-size:11px;color:var(--text2);margin-bottom:8px;background:var(--surface2);border-radius:10px;padding:8px;">Đã mở: <strong style=\'color:var(--green);\'>' + unlocked + '</strong> / '+FULL_BADGES.length+' huy chương</div>';
+  FULL_BADGES.forEach(b=>{
+    grid.innerHTML+='<div class="badge-card '+(b.unlocked?'':'locked')+'" title="'+b.desc+'"><div class="badge-icon">'+b.icon+'</div><div class="badge-name">'+b.name+'</div><div style="font-size:9px;color:var(--text3);margin-top:2px;">'+b.desc+'</div></div>';
+  });
+}
+
+function renderStreak() {
+  const streak=state.streak||0;
+  document.getElementById('streak-num').textContent=streak;
+  const stars=document.getElementById('streak-stars');
+  const filled=Math.min(streak,5), empty=Math.max(0,5-filled);
+  stars.innerHTML='⭐'.repeat(filled)+'☆'.repeat(empty);
+
+  const milestones=[
+    {m:1,label:'Bước đầu 🌱',pts:50},
+    {m:3,label:'3 tháng 🔥',pts:200},
+    {m:6,label:'Nửa năm 💪',pts:500},
+    {m:12,label:'Một năm 🏆',pts:1500},
+    {m:24,label:'Hai năm 👑',pts:5000},
+  ];
+  const el=document.getElementById('streak-milestones'); if(!el) return;
+  el.innerHTML='<div class="sec-title">Cột mốc streak</div>';
+  milestones.forEach(ms=>{
+    const done=streak>=ms.m;
+    el.innerHTML+=
+      '<div style="display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);opacity:'+(done?1:.45)+';">' +
+        '<div style="width:36px;height:36px;border-radius:50%;background:'+(done?'linear-gradient(135deg,#f59e0b,#d97706)':'var(--surface2)')+';display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:'+(done?'#fff':'var(--text3)')+';">'+ms.m+'</div>' +
+        '<div style="flex:1;"><div style="font-size:13px;font-weight:700;">'+ms.label+'</div><div style="font-size:10px;color:var(--text3);">'+ms.m+' tháng liên tiếp</div></div>' +
+        '<div style="font-size:11px;font-weight:800;color:var(--j6);">'+(done?'✅':'')+' 🪙'+ms.pts+'</div>' +
+      '</div>';
+  });
+
+  // Total points
+  const totalPts=computeMissionProgress().filter(m=>m.prog>=100).reduce((s,m)=>s+m.reward,0);
+  el.innerHTML+='<div style="background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(251,191,36,.04));border:1px solid rgba(251,191,36,.2);border-radius:12px;padding:14px;text-align:center;margin-top:8px;">' +
+    '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;">Tổng điểm thành tựu</div>' +
+    '<div style="font-size:28px;font-weight:800;color:var(--j6);">🪙 '+totalPts+'</div>' +
+    '<div style="font-size:11px;color:var(--text2);margin-top:4px;">'+(state.completedMissions||[]).length+' nhiệm vụ hoàn thành</div>' +
+  '</div>';
+}
+
 // ===== GAME =====
 const BADGES = [
   { icon:'🥇', name:'Khởi đầu', desc:'Giao dịch đầu tiên' },
@@ -2142,35 +2406,9 @@ const BADGES = [
 ];
 
 function renderGame() {
-  const streak = state.streak || (state.txs.length > 0 ? 1 : 0);
-  document.getElementById('streak-num').textContent = streak;
-  const stars = document.getElementById('streak-stars');
-  stars.innerHTML = Array(Math.min(streak,5)).fill('⭐').join('') || '☆☆☆☆☆';
-
-  const badgeGrid = document.getElementById('badge-grid');
-  badgeGrid.innerHTML = '';
-  BADGES.forEach(b => {
-    const locked = b.locked || (b.name==='Khởi đầu' && state.txs.length===0);
-    badgeGrid.innerHTML += `
-      <div class="badge-card ${locked?'locked':''}">
-        <div class="badge-icon">${b.icon}</div>
-        <div class="badge-name">${b.name}</div>
-      </div>`;
-  });
-
-  const missionList = document.getElementById('mission-list');
-  missionList.innerHTML = '';
-  state.missions.forEach(m => {
-    missionList.innerHTML += `
-      <div class="mission-card">
-        <div class="mission-top">
-          <div class="mission-title">${m.title}</div>
-          <div class="mission-badge">${m.badge}</div>
-        </div>
-        <div class="mission-bar-wrap"><div class="mission-bar" style="width:${m.current}%"></div></div>
-        <div class="mission-meta"><span>${m.current}% hoàn thành</span><span>${m.current>=100?'✅ Xong':'Đang thực hiện'}</span></div>
-      </div>`;
-  });
+  if(!state.completedMissions) state.completedMissions=[];
+  // default to missions tab
+  switchGameTab('missions', document.getElementById('mtab-missions'));
 }
 
 // ===== SETTINGS =====
